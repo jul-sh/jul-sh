@@ -31,15 +31,6 @@
 }
 
 :root {
-  font-family: Iosevka Julsh, monospace;
-  font-size: 26px;
-  word-spacing: -0.2ch;
-  line-height: 1.4;
-
-  background: var(--background-color);
-  color: var(--green);
-
-  --background-color: hsl(217, 36%, 10%);
   --pink: hsl(0, 82%, 85%);
   --yellow: hsl(37, 80%, 75%);
   --orange: hsl(26, 80%, 71%);
@@ -55,6 +46,13 @@
   --ggreen: hsl(138, 60%, 60%);
 
   --responsive-padding: 2.3rem;
+
+  background: hsl(217, 36%, 10%);
+  color: var(--green);
+  font-family: Iosevka Julsh, monospace;
+  font-size: 26px;
+  word-spacing: -0.2ch;
+  line-height: 1.4;
 }
 
 body,
@@ -66,7 +64,6 @@ html {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -125,29 +122,6 @@ h2 + h3 {
   margin-top: 0;
 }
 
-i,
-em {
-  color: var(--lightBlue);
-  font-style: normal;
-}
-
-b,
-strong,
-strong a,
-b a {
-  color: var(--blue);
-  font-weight: normal;
-}
-
-strong em,
-em strong,
-b i,
-i b {
-  color: var(--orange);
-  font-style: normal;
-  font-weight: normal;
-}
-
 a {
   text-decoration: underline;
   color: var(--green);
@@ -158,15 +132,29 @@ a:active {
   text-decoration: underline dashed;
 }
 
+i,
+em {
+  color: var(--lightBlue);
+  font-style: normal;
+}
+
+b,
+strong {
+  color: var(--blue);
+  font-weight: normal;
+}
+
+strong em,
+em strong,
+b i,
+i b {
+  color: var(--orange);
+}
+
 #content-wrapper.page-index > picture {
   display: block;
   position: relative;
   margin: 0 0 1.25rem 0;
-}
-
-#content-wrapper.page-index > picture,
-#content-wrapper.page-index > picture > .image-placeholder,
-#content-wrapper.page-index > picture > img {
   max-width: 400px;
 }
 
