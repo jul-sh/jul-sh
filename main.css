@@ -149,49 +149,13 @@ i b {
 }
 
 a {
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  text-decoration: none;
+  text-decoration: underline;
   color: var(--green);
-  background-image: linear-gradient(
-    to right,
-    var(--translucentGreen),
-    var(--translucentGreen)
-  );
-  background-repeat: no-repeat;
-  background-size: 100% 0.1em;
-  background-position: 0 100%;
-  transition-duration: 300ms;
-  transition-property: background-size, box-shadow;
-  box-shadow: 0 0 var(--translucentGreen);
 }
 
 a:hover,
-a:active,
-a:focus {
-  background-size: 100% 0.15em;
-  box-shadow: 0 0.1em var(--translucentGreen);
-}
-
-strong a,
-b a {
-  background-image: linear-gradient(
-    to right,
-    var(--translucentLightBlue),
-    var(--translucentLightBlue)
-  );
-  background-repeat: no-repeat;
-  background-size: 100% 0.1em;
-  background-position: 0 100%;
-  transition-duration: 300ms;
-  transition-property: background-size, box-shadow;
-  box-shadow: 0 0 var(--translucentLightBlue);
-}
-
-strong a:hover,
-b a:hover {
-  background-size: 100% 0.15em;
-  box-shadow: 0 0.1em var(--translucentLightBlue);
+a:active {
+  text-decoration: underline dashed;
 }
 
 #content-wrapper.page-index > picture {
