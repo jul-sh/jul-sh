@@ -129,7 +129,7 @@ a {
 
 a:hover,
 a:active {
-  text-decoration: underline dashed;
+  text-shadow: 0 0 7px var(--green);
 }
 
 i,
