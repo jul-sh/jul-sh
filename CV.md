@@ -47,5 +47,5 @@ Isomorphic React, GraphQL, & Node.js powering the webapp of a challenger bank wi
 
 ## Personal Projects
 
-- [agnostic-axe](https://github.com/juliettepretot/agnostic-axe): Developer tool that reports accessibility issues to the browser console. (Now maintained by [Deque Systems](https://en.wikipedia.org/wiki/Deque_Systems))
-- [co-commit](https://github.com/juliettepretot/npx-co-commit): A Node.js tool to co-author commits on GitHub when pair programming. Featured on the front page of [Product Hunt](https://www.producthunt.com/posts/co-commit).
+- [agnostic-axe](https://github.com/jul-sh/agnostic-axe): Developer tool that reports accessibility issues to the browser console. (Now maintained by [Deque Systems](https://en.wikipedia.org/wiki/Deque_Systems))
+- [co-commit](https://github.com/jul-sh/npx-co-commit): A Node.js tool to co-author commits on GitHub when pair programming. Featured on the front page of [Product Hunt](https://www.producthunt.com/posts/co-commit).
