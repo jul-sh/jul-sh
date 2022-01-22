@@ -34,28 +34,29 @@ await copyDir("./static", `${BUILD_DIR}/static`);
 
 const css = await Deno.readTextFile("./main.css");
 
-const LocalMarkdownFiles = new Set<string>();
-for await (const { isFile, name } of Deno.readDir("./")) {
-  if (isFile && name.endsWith(".md")) {
-    LocalMarkdownFiles.add(name);
+const MarkdownPaths = new Set<string>();
+for await (const { isFile, name: path } of Deno.readDir("./")) {
+  if (isFile && path.endsWith(".md")) {
+    MarkdownPaths.add(path);
   }
 }
 
 class JuliettesMarkdownRenderer extends Renderer implements Renderer {
   static markdownPathToHtmlName(path: string): string {
-    const extensionLessPath = path.substr(0, path.length - 3)
+    const name = path.substr(0, path.length - 3)
       .toLocaleLowerCase();
-    return extensionLessPath === "readme" ? "index" : extensionLessPath;
+    return name === "readme" ? "index" : name;
   }
+  // rewrite links to the local .md files to the generated .html files
   link(
     ...[href, ...rest]: Parameters<Renderer["link"]>
   ): ReturnType<Renderer["link"]> {
     const normalizedPath = normalize(href);
-    if (LocalMarkdownFiles.has(normalizedPath)) {
-      const htmlHref = `${
+    if (MarkdownPaths.has(normalizedPath)) {
+      const generatedHtmlFileHref = `${
         JuliettesMarkdownRenderer.markdownPathToHtmlName(normalizedPath)
       }.html`;
-      return super.link(htmlHref, ...rest);
+      return super.link(generatedHtmlFileHref, ...rest);
     } else {
       return super.link(href, ...rest);
     }
@@ -63,12 +64,12 @@ class JuliettesMarkdownRenderer extends Renderer implements Renderer {
 }
 Marked.setOptions({ renderer: new JuliettesMarkdownRenderer() });
 
-for (const markdownFilePath of LocalMarkdownFiles.values()) {
-  const markdown = await Deno.readTextFile(markdownFilePath);
-  const htmlSegment = Marked.parse(markdown)
+for (const markdownPath of MarkdownPaths.values()) {
+  const markdown = await Deno.readTextFile(markdownPath);
+  const htmlFragment = Marked.parse(markdown)
     .content;
   const htmlName = JuliettesMarkdownRenderer.markdownPathToHtmlName(
-    markdownFilePath,
+    markdownPath,
   );
 
   await Deno.writeTextFile(
@@ -96,8 +97,8 @@ for (const markdownFilePath of LocalMarkdownFiles.values()) {
           <source type="image/jpeg" srcset="./static/me-4by5.jpg">
           <img src="./static/me-4by5.jpg" alt="Juliette in front of the Golden Gate bridge" width="100%"></img>
         </picture>
-        <main>${htmlSegment}</main>`
-        : htmlSegment
+        <main>${htmlFragment}</main>`
+        : htmlFragment
     }</div>
     </body>
   </html>`,
