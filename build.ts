@@ -89,15 +89,14 @@ function markdownPathToHtmlName(path: string): string {
   return extensionLessPath === "readme" ? "index" : extensionLessPath;
 }
 
-class JuliettesMarkdownRenderer extends Renderer {
-  link(href: string, title: string, text: string): string {
-    const isMarkdownPath = /^[\w./]+\.md$/.test(href);
-    const destination = isMarkdownPath
-      ? `${markdownPathToHtmlName(href)}.html`
-      : href;
-    return `<a href="${destination}" ${
-      title ? `title=${title}` : ""
-    }>${text}</a>`;
+class JuliettesMarkdownRenderer extends Renderer implements Renderer {
+  link(...[href, ...rest]: Parameters<Renderer["link"]>): ReturnType<Renderer["link"]> {
+    if (/^[\w./]+\.md$/.test(href)) {
+      const htmlHref = `${markdownPathToHtmlName(href)}.html`;
+      return super.link(htmlHref, ...rest)
+    } else {
+      return super.link(href,  ...rest)
+    }
   }
 }
 
