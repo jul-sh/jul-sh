@@ -23,8 +23,6 @@ for await (const entry of walk("./static", { includeDirs: false })) {
   );
 }
 
-const css = await Deno.readTextFile("./main.css");
-
 const MarkdownPaths = new Set<string>();
 for await (const { isFile, name: path } of Deno.readDir("./")) {
   if (isFile && path.endsWith(".md")) {
@@ -74,7 +72,7 @@ for (const markdownPath of MarkdownPaths.values()) {
       htmlName === "index" ? "" : `${htmlName} — `
     }Juliette Pretot</title>
       <meta name="description" content="Engineer at Google" />
-      <style>${css}</style>
+      <link rel="stylesheet" href="./static/main.css">
       <link rel="apple-touch-icon" sizes="180x180" href="./static/apple-touch-icon.png" />
       <link rel="icon" type="image/png" sizes="32x32" href="./static/favicon-32x32.png" />
       <meta name="theme-color" content="#101723" />
