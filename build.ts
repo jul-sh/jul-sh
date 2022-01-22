@@ -6,31 +6,22 @@ Run via `deno run --allow-read="./" --allow-write="./build" build.ts`.
 
 import { Marked, Renderer } from "https://deno.land/x/markdown@v2.0.0/mod.ts";
 import { normalize } from "https://deno.land/std@0.122.0/path/mod.ts";
-import { emptyDir } from "https://deno.land/std@0.122.0/fs/mod.ts";
-
-// Recursively copies a directory. Should be replaced with `fs.copy` from the
-// deno std library once that is stable.
-async function copyDir(source: string, destination: string) {
-  for await (const dirEntry of Deno.readDir(source)) {
-    if (dirEntry.isDirectory) {
-      Deno.mkdir(`${destination}/${dirEntry.name}`);
-      await copyDir(
-        `${source}/${dirEntry.name}`,
-        `${destination}/${dirEntry.name}`,
-      );
-    } else {
-      await Deno.copyFile(
-        `${source}/${dirEntry.name}`,
-        `${destination}/${dirEntry.name}`,
-      );
-    }
-  }
-}
+import {
+  emptyDir,
+  ensureFile,
+  walk,
+} from "https://deno.land/std@0.122.0/fs/mod.ts";
 
 const BUILD_DIR = "./build";
 await emptyDir(BUILD_DIR);
-await Deno.mkdir(`${BUILD_DIR}/static`);
-await copyDir("./static", `${BUILD_DIR}/static`);
+for await (const entry of walk("./static", { includeDirs: false })) {
+  const target = `${BUILD_DIR}/${entry.path}`;
+  await ensureFile(target);
+  await Deno.copyFile(
+    entry.path,
+    target,
+  );
+}
 
 const css = await Deno.readTextFile("./main.css");
 
