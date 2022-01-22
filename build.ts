@@ -5,18 +5,14 @@ Run via `deno run --allow-read="./" --allow-write="./build" build.ts`.
 */
 
 import { Marked, Renderer } from "https://deno.land/x/markdown@v2.0.0/mod.ts";
-import { normalize } from "https://deno.land/std@0.122.0/path/mod.ts";
-import {
-  emptyDir,
-  ensureFile,
-  walk,
-} from "https://deno.land/std@0.122.0/fs/mod.ts";
+import * as path from "https://deno.land/std@0.122.0/path/mod.ts";
+import * as fs from "https://deno.land/std@0.122.0/fs/mod.ts";
 
 const BUILD_DIR = "./build";
-await emptyDir(BUILD_DIR);
-for await (const entry of walk("./static", { includeDirs: false })) {
+await fs.emptyDir(BUILD_DIR);
+for await (const entry of fs.walk("./static", { includeDirs: false })) {
   const target = `${BUILD_DIR}/${entry.path}`;
-  await ensureFile(target);
+  await fs.ensureFile(target);
   await Deno.copyFile(
     entry.path,
     target,
@@ -40,7 +36,7 @@ class JuliettesMarkdownRenderer extends Renderer implements Renderer {
   link(
     ...[href, ...rest]: Parameters<Renderer["link"]>
   ): ReturnType<Renderer["link"]> {
-    const normalizedPath = normalize(href);
+    const normalizedPath = path.normalize(href);
     if (MarkdownPaths.has(normalizedPath)) {
       const generatedHtmlFileHref = `${
         JuliettesMarkdownRenderer.markdownPathToHtmlName(normalizedPath)
