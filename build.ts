@@ -6,10 +6,7 @@ Run via `deno run --allow-read="./" --allow-write="./build" build.ts`.
 
 import { Marked, Renderer } from "https://deno.land/x/markdown@v2.0.0/mod.ts";
 import { normalize } from "https://deno.land/std@0.122.0/path/mod.ts";
-
-/*
-Deno Helper Functions
-*/
+import { emptyDir } from "https://deno.land/std@0.122.0/fs/mod.ts";
 
 // Recursively copies a directory. Should be replaced with `fs.copy` from the
 // deno std library once that is stable.
@@ -29,26 +26,6 @@ async function copyDir(source: string, destination: string) {
     }
   }
 }
-
-// Creates an empty directory, replacing any existing ones. Should be replaced
-// with `fs.emptyDir` from the deno std library once that is stable.
-async function emptyDir(path: string) {
-  try {
-    await Deno.remove(path, { recursive: true });
-  } catch (error) {
-    if (error instanceof Deno.errors.NotFound) {
-      // nothing to remove
-    } else {
-      throw error;
-    }
-  }
-
-  await Deno.mkdir(path);
-}
-
-/*
-Main Script
-*/
 
 function createHTMLPage(
   htmlName: string,
