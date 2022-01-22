@@ -27,19 +27,16 @@ for await (const { isFile, name: path } of Deno.readDir("./")) {
 }
 
 class MarkdownRenderer extends Renderer {
-  static toFileName(markdownPath: string): string {
-    const name = markdownPath.slice(0, -3).toLocaleLowerCase();
-    // readme.md should become index.html
-    return name === "readme" ? "index" : name;
+  static htmlPath(markdownPath: string): string {
+    const path = markdownPath.toLocaleLowerCase().slice(0, -2) + "html";
+    return path === "readme.html" ? "index.html" : path;
   }
-  // rewrite links to local .md files to the generated .html files
   link(
     ...[href, ...rest]: Parameters<Renderer["link"]>
   ): ReturnType<Renderer["link"]> {
     const normalizedPath = path.normalize(href);
     if (MarkdownPaths.has(normalizedPath)) {
-      const newHref = `${MarkdownRenderer.toFileName(normalizedPath)}.html`;
-      return super.link(newHref, ...rest);
+      return super.link(MarkdownRenderer.htmlPath(normalizedPath), ...rest);
     } else {
       return super.link(href, ...rest);
     }
@@ -50,17 +47,17 @@ Marked.setOptions({ renderer: new MarkdownRenderer() });
 for (const markdownPath of MarkdownPaths.values()) {
   const markdown = await Deno.readTextFile(markdownPath);
   const htmlFragment = Marked.parse(markdown).content;
-  const htmlName = MarkdownRenderer.toFileName(markdownPath);
+  const path = MarkdownRenderer.htmlPath(markdownPath);
 
   await Deno.writeTextFile(
-    `${BUILD_DIR}/${htmlName}.html`,
+    `${BUILD_DIR}/${path}`,
     `<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
       <title>${
-      htmlName === "index" ? "" : `${htmlName} — `
+      path === "index.html" ? "" : `${path.slice(0, -5)} — `
     }Juliette Pretot</title>
       <meta name="description" content="Engineer at Google" />
       <link rel="stylesheet" href="./static/main.css">
@@ -69,16 +66,16 @@ for (const markdownPath of MarkdownPaths.values()) {
       <meta name="theme-color" content="#101723" />
     </head>
     <body>
-      <div id="content-wrapper" class="page-${htmlName}">${
-      htmlName === "index"
-        ? `<picture>
-          <div class="image-placeholder"></div>
-          <source type="image/webp" srcset="./static/me-4by5.webp">
-          <source type="image/jpeg" srcset="./static/me-4by5.jpg">
-          <img src="./static/me-4by5.jpg" alt="Juliette in front of the Golden Gate bridge" width="100%"></img>
-        </picture>
-        <main>${htmlFragment}</main>`
-        : htmlFragment
+    ${
+      path === "index.html"
+        ? `<div id="content-wrapper" class="page-index"><picture>
+        <div class="image-placeholder"></div>
+        <source type="image/webp" srcset="./static/me-4by5.webp">
+        <source type="image/jpeg" srcset="./static/me-4by5.jpg">
+        <img src="./static/me-4by5.jpg" alt="Juliette in front of the Golden Gate bridge" width="100%"></img>
+      </picture>
+      <main>${htmlFragment}</main></div>`
+        : `<div id="content-wrapper">${htmlFragment}</div>`
     }</div>
     </body>
   </html>`,
