@@ -5,6 +5,7 @@ Run via `deno run --allow-read="./" --allow-write="./build" build.ts`.
 */
 
 import { Marked, Renderer } from "https://deno.land/x/markdown@v2.0.0/mod.ts";
+import { normalize } from "https://deno.land/std@0.122.0/path/mod.ts";
 
 /*
 Deno Helper Functions
@@ -89,32 +90,40 @@ function markdownPathToHtmlName(path: string): string {
   return extensionLessPath === "readme" ? "index" : extensionLessPath;
 }
 
-class JuliettesMarkdownRenderer extends Renderer implements Renderer {
-  link(...[href, ...rest]: Parameters<Renderer["link"]>): ReturnType<Renderer["link"]> {
-    if (/^[\w./]+\.md$/.test(href)) {
-      const htmlHref = `${markdownPathToHtmlName(href)}.html`;
-      return super.link(htmlHref, ...rest)
-    } else {
-      return super.link(href,  ...rest)
-    }
-  }
-}
-
 const BUILD_DIR = "./build";
 const CSS = await Deno.readTextFile("./main.css");
 
-Marked.setOptions({ renderer: new JuliettesMarkdownRenderer() });
 await emptyDir(BUILD_DIR);
 await Deno.mkdir(`${BUILD_DIR}/static`);
 await copyDir("./static", `${BUILD_DIR}/static`);
 
-for await (const { isFile, name: path } of Deno.readDir("./")) {
-  const isMarkdownFile = isFile && path.endsWith(".md");
-  if (!isMarkdownFile) continue;
-  const markdown = await Deno.readTextFile(path);
+const LocalMarkdownFiles = new Set<string>();
+for await (const { isFile, name } of Deno.readDir("./")) {
+  if (isFile && name.endsWith(".md")) {
+    LocalMarkdownFiles.add(name);
+  }
+}
+
+class JuliettesMarkdownRenderer extends Renderer implements Renderer {
+  link(
+    ...[href, ...rest]: Parameters<Renderer["link"]>
+  ): ReturnType<Renderer["link"]> {
+    const normalizedPath = normalize(href);
+    if (LocalMarkdownFiles.has(normalizedPath)) {
+      const htmlHref = `${markdownPathToHtmlName(normalizedPath)}.html`;
+      return super.link(htmlHref, ...rest);
+    } else {
+      return super.link(href, ...rest);
+    }
+  }
+}
+Marked.setOptions({ renderer: new JuliettesMarkdownRenderer() });
+
+for (const markdownFilePath of LocalMarkdownFiles.values()) {
+  const markdown = await Deno.readTextFile(markdownFilePath);
   const htmlSegment = Marked.parse(markdown)
     .content;
-  const htmlName = markdownPathToHtmlName(path);
+  const htmlName = markdownPathToHtmlName(markdownFilePath);
   const htmlPage = createHTMLPage(htmlName, htmlSegment, CSS);
   await Deno.writeTextFile(
     `${BUILD_DIR}/${htmlName}.html`,
