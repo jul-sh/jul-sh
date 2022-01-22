@@ -26,36 +26,31 @@ for await (const { isFile, name: path } of Deno.readDir("./")) {
   }
 }
 
-class JuliettesMarkdownRenderer extends Renderer implements Renderer {
-  static markdownPathToHtmlName(path: string): string {
-    const name = path.substr(0, path.length - 3)
-      .toLocaleLowerCase();
+class MarkdownRenderer extends Renderer {
+  static toFileName(markdownPath: string): string {
+    const name = markdownPath.slice(0, -3).toLocaleLowerCase();
+    // readme.md should become index.html
     return name === "readme" ? "index" : name;
   }
-  // rewrite links to the local .md files to the generated .html files
+  // rewrite links to local .md files to the generated .html files
   link(
     ...[href, ...rest]: Parameters<Renderer["link"]>
   ): ReturnType<Renderer["link"]> {
     const normalizedPath = path.normalize(href);
     if (MarkdownPaths.has(normalizedPath)) {
-      const generatedHtmlFileHref = `${
-        JuliettesMarkdownRenderer.markdownPathToHtmlName(normalizedPath)
-      }.html`;
-      return super.link(generatedHtmlFileHref, ...rest);
+      const newHref = `${MarkdownRenderer.toFileName(normalizedPath)}.html`;
+      return super.link(newHref, ...rest);
     } else {
       return super.link(href, ...rest);
     }
   }
 }
-Marked.setOptions({ renderer: new JuliettesMarkdownRenderer() });
+Marked.setOptions({ renderer: new MarkdownRenderer() });
 
 for (const markdownPath of MarkdownPaths.values()) {
   const markdown = await Deno.readTextFile(markdownPath);
-  const htmlFragment = Marked.parse(markdown)
-    .content;
-  const htmlName = JuliettesMarkdownRenderer.markdownPathToHtmlName(
-    markdownPath,
-  );
+  const htmlFragment = Marked.parse(markdown).content;
+  const htmlName = MarkdownRenderer.toFileName(markdownPath);
 
   await Deno.writeTextFile(
     `${BUILD_DIR}/${htmlName}.html`,
