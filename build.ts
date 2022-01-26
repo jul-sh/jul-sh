@@ -1,63 +1,67 @@
-/*
-A simple deno script that collects the markdown files in the root directory and
-generates static HTML pages off them. For more about deno see https://deno.land.
-Run via `deno run --allow-read="./" --allow-write="./build" build.ts`.
-*/
+// Generates static HTML pages off the markdown files in the repo. Rewrites
+// links between them as links between the generated HTML pages.
+// Run via `deno run --allow-read="./" --allow-write="./build" build.ts`.
 
-import { Marked, Renderer } from "https://deno.land/x/markdown@v2.0.0/mod.ts";
+import * as markdown from "https://deno.land/x/markdown@v2.0.0/mod.ts";
 import * as path from "https://deno.land/std@0.122.0/path/mod.ts";
 import * as fs from "https://deno.land/std@0.122.0/fs/mod.ts";
 
 const BUILD_DIR = "./build";
 await fs.emptyDir(BUILD_DIR);
 for await (const entry of fs.walk("./static", { includeDirs: false })) {
-  const target = `${BUILD_DIR}/${entry.path}`;
+  const target = path.join(BUILD_DIR, entry.path);
   await fs.ensureFile(target);
-  await Deno.copyFile(
-    entry.path,
-    target,
-  );
+  await Deno.copyFile(entry.path, target);
 }
 
 const MarkdownPaths = new Set<string>();
-for await (const { isFile, name: path } of Deno.readDir("./")) {
-  if (isFile && path.endsWith(".md")) {
-    MarkdownPaths.add(path);
-  }
+for await (
+  const entry of fs.walk("./", {
+    includeDirs: false,
+    exts: ["md"],
+    skip: [new RegExp("static")],
+  })
+) {
+  MarkdownPaths.add(entry.path);
 }
 
-class MarkdownRenderer extends Renderer {
+class MarkdownRenderer extends markdown.Renderer {
   static htmlPath(markdownPath: string): string {
     const path = markdownPath.toLocaleLowerCase().slice(0, -2) + "html";
     return path === "readme.html" ? "index.html" : path;
   }
+  #dir: string;
+  constructor(dir: string) {
+    super();
+    this.#dir = dir;
+  }
   link(
-    ...[href, ...rest]: Parameters<Renderer["link"]>
-  ): ReturnType<Renderer["link"]> {
-    const normalizedPath = path.normalize(href);
-    if (MarkdownPaths.has(normalizedPath)) {
-      return super.link(MarkdownRenderer.htmlPath(normalizedPath), ...rest);
-    } else {
-      return super.link(href, ...rest);
-    }
+    ...[href, ...rest]: Parameters<markdown.Renderer["link"]>
+  ): ReturnType<markdown.Renderer["link"]> {
+    if (MarkdownPaths.has(path.join(this.#dir, href))) {
+      return super.link(MarkdownRenderer.htmlPath(href), ...rest);
+    } else return super.link(href, ...rest);
   }
 }
-Marked.setOptions({ renderer: new MarkdownRenderer() });
 
 for (const markdownPath of MarkdownPaths.values()) {
-  const markdown = await Deno.readTextFile(markdownPath);
-  const htmlFragment = Marked.parse(markdown).content;
-  const path = MarkdownRenderer.htmlPath(markdownPath);
+  const htmlFragment =
+    markdown.Marked.parse(await Deno.readTextFile(markdownPath), {
+      ...new markdown.MarkedOptions(),
+      renderer: new MarkdownRenderer(path.dirname(markdownPath)),
+    }).content;
+  const htmlPath = MarkdownRenderer.htmlPath(markdownPath);
 
+  await fs.ensureFile(path.join(BUILD_DIR, htmlPath));
   await Deno.writeTextFile(
-    `${BUILD_DIR}/${path}`,
+    path.join(BUILD_DIR, htmlPath),
     `<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
       <title>${
-      path === "index.html" ? "" : `${path.slice(0, -5)} — `
+      htmlPath === "index.html" ? "" : `${htmlPath.slice(0, -5)} — `
     }Juliette Pretot</title>
       <meta name="description" content="Engineer at Google" />
       <link rel="stylesheet" href="./static/main.css">
@@ -67,7 +71,7 @@ for (const markdownPath of MarkdownPaths.values()) {
     </head>
     <body>
     ${
-      path === "index.html"
+      htmlPath === "index.html"
         ? `<div id="content-wrapper" class="page-index"><picture>
         <div class="image-placeholder"></div>
         <source type="image/webp" srcset="./static/me-4by5.webp">
@@ -79,6 +83,5 @@ for (const markdownPath of MarkdownPaths.values()) {
     }</div>
     </body>
   </html>`,
-    { create: true },
   );
 }
