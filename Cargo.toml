@@ -1,0 +1,13 @@
+[package]
+name = "rusty-about-me"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name="about-me"
+path = "generate-website.rs"
+
+[dependencies]
+pulldown-cmark = "*"
+walkdir = "*"
+relative-path = "*"
