@@ -159,7 +159,9 @@ i b {
 }
 
 /* The width and padding value correspond to creating a 4/5 aspect ratio */
-#content-wrapper.page-index > picture > .image-placeholder {
+#content-wrapper.page-index > picture > img::after {
+  display: block;
+  content: '';
   width: 100%;
   padding-bottom: 125%;
   background-position: center;
@@ -168,9 +170,6 @@ i b {
 }
 
 #content-wrapper.page-index > picture > img {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
 }
 

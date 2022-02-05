@@ -73,14 +73,13 @@ for (const markdownPath of MarkdownPaths.values()) {
     ${
       htmlPath === "index.html"
         ? `<div id="content-wrapper" class="page-index"><picture>
-        <div class="image-placeholder"></div>
         <source type="image/webp" srcset="./static/me-4by5.webp">
         <source type="image/jpeg" srcset="./static/me-4by5.jpg">
-        <img src="./static/me-4by5.jpg" alt="Juliette in front of the Golden Gate bridge" width="100%"></img>
+        <img src="./static/me-4by5.jpg" alt="Juliette in front of the Golden Gate bridge"/>
       </picture>
       <main>${htmlFragment}</main></div>`
         : `<div id="content-wrapper">${htmlFragment}</div>`
-    }</div>
+    }
     </body>
   </html>`,
   );
