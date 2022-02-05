@@ -5,7 +5,7 @@ use walkdir;
 
 static OUTPUT_DIR: &str = "./build";
 
-fn main() -> std::io::Result<()> {
+fn main() {
     fs::remove_dir_all(OUTPUT_DIR).expect("failed to clear output dir");
     fs::create_dir(OUTPUT_DIR).expect("failed to create output dir");
 
@@ -80,11 +80,19 @@ fn main() -> std::io::Result<()> {
         )
         .expect("Failed to write html");
     }
-
-    Ok(())
 }
 
 fn copy_recursively(src: std::path::PathBuf, dst: std::path::PathBuf) -> std::io::Result<()> {
+    for entry in walkdir::WalkDir::new(src) {
+        let path = entry?.into_path();
+        if path.is_file() {
+            let target = dst.join(&path);
+            if let Some(parent) = target.parent() {
+                fs::create_dir_all(parent)?;
+            }
+            fs::copy(&path, target)?;
+        }
+    }
     Ok(())
 }
 
