@@ -51,12 +51,6 @@ fn main() {
         });
 
         let html_path = make_html_path(md_path.clone());
-        let html = html(&html_path, {
-            let mut html_buf = String::new();
-            html::push_html(&mut html_buf, parsed);
-            html_buf
-        });
-
         fs::write(
             {
                 let target = html_path.to_path(OUTPUT_DIR);
@@ -65,7 +59,11 @@ fn main() {
                 };
                 target
             },
-            html,
+            html_page(&html_path, {
+                let mut html_buf = String::new();
+                html::push_html(&mut html_buf, parsed);
+                html_buf
+            }),
         )
         .expect("Failed to write html");
     }
@@ -93,7 +91,7 @@ fn make_html_path(mut md_path: RelativePathBuf) -> RelativePathBuf {
     md_path
 }
 
-fn html(html_path: &RelativePathBuf, html_fragment: String) -> String {
+fn html_page(html_path: &RelativePathBuf, html_fragment: String) -> String {
     let file_name = html_path.file_stem().expect("md file_name");
     let title = if file_name == "index" {
         "Juliette Pretot".to_string()
