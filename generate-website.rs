@@ -8,7 +8,7 @@ use walkdir::WalkDir;
 static OUTPUT_DIR: &str = "./build";
 
 fn main() {
-    fs::remove_dir_all(OUTPUT_DIR).expect("failed to clear output dir");
+    let _ = fs::remove_dir_all(OUTPUT_DIR);
     fs::create_dir(OUTPUT_DIR).expect("failed to create output dir");
 
     copy_recursively(PathBuf::from("./static"), PathBuf::from(OUTPUT_DIR))
