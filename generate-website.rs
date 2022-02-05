@@ -1,7 +1,9 @@
-use pulldown_cmark;
+use pulldown_cmark::{html, Event, Parser, Tag};
 use relative_path::RelativePathBuf;
+use std::collections::HashSet;
 use std::fs;
-use walkdir;
+use std::path::PathBuf;
+use walkdir::WalkDir;
 
 static OUTPUT_DIR: &str = "./build";
 
@@ -9,38 +11,29 @@ fn main() {
     fs::remove_dir_all(OUTPUT_DIR).expect("failed to clear output dir");
     fs::create_dir(OUTPUT_DIR).expect("failed to create output dir");
 
-    copy_recursively(
-        std::path::PathBuf::from("./static"),
-        std::path::PathBuf::from(OUTPUT_DIR),
-    )
-    .expect("failed to copy static assets");
+    copy_recursively(PathBuf::from("./static"), PathBuf::from(OUTPUT_DIR))
+        .expect("failed to copy static assets");
 
-    let md_paths = std::collections::HashSet::<_>::from_iter(
-        walkdir::WalkDir::new("./").into_iter().filter_map(|e| {
-            let path = RelativePathBuf::from_path(
-                &e.expect("failed to turn md walker entry into path")
-                    .into_path(),
-            )
-            .expect("failed to create relative markdown path");
-            if !path.starts_with("./target")
-                && !path.starts_with("./.git")
-                && path.extension() == Some("md")
-            {
-                Some(path.normalize())
-            } else {
-                None
-            }
-        }),
-    );
+    let md_paths = HashSet::<_>::from_iter(WalkDir::new("./").into_iter().filter_map(|e| {
+        let path = RelativePathBuf::from_path(
+            &e.expect("failed to turn md walker entry into path")
+                .into_path(),
+        )
+        .expect("failed to create relative markdown path");
+        if !path.starts_with("./target")
+            && !path.starts_with("./.git")
+            && path.extension() == Some("md")
+        {
+            Some(path.normalize())
+        } else {
+            None
+        }
+    }));
 
     for md_path in md_paths.iter() {
         let contents = fs::read_to_string(&md_path.to_path(".")).expect("failed to read markdown");
-        let parsed = pulldown_cmark::Parser::new(&contents).map(|event| match event {
-            pulldown_cmark::Event::Start(pulldown_cmark::Tag::Link(
-                link_type,
-                mut destination,
-                title,
-            )) => {
+        let parsed = Parser::new(&contents).map(|event| match event {
+            Event::Start(Tag::Link(link_type, mut destination, title)) => {
                 if destination.ends_with(".md") {
                     let destination_path = RelativePathBuf::from(destination.to_string());
                     if md_paths.contains(
@@ -52,11 +45,7 @@ fn main() {
                         destination = make_html_path(destination_path).as_str().to_string().into()
                     }
                 }
-                pulldown_cmark::Event::Start(pulldown_cmark::Tag::Link(
-                    link_type,
-                    destination,
-                    title,
-                ))
+                Event::Start(Tag::Link(link_type, destination, title))
             }
             _ => event,
         });
@@ -64,7 +53,7 @@ fn main() {
         let html_path = make_html_path(md_path.clone());
         let html = html(&html_path, {
             let mut html_buf = String::new();
-            pulldown_cmark::html::push_html(&mut html_buf, parsed);
+            html::push_html(&mut html_buf, parsed);
             html_buf
         });
 
@@ -82,8 +71,8 @@ fn main() {
     }
 }
 
-fn copy_recursively(src: std::path::PathBuf, dst: std::path::PathBuf) -> std::io::Result<()> {
-    for entry in walkdir::WalkDir::new(src) {
+fn copy_recursively(src: PathBuf, dst: PathBuf) -> std::io::Result<()> {
+    for entry in WalkDir::new(src) {
         let path = entry?.into_path();
         if path.is_file() {
             let target = dst.join(&path);
