@@ -1,97 +1,103 @@
 use pulldown_cmark;
-use relative_path::{RelativePath, RelativePathBuf};
+use relative_path::RelativePathBuf;
 use std::fs;
 use walkdir;
 
 static OUTPUT_DIR: &str = "./build";
 
-fn make_html_path(mut markdown_path: RelativePathBuf) -> RelativePathBuf {
-    if markdown_path.file_name().unwrap().to_lowercase() == "readme.md" {
-        markdown_path.set_file_name("index");
-    }
-    markdown_path.set_extension("html");
-    markdown_path
-}
-
 fn main() -> std::io::Result<()> {
-    let _ = fs::remove_dir_all(OUTPUT_DIR);
-    fs::create_dir(OUTPUT_DIR)?;
+    fs::remove_dir_all(OUTPUT_DIR).expect("failed to clear output dir");
+    fs::create_dir(OUTPUT_DIR).expect("failed to create output dir");
 
-    for entry in walkdir::WalkDir::new("./static") {
-        let path = entry?.into_path();
-        if path.is_file() {
-            let target = std::path::Path::new(OUTPUT_DIR).join(&path);
-            if target.parent().is_some() {
-                fs::create_dir_all(target.parent().unwrap()).unwrap();
+    copy_recursively(
+        std::path::PathBuf::from("./static"),
+        std::path::PathBuf::from(OUTPUT_DIR),
+    )
+    .expect("failed to copy static assets");
+
+    let md_paths = std::collections::HashSet::<_>::from_iter(
+        walkdir::WalkDir::new("./").into_iter().filter_map(|e| {
+            let path = RelativePathBuf::from_path(
+                &e.expect("failed to turn md walker entry into path")
+                    .into_path(),
+            )
+            .expect("failed to create relative markdown path");
+            if !path.starts_with("./target")
+                && !path.starts_with("./.git")
+                && path.extension() == Some("md")
+            {
+                Some(path.normalize())
+            } else {
+                None
             }
-            fs::copy(&path, target)?;
-        }
-    }
+        }),
+    );
 
-    let walker = walkdir::WalkDir::new("./").into_iter();
-    let set = std::collections::HashSet::<_>::from_iter(walker.filter_map(|e| {
-        let p = &e.ok()?.into_path();
-        let path = RelativePathBuf::from_path(p).ok()?;
-        if !path.starts_with("./target") && !path.starts_with("./.git") && path.extension()? == "md"
-        {
-            Some(path.normalize())
-        } else {
-            None
-        }
-    }));
-
-    for markdown_path in set.iter() {
-        let contents = fs::read_to_string(&markdown_path.to_path("."))?;
-        let events = pulldown_cmark::Parser::new_ext(&contents, pulldown_cmark::Options::empty())
-            .map(|event| match event {
+    for md_path in md_paths.iter() {
+        let contents = fs::read_to_string(&md_path.to_path(".")).expect("failed to read markdown");
+        let parsed = pulldown_cmark::Parser::new(&contents).map(|event| match event {
+            pulldown_cmark::Event::Start(pulldown_cmark::Tag::Link(
+                link_type,
+                mut destination,
+                title,
+            )) => {
+                if destination.ends_with(".md") {
+                    let destination_path = RelativePathBuf::from(destination.to_string());
+                    if md_paths.contains(
+                        &md_path
+                            .parent()
+                            .unwrap_or(&RelativePathBuf::from("./"))
+                            .join_normalized(&destination_path),
+                    ) {
+                        destination = make_html_path(destination_path).as_str().to_string().into()
+                    }
+                }
                 pulldown_cmark::Event::Start(pulldown_cmark::Tag::Link(
                     link_type,
                     destination,
                     title,
-                )) => {
-                    let mut href = RelativePathBuf::from(destination.to_string());
-                    if href.extension().is_some() && href.extension().unwrap() == "md" {
-                        let joined = markdown_path
-                            .parent()
-                            .unwrap_or(&RelativePath::new(OUTPUT_DIR))
-                            .join_normalized(&href);
-                        if set.contains(&joined) {
-                            href = make_html_path(href);
-                        }
-                    }
+                ))
+            }
+            _ => event,
+        });
 
-                    pulldown_cmark::Event::Start(pulldown_cmark::Tag::Link(
-                        link_type,
-                        href.as_str().to_string().into(),
-                        title,
-                    ))
-                }
-                _ => event,
-            })
-            .into_iter();
-
-        let html_path = make_html_path(markdown_path.clone());
-
-        let html_fragment = {
+        let html_path = make_html_path(md_path.clone());
+        let html = html(&html_path, {
             let mut html_buf = String::new();
-            pulldown_cmark::html::push_html(&mut html_buf, events);
+            pulldown_cmark::html::push_html(&mut html_buf, parsed);
             html_buf
-        };
+        });
 
-        let html = html(&html_path, html_fragment);
-
-        let target = html_path.to_path(OUTPUT_DIR);
-        if target.parent().is_some() {
-            fs::create_dir_all(target.parent().unwrap()).unwrap();
-        }
-        fs::write(target, html)?;
+        fs::write(
+            {
+                let target = html_path.to_path(OUTPUT_DIR);
+                if let Some(parent) = target.parent() {
+                    fs::create_dir_all(parent).expect("Failed to create html parent dirs");
+                };
+                target
+            },
+            html,
+        )
+        .expect("Failed to write html");
     }
 
     Ok(())
 }
 
+fn copy_recursively(src: std::path::PathBuf, dst: std::path::PathBuf) -> std::io::Result<()> {
+    Ok(())
+}
+
+fn make_html_path(mut md_path: RelativePathBuf) -> RelativePathBuf {
+    if md_path.file_name().expect("html file_name").to_lowercase() == "readme.md" {
+        md_path.set_file_name("index");
+    }
+    md_path.set_extension("html");
+    md_path
+}
+
 fn html(html_path: &RelativePathBuf, html_fragment: String) -> String {
-    let file_name = html_path.file_name().unwrap();
+    let file_name = html_path.file_name().expect("md file_name");
     let title = if file_name == "index" {
         "Juliette Pretot".to_string()
     } else {
