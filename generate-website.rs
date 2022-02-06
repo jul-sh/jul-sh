@@ -11,9 +11,19 @@ fn main() {
     let _ = fs::remove_dir_all(OUTPUT_DIR);
     fs::create_dir(OUTPUT_DIR).expect("failed to create output dir");
 
-    copy_recursively(PathBuf::from("./static"), PathBuf::from(OUTPUT_DIR))
-        .expect("failed to copy static assets");
+    // Copy static files
+    for entry in WalkDir::new("./static") {
+        let path = entry.expect("failed to get dir entry").into_path();
+        let file_type = path.metadata().expect("failed to get metadata").file_type();
+        let target = PathBuf::from(OUTPUT_DIR).join(&path);
+        if file_type.is_file() {
+            fs::copy(&path, target).expect("failed copy file");
+        } else if file_type.is_dir() {
+            fs::create_dir(target).expect("failed to copy subdir");
+        }
+    }
 
+    // Get markdown files
     let md_paths = HashSet::<_>::from_iter(WalkDir::new("./").into_iter().filter_map(|e| {
         let path = RelativePathBuf::from_path(
             &e.expect("failed to turn md walker entry into path")
@@ -30,6 +40,7 @@ fn main() {
         }
     }));
 
+    // Generate HTML files off them
     for md_path in md_paths.iter() {
         let contents = fs::read_to_string(&md_path.to_path(".")).expect("failed to read markdown");
         let parsed = Parser::new(&contents).map(|event| match event {
@@ -67,20 +78,6 @@ fn main() {
         )
         .expect("Failed to write html");
     }
-}
-
-fn copy_recursively(src: PathBuf, dst: PathBuf) -> std::io::Result<()> {
-    for entry in WalkDir::new(src) {
-        let path = entry?.into_path();
-        if path.is_file() {
-            let target = dst.join(&path);
-            if let Some(parent) = target.parent() {
-                fs::create_dir_all(parent)?;
-            }
-            fs::copy(&path, target)?;
-        }
-    }
-    Ok(())
 }
 
 fn make_html_path(mut md_path: RelativePathBuf) -> RelativePathBuf {
