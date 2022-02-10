@@ -24,21 +24,23 @@ fn main() {
     }
 
     // Get markdown files
-    let md_paths = HashSet::<_>::from_iter(WalkDir::new("./").into_iter().filter_map(|e| {
-        let path = RelativePathBuf::from_path(
-            &e.expect("failed to turn md walker entry into path")
-                .into_path(),
-        )
-        .expect("failed to create relative markdown path");
-        if !path.starts_with("./target")
-            && !path.starts_with("./.git")
-            && path.extension() == Some("md")
-        {
-            Some(path.normalize())
-        } else {
-            None
-        }
-    }));
+    let md_paths = HashSet::<_>::from_iter(
+        WalkDir::new("./")
+            .into_iter()
+            .filter_entry(|e| !e.path().starts_with("./target") && !e.path().starts_with("./.git"))
+            .filter_map(|e| {
+                let path = RelativePathBuf::from_path(
+                    &e.expect("failed to turn md walker entry into path")
+                        .into_path(),
+                )
+                .expect("failed to create relative markdown path");
+                if path.extension() == Some("md") {
+                    Some(path.normalize())
+                } else {
+                    None
+                }
+            }),
+    );
 
     // Generate HTML files off them
     for md_path in md_paths.iter() {
