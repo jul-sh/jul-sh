@@ -27,7 +27,11 @@ fn main() {
     let md_paths = HashSet::<_>::from_iter(
         WalkDir::new("./")
             .into_iter()
-            .filter_entry(|e| !e.path().starts_with("./target") && !e.path().starts_with("./.git"))
+            .filter_entry(|e| {
+                !e.path().starts_with("./static")
+                    && !e.path().starts_with("./target")
+                    && !e.path().starts_with("./.git")
+            })
             .filter_map(|e| {
                 let path = RelativePathBuf::from_path(
                     &e.expect("failed to turn md walker entry into path")
