@@ -101,19 +101,7 @@ fn html_page(html_path: &RelativePathBuf, html_fragment: String) -> String {
     } else {
         format!("{} — Juliette Pretot", file_name)
     };
-    let body = if file_name == "index" {
-        let picture = r##"<picture>
-<source type="image/webp" srcset="./static/me-4by5.webp"></source>
-<source type="image/jpeg" srcset="./static/me-4by5.jpg"></source>
-<img src="./static/me-4by5.jpg" alt="Juliette in front of the Golden Gate bridge" width="100%"/>
-</picture>"##;
-        format!(
-            r##"<div id="content-wrapper" class="page-index">{}<main>{}</main></div>"##,
-            picture, html_fragment
-        )
-    } else {
-        format!(r##"<div id="content-wrapper">{}</div>"##, html_fragment)
-    };
+    let body = format!(r##"<div id="content-wrapper">{}</div>"##, html_fragment);
     return format!(
         r##"
 <!DOCTYPE html>
