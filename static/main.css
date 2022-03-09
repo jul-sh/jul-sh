@@ -129,7 +129,7 @@ a {
 
 a:hover,
 a:active {
-  text-shadow: 0 0 7px var(--green);
+  text-shadow: 0 0 2px var(--green);
 }
 
 i,
