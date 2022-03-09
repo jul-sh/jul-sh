@@ -8,19 +8,19 @@ _Enterprising software engineer with a penchant for small solutions and complex 
 
 ### Software Engineering at Google, 2020.04 - present, London
 
-Working on a research project enabling meaningful control of data in distributed systems.
+Privacy & Security Research.
 
 ### Senior Web Engineer at N26, 2018.01 - 2020.03, Berlin & NYC
 
-Isomorphic React, GraphQL, & Node.js powering the webapp of a challenger bank with 5M users.
+Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech bank.
 
-- Led web development of key features
+- Led web development of key features across the stack
 - Reduced errors in prod by 30% via deterministic script loading
 - Sped up time-to-first-meaningful-paint by 20% via improved server-side rendering
 - Improved time-to-interactive by 1.4s with code splitting
 - Doubled font loading speed via range-splitting & preloading
 - Multiplied developer productivity by engineering key abstractions
-- Mentored junior & mid-level engineers, conducted interviews, took charge of team processes
+- Mentored junior & mid-level engineers, proactively took charge of team processes
 
 ### Lead Engineer at Language Academy, 2016.08 - 2017.12, Berlin
 
@@ -32,9 +32,8 @@ Isomorphic React, GraphQL, & Node.js powering the webapp of a challenger bank wi
 
 ### Web Developer & Design Researcher at Clue, 2015 - 2016, Berlin
 
-- Engineered in-app modals using web technologies
 - Rebuilt the self-service support website, increasing usage by 20%
-- Prototyped a chatbot in Python
+- Engineered in-app modals using web technologies, prototyped a chatbot in Python
 - Created & implemented company-wide processes for user research
 
 ## Education
