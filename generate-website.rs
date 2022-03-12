@@ -114,7 +114,7 @@ fn html_page(html_path: &RelativePathBuf, html_fragment: String) -> String {
     <link rel="stylesheet" href="./static/main.css">
     <link rel="apple-touch-icon" sizes="180x180" href="./static/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="./static/favicon-32x32.png" />
-    <meta name="theme-color" content="#101723" />
+    <meta name="theme-color" content="#11161d" />
     </head>
     <body>
     {}
