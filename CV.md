@@ -1,6 +1,6 @@
 # Juliette Pretot
 
-_Enterprising software engineer with a penchant for small solutions and complex problems. — I strive in teams with strong engineering cultures and meaningful cross-functional collaboration._
+_Enterprising software engineer with a penchant for small solutions to complex problems. — I strive in teams with strong engineering cultures and meaningful cross-functional collaboration._
 
 **[hi@juliette.sh](mailto:hi@juliette.sh)**
 
