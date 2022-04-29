@@ -5,7 +5,7 @@ edition = "2021"
 
 [[bin]]
 name="about-me"
-path = "generate-website.rs"
+path = "main.rs"
 
 [dependencies]
 pulldown-cmark = "*"
