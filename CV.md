@@ -18,28 +18,23 @@ Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech
 bank.
 
 - Led web development of key features across the stack
+- Mentored junior & mid-level engineers, proactively took charge of team
+  processes
 - Reduced errors in prod by 30% via deterministic script loading
 - Sped up time-to-first-meaningful-paint by 20% via improved server-side
   rendering
 - Improved time-to-interactive by 1.4s with code splitting
 - Doubled font loading speed via range-splitting & preloading
-- Multiplied developer productivity by engineering key abstractions
-- Mentored junior & mid-level engineers, proactively took charge of team
-  processes
 
 ### Lead Engineer at Language Academy, 2016.08 - 2017.12, Berlin
 
 - Led development of the web platform
-- Accomplished a 10% visitor-to-subscriber rate on marketing pages
 - Achieved a 63% faster time-to-interactive than competiting platforms
-- Reduced email automation costs by 82% using open source software
-- Co-founded the company, brought it to profitability
+- Accomplished a 10% visitor-to-subscriber rate on marketing pages
 
 ### Web Developer & Design Researcher at Clue, 2015 - 2016, Berlin
 
 - Rebuilt the self-service support website, increasing usage by 20%
-- Engineered in-app modals using web technologies, prototyped a chatbot in
-  Python
 - Created & implemented company-wide processes for user research
 
 ## Education
