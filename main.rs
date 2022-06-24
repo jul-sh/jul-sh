@@ -24,13 +24,14 @@ fn main() {
     }
 
     // Get markdown files
-    let md_paths = HashSet::<_>::from_iter(
+    let md_paths = HashSet::<RelativePathBuf>::from_iter(
         WalkDir::new("./")
             .into_iter()
             .filter_entry(|e| {
                 !e.path().starts_with("./static")
                     && !e.path().starts_with("./target")
                     && !e.path().starts_with("./.git")
+                    && !e.path().starts_with(OUTPUT_DIR)
             })
             .filter_map(|e| {
                 let path = RelativePathBuf::from_path(
