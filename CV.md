@@ -12,7 +12,7 @@ cross-functional collaboration._
 
 Privacy & Security Research.
 
-### Senior Web Engineer at N26, 2018.01 - 2020.03, Berlin & NYC
+### Web Engineer at N26, 2018.01 - 2020.03, Berlin & NYC
 
 Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech
 bank.
@@ -49,7 +49,7 @@ bank.
 
 - [agnostic-axe](https://github.com/dequelabs/agnostic-axe): Developer tool that
   reports accessibility issues to the browser console. (Now maintained by
-  [Deque Systems](https://en.wikipedia.org/wiki/Deque_Systems))
-- [co-commit](https://github.com/jul-sh/npx-co-commit): A Node.js tool to
+  [Deque Systems](https://en.wikipedia.org/wiki/Deque_Systems)).
+- [co-commit](https://github.com/jul-sh/npx-co-commit): Friendly CLI to quickly
   co-author commits on GitHub when pair programming. Featured on the front page
   of [Product Hunt](https://www.producthunt.com/posts/co-commit).
