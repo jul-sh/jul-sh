@@ -10,7 +10,8 @@ cross-functional collaboration._
 
 ### Software Engineering at Google, 2020.04 - present, London
 
-Privacy & Security Research.
+Privacy & Security Research. Building infrastructure for privacy-preserving
+services in Rust.
 
 ### Web Engineer at N26, 2018.01 - 2020.03, Berlin & NYC
 
