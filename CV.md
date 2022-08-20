@@ -1,8 +1,8 @@
 # Juliette Pretot
 
-_Enterprising software engineer with a penchant for pragmatic solutions to complex
-problems. — I strive in teams with strong engineering cultures and meaningful
-cross-functional collaboration._
+_Enterprising software engineer with a penchant for pragmatic solutions to
+complex problems. — I strive in teams with strong engineering cultures and
+meaningful cross-functional collaboration._
 
 **[j@jul.sh](mailto:j@jul.sh)**
 
