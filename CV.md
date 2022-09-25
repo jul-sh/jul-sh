@@ -8,11 +8,11 @@ meaningful cross-functional collaboration._
 
 ## Experience
 
-### Software Engineer at Google, 2020.04 - present, London
+### Software Engineer at Google, 2020-04-06 to present, London
 
 Privacy & Security Research.
 
-### Web Engineer at N26, 2018.01 - 2020.03, Berlin & NYC
+### Web Engineer at N26, 2018-01 to 2020-03 Berlin & NYC
 
 Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech
 bank.
@@ -26,20 +26,20 @@ bank.
 - Improved time-to-interactive by 1.4s with code splitting
 - Doubled font loading speed via range-splitting & preloading
 
-### Lead Engineer at Language Academy, 2016.08 - 2017.12, Berlin
+### Lead Engineer at Language Academy, 2016-08 to 2017-12, Berlin
 
 - Led development of the web platform
 - Achieved a 63% faster time-to-interactive than competiting platforms
 - Accomplished a 10% visitor-to-subscriber rate on marketing pages
 
-### Web Developer & Design Researcher at Clue, 2015 - 2016, Berlin
+### Web Developer & Design Researcher at Clue, 2015-10 to 2016-08, Berlin
 
 - Rebuilt the self-service support website, increasing usage by 20%
 - Created & implemented company-wide processes for user research
 
 ## Education
 
-- Humboldt University Berlin, 2013 - 2016
+- Humboldt University Berlin, 2013-10 to 2016-03
 
 ## Recognition
 
