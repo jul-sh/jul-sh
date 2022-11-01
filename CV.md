@@ -12,7 +12,7 @@ meaningful cross-functional collaboration._
 
 Privacy & Security Research.
 
-### Web Engineer at N26, 2018-01 to 2020-03 Berlin & NYC
+### Web Engineer at N26, 2018-01 to 2020-03, Berlin & NYC
 
 Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech
 bank.
