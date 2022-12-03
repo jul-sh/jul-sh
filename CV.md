@@ -8,7 +8,7 @@ meaningful cross-functional collaboration._
 
 ## Experience
 
-### Software Engineer at Google, 2020-04-06 to present, London
+### Software Engineer at Google, 2020-04-06 to present, NYC & London
 
 Privacy & Security Research.
 
