@@ -78,9 +78,14 @@ fn main() {
                 target
             },
             html_page(&html_path, {
-                let mut html_buf = String::new();
-                html::push_html(&mut html_buf, parsed);
-                html_buf
+                let mut html = String::new();
+                html::push_html(&mut html, parsed);
+                let html: String = html
+                    .chars()
+                    .into_iter()
+                    .map(|c| if c == '\n' { '\u{0020}' } else { c })
+                    .collect();
+                html
             }),
         )
         .expect("Failed to write html");
