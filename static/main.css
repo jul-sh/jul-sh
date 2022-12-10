@@ -52,7 +52,7 @@ html {
   align-items: center;
 }
 
-#content-wrapper {
+main {
   padding: var(--responsive-padding);
   max-width: 30em;
 }
@@ -168,7 +168,7 @@ i b {
     background: none;
   }
 
-  #content-wrapper {
+  main {
     max-width: none;
   }
 
