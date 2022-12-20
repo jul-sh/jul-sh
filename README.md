@@ -1,4 +1,4 @@
-# Nice to meet you
+# Nice to meet you!
 
 My name's **_Juliette Pretot_**. I'm a **software engineer** based in New York
 City. Presently I work on privacy at
