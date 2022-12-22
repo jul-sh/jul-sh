@@ -6,13 +6,17 @@ use std::path::PathBuf;
 use walkdir::WalkDir;
 
 static OUTPUT_DIR: &str = "./build";
+// Copy this static directory into output. Used for font files, images, etc.
+static STATIC_DIR: &str = "./static";
+// Don't look for markdown files in these directories.
+static IGNORED_MD_DIRECTORIES: &[&str] = &["./target", "./.git", STATIC_DIR, OUTPUT_DIR];
 
 fn main() {
     let _ = fs::remove_dir_all(OUTPUT_DIR);
     fs::create_dir(OUTPUT_DIR).expect("failed to create output dir");
 
     // Copy static files
-    for entry in WalkDir::new("./static") {
+    for entry in WalkDir::new(STATIC_DIR) {
         let path = entry.expect("failed to get dir entry").into_path();
         let file_type = path.metadata().expect("failed to get metadata").file_type();
         let target = PathBuf::from(OUTPUT_DIR).join(&path);
@@ -28,10 +32,10 @@ fn main() {
         WalkDir::new("./")
             .into_iter()
             .filter_entry(|e| {
-                !e.path().starts_with("./static")
-                    && !e.path().starts_with("./target")
-                    && !e.path().starts_with("./.git")
-                    && !e.path().starts_with(OUTPUT_DIR)
+                let is_in_ignored_dir = !IGNORED_MD_DIRECTORIES
+                    .into_iter()
+                    .any(|dir| e.path().starts_with(dir));
+                is_in_ignored_dir
             })
             .filter_map(|e| {
                 let path = RelativePathBuf::from_path(
