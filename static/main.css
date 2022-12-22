@@ -108,7 +108,7 @@ h2+h3 {
 
 a {
   text-decoration: underline;
-  color: var(--green);
+  color: var(--blue);
 }
 
 a:hover,
@@ -124,15 +124,8 @@ em {
 
 b,
 strong {
-  color: var(--blue);
-  font-weight: normal;
-}
-
-strong em,
-em strong,
-b i,
-i b {
   color: var(--orange);
+  font-weight: normal;
 }
 
 @media only screen and (max-width: 700px) {
