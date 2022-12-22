@@ -1,15 +1,19 @@
+//! A simple static site generator that recursively finds markdown files in the current
+//! directory, and generates HTML documents based on them.
+
+// Output the generated static site here.
+static OUTPUT_DIR: &str = "./build";
+// Copy this static directory into output. Used for font files, images, etc.
+static STATIC_DIR: &str = "./static";
+// Don't look for markdown files in these directories.
+static IGNORED_MD_DIRECTORIES: &[&str] = &["./target", "./.git", STATIC_DIR, OUTPUT_DIR];
+
 use pulldown_cmark::{html, Event, Parser, Tag};
 use relative_path::RelativePathBuf;
 use std::collections::HashSet;
 use std::fs;
 use std::path::PathBuf;
 use walkdir::WalkDir;
-
-static OUTPUT_DIR: &str = "./build";
-// Copy this static directory into output. Used for font files, images, etc.
-static STATIC_DIR: &str = "./static";
-// Don't look for markdown files in these directories.
-static IGNORED_MD_DIRECTORIES: &[&str] = &["./target", "./.git", STATIC_DIR, OUTPUT_DIR];
 
 fn main() {
     let _ = fs::remove_dir_all(OUTPUT_DIR);
