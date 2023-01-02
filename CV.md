@@ -8,7 +8,7 @@ and meaningful cross-functional participation._
 
 ## Experience
 
-### Software Engineer at Google, 2020-04-06 to present, NYC & London
+### Software Engineer at Google, 2020-04 to present, NYC & London
 
 Privacy & Security Research.
 
@@ -43,7 +43,7 @@ bank.
 
 ## Recognition
 
-- Google Developer Expert for Web Technologies, 2019 - 2020
+- Google Developer Expert for Web Technologies, 2019-03 to 2020-02
 
 ## Personal Projects
 
