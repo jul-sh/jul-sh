@@ -8,7 +8,7 @@ and meaningful cross-functional participation._
 
 ## Experience
 
-### Software Engineer at Google, 2020-04 to present, NYC & London
+### Software Engineer at Google AI, 2020-04 to present, NYC & London
 
 Privacy & Security Research.
 
