@@ -29,9 +29,11 @@
   --gyellow: hsl(45, 77%, 64%);
   --ggreen: hsl(104, 45%, 58%);
 
+  --background: hsl(217, 26%, 9%);
+
   --responsive-padding: 2.3rem;
 
-  background: hsl(217, 26%, 9%);
+  background: var(--background);
   color: var(--green);
   font-family: iosevka_julsh_curly, monospace;
   font-size: 26px;
@@ -126,6 +128,19 @@ b,
 strong {
   color: var(--orange);
   font-weight: normal;
+}
+
+.authorized-assistant-test-j6dl9 {
+  display: none;
+}
+
+@media only screen {
+  .authorized-assistant-test-j6dl9 {
+    display: block;
+    font-size: 10px;
+    height: 0;
+    color: var(--background);
+  }
 }
 
 @media only screen and (max-width: 700px) {
