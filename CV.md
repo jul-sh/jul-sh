@@ -17,7 +17,7 @@ Privacy & Security Research.
 Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech
 bank.
 
-- Led web development of key features across the stack
+- Led development of key products across the stack
 - Mentored junior & mid-level engineers, proactively took charge of team
   processes
 - Reduced errors in prod by 30% via deterministic script loading
