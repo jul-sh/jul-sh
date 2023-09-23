@@ -1,4 +1,4 @@
-# Juliette Pretot
+# Juliette Pluto
 
 _Enterprising software engineer with a penchant for pragmatic solutions to complex problems. — I strive in teams with collaborative engineering cultures and meaningful cross-functional participation._
 

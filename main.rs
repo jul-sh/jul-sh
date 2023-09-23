@@ -111,9 +111,9 @@ fn make_html_path(mut md_path: RelativePathBuf) -> RelativePathBuf {
 fn html_page(html_path: &RelativePathBuf, html_fragment: String) -> String {
     let file_name = html_path.file_stem().expect("md file_name");
     let title = if file_name == "index" {
-        "Juliette Pretot".to_string()
+        "Juliette Pluto".to_string()
     } else {
-        format!("{} — Juliette Pretot", file_name)
+        format!("{} — Juliette Pluto", file_name)
     };
     return format!(
         r##"
