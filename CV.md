@@ -6,9 +6,9 @@ _Enterprising software engineer with a penchant for pragmatic solutions to compl
 
 ## Experience
 
-### Software Engineer at Google AI, 2020-04 to present, NYC & London
+### Software Engineer at Google Research, 2020-04 to present, NYC & London
 
-Research infrastructure to enable secure, privacy preserving ML inference.
+Infrastructure to enable secure, privacy preserving ML inference.
 
 ### Web Engineer at N26, 2018-01 to 2020-03, Berlin & NYC
 
