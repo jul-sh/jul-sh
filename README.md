@@ -4,4 +4,4 @@ My name's **Juliette Pluto**. I'm a software engineer working on security & priv
 
 I'd be happy to hear from you via email at [j@jul.sh](mailto:j@jul.sh). You can
 also find me on [GitHub](https://github.com/jul-sh) and
-[Twitter](https://twitter.com/itsjulsh).
+[Twitter](https://twitter.com/foundjuliette).
