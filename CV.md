@@ -2,7 +2,7 @@
 
 _Enterprising software engineer with a penchant for pragmatic solutions to complex problems. — I strive in teams with collaborative engineering cultures and meaningful cross-functional participation._
 
-**[j@jul.sh](mailto:j@jul.sh)**
+[j@jul.sh](mailto:j@jul.sh)
 
 ## Experience
 

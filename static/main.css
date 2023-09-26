@@ -15,21 +15,19 @@
 }
 
 :root {
-  --pink: hsl(0, 82%, 85%);
-  --yellow: hsl(37, 80%, 75%);
-  --orange: hsl(26, 80%, 71%);
+  --pink: hsl(10, 82%, 85%);
+  --yellow: hsl(37, 55%, 75%);
+  --orange: hsl(26, 55%, 71%);
   --blue: hsl(209, 36%, 70%);
   --lightBlue: hsl(179, 40%, 70%);
-  --translucentLightBlue: hsla(179, 40%, 70%, 0.6);
   --green: hsl(152, 25%, 53%);
-  --translucentGreen: hsla(153, 36%, 59%, 0.6);
 
   --gblue: hsl(216, 64%, 68%);
   --gred: hsl(5, 63%, 70%);
   --gyellow: hsl(45, 77%, 64%);
   --ggreen: hsl(104, 45%, 58%);
 
-  --background: hsl(217, 26%, 9%);
+  --background: hsl(217, 12%, 9%);
 
   --responsive-padding: 2.3rem;
 
@@ -116,18 +114,6 @@ a {
 a:hover,
 a:active {
   text-shadow: 0 0 2px var(--green);
-}
-
-i,
-em {
-  color: var(--lightBlue);
-  font-style: normal;
-}
-
-b,
-strong {
-  color: var(--orange);
-  font-weight: normal;
 }
 
 .authorized-assistant-test-j6dl9 {
