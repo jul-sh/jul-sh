@@ -6,11 +6,11 @@ _Enterprising software engineer with a penchant for pragmatic solutions to compl
 
 ## Experience
 
-### Software Engineer at Google Research, 2020-04 to present, New York City (prev. London)
+### Software Engineer at Google Research; 2020-04 to present; New York, NY (prev. London, UK)
 
 Infrastructure to enable secure, privacy preserving ML inference.
 
-### Web Engineer at N26, 2018-01 to 2020-03, Berlin
+### Web Engineer at N26; 2018-01 to 2020-03; Berlin, Germany and New York, NY
 
 Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech bank.
 
@@ -21,24 +21,24 @@ Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech ba
 - Improved time-to-interactive by 1.4s with code splitting
 - Doubled font loading speed via range-splitting & preloading
 
-### Lead Engineer at Language Academy, 2016-08 to 2017-12, Berlin
+### Lead Engineer at Language Academy; 2016-08 to 2017-12; Berlin, Germany
 
 - Led development of the web platform
 - Achieved a 63% faster time-to-interactive than competiting platforms
 - Accomplished a 10% visitor-to-subscriber rate on marketing pages
 
-### Web Developer & Design Researcher at Clue, 2015-10 to 2016-08, Berlin
+### Web Developer & Design Researcher at Clue; 2015-10 to 2016-08; Berlin, Germany
 
 - Rebuilt the self-service support website, increasing usage by 20%
 - Created & implemented company-wide processes for user research
 
 ## Education
 
-- Humboldt University Berlin, 2013-10 to 2016-03
+- Humboldt University; 2013-10 to 2016-03; Berlin, Germany
 
 ## Recognition
 
-- Google Developer Expert for Web Technologies, 2019-03 to 2020-02
+- Google Developer Expert for Web Technologies; 2019-03 to 2020-02
 
 ## Personal Projects
 
