@@ -6,9 +6,9 @@ _Enterprising software engineer with a penchant for pragmatic solutions to compl
 
 ## Experience
 
-### Software Engineer at Google Research; 2020-04 to present; New York, NY (prev. London, UK)
+### Software Engineer at Google DeepMind; 2020-04 to present; New York, NY (prev. London, UK)
 
-Infrastructure to enable secure, privacy preserving ML inference.
+Security and privacy.
 
 ### Web Engineer at N26; 2018-01 to 2020-03; Berlin, Germany and New York, NY
 
