@@ -3,10 +3,6 @@ name = "rusty-about-me"
 version = "0.1.0"
 edition = "2021"
 
-[[bin]]
-name = "about-me"
-path = "main.rs"
-
 [dependencies]
 pulldown-cmark = "*"
 walkdir = "*"
