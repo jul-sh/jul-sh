@@ -6,11 +6,11 @@ _Enterprising software engineer with a penchant for pragmatic solutions to compl
 
 ## Experience
 
-### Software Engineer at Google DeepMind; 2020-04 to present; New York, NY (prev. London, UK)
+### Software Engineer at Google DeepMind; 2020-04 to present; New York, NY (via London, UK)
 
 Security and privacy.
 
-### Web Engineer at N26; 2018-01 to 2020-03; Berlin, Germany and New York, NY
+### Web Engineer at N26; 2018-01 to 2020-03; Berlin, Germany
 
 Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech bank.
 
@@ -29,7 +29,7 @@ Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech ba
 
 ### Web Developer & Design Researcher at Clue; 2015-10 to 2016-08; Berlin, Germany
 
-- Rebuilt the self-service support website, increasing usage by 20%
+- Rebuilt the self-service support website, increasing ussage by 20%
 - Created & implemented company-wide processes for user research
 
 ## Education
