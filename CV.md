@@ -1,18 +1,18 @@
 # Juliette Pluto
 
-_Enterprising software engineer with a penchant for pragmatic solutions to complex problems. — I strive in teams with collaborative engineering cultures and meaningful cross-functional participation._
+_Enterprising software engineer with a penchant for pragmatic solutions to complex problems._
 
 [j@jul.sh](mailto:j@jul.sh)
 
 ## Experience
 
-### Software Engineer at Google DeepMind; 2020-04 to present; New York, NY (via London, UK)
+### Senior Software Engineer at Google DeepMind; 2020-04 to present; New York, NY (via London, UK)
 
-Security and privacy.
+ML security and privacy.
 
 ### Web Engineer at N26; 2018-01 to 2020-03; Berlin, Germany
 
-Isomorphic React, GraphQL, & Node.js powering the webapp of a unicorn fintech bank.
+Joined a small team of four engineers at a fintech startup rebuilding the web platform from scratch. Grew the team to 20+ engineers as the company scaled to unicorn status.
 
 - Led development of key products across the stack
 - Mentored junior & mid-level engineers, proactively took charge of team processes
