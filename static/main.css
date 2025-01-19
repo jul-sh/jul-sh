@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'iosevka_julsh_curly';
-  src: url('./iosevka-julsh-curly-regular.woff2') format('woff2');
+  src: url('./iosevka-julsh-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: 'iosevka_julsh_curly';
-  src: url('./iosevka-julsh-curly-bold.woff2') format('woff2');
+  src: url('./iosevka-julsh-bold.woff2') format('woff2');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -35,7 +35,6 @@
   color: var(--green);
   font-family: iosevka_julsh_curly, monospace;
   font-size: 26px;
-  word-spacing: -0.2ch;
   line-height: 1.4;
 }
 
@@ -92,12 +91,6 @@ h4 a {
   color: var(--blue);
 }
 
-h1,
-h2,
-h3 {
-  word-spacing: -0.25ch;
-}
-
 h1:first-child,
 h2:first-child,
 h3:first-child,
@@ -133,7 +126,6 @@ a:active {
   :root {
     font-size: 20px;
     line-height: 1.3;
-    word-spacing: -0.15ch;
     --responsive-padding: 1.1rem;
   }
 
