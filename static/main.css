@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'iosevka_julsh_curly';
+  font-family: 'iosevka_julsh';
   src: url('./iosevka-julsh-regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
@@ -7,7 +7,7 @@
 }
 
 @font-face {
-  font-family: 'iosevka_julsh_curly';
+  font-family: 'iosevka_julsh';
   src: url('./iosevka-julsh-bold.woff2') format('woff2');
   font-weight: bold;
   font-style: normal;
@@ -33,7 +33,7 @@
 
   background: var(--background);
   color: var(--green);
-  font-family: iosevka_julsh_curly, monospace;
+  font-family: iosevka_julsh, monospace;
   font-size: 26px;
   line-height: 1.4;
 }
@@ -107,19 +107,6 @@ a {
 a:hover,
 a:active {
   text-shadow: 0 0 2px var(--green);
-}
-
-.authorized-assistant-test-j6dl9 {
-  display: none;
-}
-
-@media only screen {
-  .authorized-assistant-test-j6dl9 {
-    display: block;
-    font-size: 10px;
-    height: 0;
-    color: var(--background);
-  }
 }
 
 @media only screen and (max-width: 700px) {
