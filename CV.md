@@ -8,7 +8,7 @@ _Enterprising software engineer with a penchant for pragmatic solutions to compl
 
 ### Senior Software Engineer at Google DeepMind; 2020-04 to present; New York, NY (via London, UK)
 
-ML security and privacy.
+ML security and privacy; systems engineering.
 
 ### Web Engineer at N26; 2018-01 to 2020-03; Berlin, Germany
 
