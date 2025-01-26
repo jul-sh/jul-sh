@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'iosevka_julsh';
-  src: url('./iosevka-julsh-regular.woff2') format('woff2');
+  src: url('./iosevka-julsh-upright.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: 'iosevka_julsh';
-  src: url('./iosevka-julsh-bold.woff2') format('woff2');
+  src: url('./iosevka-julsh-Boldupright.woff2') format('woff2');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
