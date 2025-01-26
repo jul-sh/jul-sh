@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'iosevka_julsh';
-  src: url('./iosevka-julsh-upright.woff2') format('woff2');
+  src: url('./IosevkaJulsh-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: 'iosevka_julsh';
-  src: url('./iosevka-julsh-Boldupright.woff2') format('woff2');
+  src: url('./IosevkaJulsh-Bold.woff2') format('woff2');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -24,8 +24,8 @@
 
   --gblue: hsl(216, 64%, 68%);
   --gred: hsl(5, 63%, 70%);
-  --gyellow: hsl(45, 77%, 64%);
-  --ggreen: hsl(104, 45%, 58%);
+  --gyellow: hsl(45, 70%, 64%);
+  --ggreen: hsl(104, 38%, 64%);
 
   --background: hsl(217, 12%, 9%);
 
