@@ -88,7 +88,8 @@ fn main() {
                     .into_iter()
                     .map(|c| if c == '\n' { '\u{0020}' } else { c })
                     .collect();
-                html
+                // Render Google in nice colors
+                html.replace("Google", r#"<span style="color: var(--gblue)">G</span><span style="color: var(--gred)">o</span><span style="color: var(--gyellow)">o</span><span style="color: var(--gblue)">g</span><span style="color: var(--ggreen)">l</span><span style="color: var(--gred)">e</span>"#)
             }),
         )
         .expect("Failed to write html");
@@ -118,7 +119,7 @@ fn html_page(html_path: &Path, html_fragment: String) -> String {
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
-        <title>{}</title>
+        <title>{title}</title>
         <meta name="description" content="Engineer at Google" />
         <link rel="stylesheet" href="./static/main.css" />
         <link rel="preload" href="./static/iosevka-julsh-curly-regular.woff2" as="font" type="font/woff2" />
@@ -128,11 +129,10 @@ fn html_page(html_path: &Path, html_fragment: String) -> String {
         <meta name="theme-color" content="#11161d" />
     </head>
     <body>
-        <main>{}</main>
+        <main>{html_fragment}</main>
     </body>
-    <!-- With love from (California|New York|Washington) -->
+    <!-- 🗽 -->
 </html>
-"##,
-        title, html_fragment
+"##
     );
 }
