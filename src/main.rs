@@ -9,10 +9,9 @@ static STATIC_DIR: &str = "./static";
 static IGNORED_MD_DIRECTORIES: &[&str] = &["./target", "./.git", STATIC_DIR, OUTPUT_DIR];
 
 use pulldown_cmark::{html, Event, Parser, Tag};
-use relative_path::RelativePathBuf;
 use std::collections::HashSet;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
 
 fn main() {
@@ -32,7 +31,7 @@ fn main() {
     }
 
     // Get markdown files
-    let md_paths = HashSet::<RelativePathBuf>::from_iter(
+    let md_paths = HashSet::<PathBuf>::from_iter(
         WalkDir::new("./")
             .into_iter()
             .filter_entry(|e| {
@@ -42,13 +41,9 @@ fn main() {
                 is_in_ignored_dir
             })
             .filter_map(|e| {
-                let path = RelativePathBuf::from_path(
-                    &e.expect("failed to turn md walker entry into path")
-                        .into_path(),
-                )
-                .expect("failed to create relative markdown path");
-                if path.extension() == Some("md") {
-                    Some(path.normalize())
+                let path = e.expect("failed to get dir entry").into_path();
+                if path.extension().and_then(|e| e.to_str()) == Some("md") {
+                    Some(path)
                 } else {
                     None
                 }
@@ -57,18 +52,18 @@ fn main() {
 
     // Generate HTML files off them
     for md_path in md_paths.iter() {
-        let contents = fs::read_to_string(&md_path.to_path(".")).expect("failed to read markdown");
+        let contents = fs::read_to_string(&md_path).expect("failed to read markdown");
         let parsed = Parser::new(&contents).map(|event| match event {
             Event::Start(Tag::Link(link_type, mut destination, title)) => {
                 if destination.ends_with(".md") {
-                    let destination_path = RelativePathBuf::from(destination.to_string());
-                    if md_paths.contains(
-                        &md_path
-                            .parent()
-                            .unwrap_or(&RelativePathBuf::from("./"))
-                            .join_normalized(&destination_path),
-                    ) {
-                        destination = make_html_path(destination_path).as_str().to_string().into()
+                    let dest_str = destination.to_string();
+                    let destination_path = Path::new(&dest_str);
+                    let full_dest_path = md_path.parent().unwrap_or(Path::new("./")).join(destination_path);
+                    if md_paths.contains(&full_dest_path) {
+                        destination = make_html_path(&PathBuf::from(destination_path))
+                            .to_string_lossy()
+                            .into_owned()
+                            .into();
                     }
                 }
                 Event::Start(Tag::Link(link_type, destination, title))
@@ -76,10 +71,10 @@ fn main() {
             _ => event,
         });
 
-        let html_path = make_html_path(md_path.clone());
+        let html_path = make_html_path(&md_path);
         fs::write(
             {
-                let target = html_path.to_path(OUTPUT_DIR);
+                let target = PathBuf::from(OUTPUT_DIR).join(&html_path);
                 if let Some(parent) = target.parent() {
                     fs::create_dir_all(parent).expect("Failed to create html parent dirs");
                 };
@@ -100,16 +95,17 @@ fn main() {
     }
 }
 
-fn make_html_path(mut md_path: RelativePathBuf) -> RelativePathBuf {
-    if md_path.file_name().expect("html file_name").to_lowercase() == "readme.md" {
-        md_path.set_file_name("index");
+fn make_html_path(md_path: &Path) -> PathBuf {
+    let mut html_path = md_path.to_path_buf();
+    if html_path.file_name().and_then(|n| n.to_str()).map(|s| s.to_lowercase()) == Some("readme.md".to_string()) {
+        html_path.set_file_name("index");
     }
-    md_path.set_extension("html");
-    md_path
+    html_path.set_extension("html");
+    html_path
 }
 
-fn html_page(html_path: &RelativePathBuf, html_fragment: String) -> String {
-    let file_name = html_path.file_stem().expect("md file_name");
+fn html_page(html_path: &Path, html_fragment: String) -> String {
+    let file_name = html_path.file_stem().and_then(|s| s.to_str()).expect("md file_name");
     let title = if file_name == "index" {
         "Juliette Pluto".to_string()
     } else {

@@ -36,17 +36,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "relative-path"
-version = "1.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73d4caf086b102ab49d0525b721594a555ab55c6556086bbe52a430ad26c3bd7"
-
-[[package]]
 name = "rusty-about-me"
 version = "0.1.0"
 dependencies = [
  "pulldown-cmark",
- "relative-path",
  "walkdir",
 ]
 

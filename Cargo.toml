@@ -6,4 +6,3 @@ edition = "2021"
 [dependencies]
 pulldown-cmark = "*"
 walkdir = "*"
-relative-path = "*"
