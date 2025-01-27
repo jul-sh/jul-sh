@@ -66,7 +66,17 @@ fn main() {
                             .into();
                     }
                 }
-                Event::Start(Tag::Link(link_type, destination, title))
+                Event::Start(Tag::Link(link_type, destination.clone(), title.clone()))
+            }
+            Event::End(Tag::Link(link_type, destination, title)) => {
+                let is_external = destination.starts_with("http://") || destination.starts_with("https://");
+                if is_external {
+                    Event::Html(
+                        r#"<svg style="width: 0.5em; vertical-align: middle; padding-bottom: 0.4em;" class="w-16 align-top" focusable="false" aria-hidden="true" viewBox="0 6 26 20"><path stroke="currentcolor" stroke-width="4" fill="none" d="M24 8L8 24M8 8H24v16"></path></svg></a>"#.into()
+                    )
+                } else {
+                    Event::End(Tag::Link(link_type, destination, title))
+                }
             }
             _ => event,
         });
