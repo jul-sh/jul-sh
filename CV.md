@@ -43,4 +43,4 @@ Joined a small team of four engineers at a fintech startup rebuilding the web pl
 ## Personal Projects
 
 - [agnostic-axe](https://github.com/dequelabs/agnostic-axe): Developer tool that reports accessibility issues to the browser console. (Now maintained by Deque Systems).
-- [co-commit](https://github.com/jul-sh/npx-co-commit): Friendly CLI to quickly co-author commits on GitHub when pair programming. Featured on the front page of https://www.producthunt.com/posts/co-commit.
+- [co-commit](https://github.com/jul-sh/npx-co-commit): Friendly CLI to quickly co-author commits on GitHub when pair programming. Featured on the front page of Product Hunt.
