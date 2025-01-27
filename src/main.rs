@@ -72,7 +72,7 @@ fn main() {
                 let is_external = destination.starts_with("http://") || destination.starts_with("https://");
                 if is_external {
                     Event::Html(
-                        r#"<svg style="width: 0.5em; vertical-align: middle; padding-bottom: 0.4em;" class="w-16 align-top" focusable="false" aria-hidden="true" viewBox="0 6 26 20"><path stroke="currentcolor" stroke-width="4" fill="none" d="M24 8L8 24M8 8H24v16"></path></svg></a>"#.into()
+                        r#"<svg style="width: 0.4em; vertical-align: middle; padding-bottom: 0.4em;" class="w-16 align-top" focusable="false" aria-hidden="true" viewBox="3 6 23 20"><path stroke="currentcolor" stroke-width="4" fill="none" d="M24 8L8 24M8 8H24v16"></path></svg></a>"#.into()
                     )
                 } else {
                     Event::End(Tag::Link(link_type, destination, title))
@@ -108,7 +108,12 @@ fn main() {
 
 fn make_html_path(md_path: &Path) -> PathBuf {
     let mut html_path = md_path.to_path_buf();
-    if html_path.file_name().and_then(|n| n.to_str()).map(|s| s.to_lowercase()) == Some("readme.md".to_string()) {
+    if html_path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .map(|s| s.to_lowercase())
+        == Some("readme.md".to_string())
+    {
         html_path.set_file_name("index");
     }
     html_path.set_extension("html");
@@ -116,7 +121,10 @@ fn make_html_path(md_path: &Path) -> PathBuf {
 }
 
 fn html_page(html_path: &Path, html_fragment: String) -> String {
-    let file_name = html_path.file_stem().and_then(|s| s.to_str()).expect("md file_name");
+    let file_name = html_path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .expect("md file_name");
     let title = if file_name == "index" {
         "Juliette Pluto".to_string()
     } else {
