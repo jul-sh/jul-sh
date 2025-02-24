@@ -97,12 +97,16 @@ fn main() {
         let mut html_content = String::new();
         html::push_html(&mut html_content, transformed_parser);
 
-        // Replace newlines with spaces and colorize Google mentions
-        let formatted_html = html_content
+        // Replace newlines with spaces
+        let mut formatted_html = html_content
             .chars()
             .map(|c| if c == '\n' { '\u{0020}' } else { c })
-            .collect::<String>()
-            .replace("Google", r#"<span style="color: var(--gblue)">G</span><span style="color: var(--gred)">o</span><span style="color: var(--gyellow)">o</span><span style="color: var(--gblue)">g</span><span style="color: var(--ggreen)">l</span><span style="color: var(--gred)">e</span>"#);
+            .collect::<String>();
+
+        // Only colorize Google mentions on the index/readme page
+        if is_readme_file(markdown_path) {
+            formatted_html = formatted_html.replace("Google", r#"<span style="color: var(--gblue)">G</span><span style="color: var(--gred)">o</span><span style="color: var(--gyellow)">o</span><span style="color: var(--gblue)">g</span><span style="color: var(--ggreen)">l</span><span style="color: var(--gred)">e</span>"#);
+        }
 
         // Write the final HTML file
         fs::write(target_html_path, html_page(&html_output_path, formatted_html))
@@ -110,13 +114,16 @@ fn main() {
     }
 }
 
-fn make_html_path(md_path: &Path) -> PathBuf {
-    let mut html_path = md_path.to_path_buf();
-    let is_readme = html_path
-        .file_name()
+fn is_readme_file(path: &Path) -> bool {
+    path.file_name()
         .and_then(|n| n.to_str())
         .map(|s| s.to_lowercase())
-        == Some("readme.md".to_string());
+        == Some("readme.md".to_string())
+}
+
+fn make_html_path(md_path: &Path) -> PathBuf {
+    let mut html_path = md_path.to_path_buf();
+    let is_readme = is_readme_file(md_path);
 
     if is_readme {
         html_path.set_file_name("index");
