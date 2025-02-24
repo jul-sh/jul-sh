@@ -10,8 +10,8 @@ _Enterprising software engineer with a penchant for pragmatic solutions to compl
 
 ML security and privacy; systems engineering.
 
-- External blogpost covering my work on [indirect prompt injection](https://security.googleblog.com/2025/01/how-we-estimate-risk-from-prompt.html)
-- Presented at OC3 on [remote attestation](https://www.youtube.com/watch?v=LaT_vgz3Dd4), enabling verification of a server's software stack
+- [Google Security blogpost](https://security.googleblog.com/2025/01/how-we-estimate-risk-from-prompt.html) on indirect prompt injection that I co-authored
+- [Presentation I gave at OC3](https://www.youtube.com/watch?v=LaT_vgz3Dd4) on our implementation of remote attestation to verify a server's entire software stack, from firmware to application
 
 ### Web Engineer at N26; 2018-01 to 2020-03; Berlin, Europe
 
