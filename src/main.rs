@@ -38,7 +38,9 @@ fn main() {
             .into_iter()
             .filter_entry(|entry| {
                 let path = entry.path();
-                !IGNORED_MD_DIRECTORIES.iter().any(|dir| path.starts_with(dir))
+                !IGNORED_MD_DIRECTORIES
+                    .iter()
+                    .any(|dir| path.starts_with(dir))
             })
             .filter_map(|entry_result| {
                 let path = entry_result.expect("failed to get dir entry").into_path();
@@ -109,8 +111,11 @@ fn main() {
         }
 
         // Write the final HTML file
-        fs::write(target_html_path, html_page(&html_output_path, formatted_html))
-            .expect("Failed to write html");
+        fs::write(
+            target_html_path,
+            html_page(&html_output_path, formatted_html),
+        )
+        .expect("Failed to write html");
     }
 }
 
@@ -138,10 +143,25 @@ fn html_page(html_path: &Path, html_fragment: String) -> String {
         .and_then(|s| s.to_str())
         .expect("md file_name");
 
-    let page_title = if file_stem == "index" {
+    let is_index = file_stem == "index";
+
+    let page_title = if is_index {
         "Juliette Pluto".to_string()
     } else {
         format!("{} — Juliette Pluto", file_stem)
+    };
+
+    let main_content = if is_index {
+        format!(
+            r#"
+        <main class="wide">
+            <div class="index-photo"><img src="./static/photo.jpg" alt="Photo of Juliette Pluto"></div>
+            <div class="index-content">{}</div>
+        </main>"#,
+            html_fragment
+        )
+    } else {
+        format!("<main>{}</main>", html_fragment)
     };
 
     format!(
@@ -161,10 +181,10 @@ fn html_page(html_path: &Path, html_fragment: String) -> String {
         <meta name="theme-color" content="#11161d" />
     </head>
     <body>
-        <main>{html_fragment}</main>
+        {main_content}
     </body>
     <!-- 🗽 -->
 </html>
-"##
+"##,
     )
 }
