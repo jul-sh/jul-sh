@@ -1,5 +1,13 @@
-//! A simple static site generator that recursively finds markdown files in the current
-//! directory, and generates HTML documents based on them.
+//! Minimal static-site generator: convert *.md → HTML, mirror ./static.
+
+use eyre::Result;
+use pulldown_cmark::{html, Event, Parser, Tag};
+use std::{
+    collections::HashSet,
+    fs, io,
+    path::{Path, PathBuf},
+};
+use walkdir::WalkDir;
 
 // Output the generated static site here.
 static OUTPUT_DIR: &str = "./build";
@@ -8,183 +16,212 @@ static STATIC_DIR: &str = "./static";
 // Don't look for markdown files in these directories.
 static IGNORED_MD_DIRECTORIES: &[&str] = &["./target", "./.git", STATIC_DIR, OUTPUT_DIR];
 
-use pulldown_cmark::{html, Event, Parser, Tag};
-use std::collections::HashSet;
-use std::fs;
-use std::path::{Path, PathBuf};
-use walkdir::WalkDir;
-
-fn main() {
-    // Setup output directory
-    let _ = fs::remove_dir_all(OUTPUT_DIR);
-    fs::create_dir(OUTPUT_DIR).expect("failed to create output dir");
-
-    // Copy static assets to output directory
-    for entry in WalkDir::new(STATIC_DIR) {
-        let path = entry.expect("failed to get dir entry").into_path();
-        let file_type = path.metadata().expect("failed to get metadata").file_type();
-        let target_path = PathBuf::from(OUTPUT_DIR).join(&path);
-
-        if file_type.is_file() {
-            fs::copy(&path, target_path).expect("failed copy file");
-        } else if file_type.is_dir() {
-            fs::create_dir(target_path).expect("failed to copy subdir");
+fn main() -> Result<()> {
+    if let Err(e) = fs::remove_dir_all(OUTPUT_DIR) {
+        if e.kind() != io::ErrorKind::NotFound {
+            return Err(e.into());
         }
     }
+    fs::create_dir_all(OUTPUT_DIR)?;
 
-    // Find all markdown files to process
-    let markdown_files = HashSet::<PathBuf>::from_iter(
-        WalkDir::new("./")
-            .into_iter()
-            .filter_entry(|entry| {
-                let path = entry.path();
-                !IGNORED_MD_DIRECTORIES
-                    .iter()
-                    .any(|dir| path.starts_with(dir))
-            })
-            .filter_map(|entry_result| {
-                let path = entry_result.expect("failed to get dir entry").into_path();
-                if path.extension().and_then(|ext| ext.to_str()) == Some("md") {
-                    Some(path)
-                } else {
-                    None
-                }
-            }),
-    );
+    // Copy static assets preserving relative structure into build/static.
+    let static_out = Path::new(OUTPUT_DIR).join("static");
+    fs::create_dir_all(&static_out)?;
+    let static_out_str = static_out.to_string_lossy();
+    copy_dir_tree(STATIC_DIR, &static_out_str)?;
 
-    // Process each markdown file into HTML
-    for markdown_path in markdown_files.iter() {
-        let markdown_content = fs::read_to_string(markdown_path).expect("failed to read markdown");
+    // Discover all markdown files.
+    let md_files: HashSet<PathBuf> = get_markdown_files(WalkDir::new("./").into_iter())?;
 
-        // Transform markdown to HTML with special link handling
-        let transformed_parser = Parser::new(&markdown_content).map(|event| match event {
-            Event::Start(Tag::Link(link_type, mut destination, title)) => {
-                if destination.ends_with(".md") {
-                    let dest_str = destination.to_string();
-                    let destination_path = Path::new(&dest_str);
-                    let full_dest_path = markdown_path.parent().unwrap_or(Path::new("./")).join(destination_path);
+    // Convert each markdown file.
+    for md in &md_files {
+        let markdown = fs::read_to_string(md)?;
+        let events = transform_events(md, &markdown, &md_files)?;
+        let mut html_fragment = String::new();
+        html::push_html(&mut html_fragment, events.into_iter());
 
-                    if markdown_files.contains(&full_dest_path) {
-                        destination = make_html_path(&PathBuf::from(destination_path))
-                            .to_string_lossy()
-                            .into_owned()
-                            .into();
-                    }
-                }
-                Event::Start(Tag::Link(link_type, destination.clone(), title.clone()))
-            },
-            Event::End(Tag::Link(link_type, destination, title)) => {
-                let is_external_link = destination.starts_with("http://") || destination.starts_with("https://");
-                if is_external_link {
-                    // Add external link icon
-                    Event::Html(
-                        r#"<svg style="width: 0.4em; vertical-align: middle; padding-bottom: 0.4em;" class="w-16 align-top" focusable="false" aria-hidden="true" viewBox="3 6 23 20"><path stroke="currentcolor" stroke-width="4" fill="none" d="M24 8L8 24M8 8H24v16"></path></svg></a>"#.into()
-                    )
-                } else {
-                    Event::End(Tag::Link(link_type, destination, title))
-                }
-            },
-            _ => event,
-        });
-
-        // Generate HTML file path and ensure parent directories exist
-        let html_output_path = make_html_path(markdown_path);
-        let target_html_path = PathBuf::from(OUTPUT_DIR).join(&html_output_path);
-
-        if let Some(parent_dir) = target_html_path.parent() {
-            fs::create_dir_all(parent_dir).expect("Failed to create html parent dirs");
+        let rel_html = make_html_path_rel(md);
+        let out_path = Path::new(OUTPUT_DIR).join(&rel_html);
+        if let Some(parent) = out_path.parent() {
+            fs::create_dir_all(parent)?;
         }
-
-        // Convert markdown to HTML and apply transformations
-        let mut html_content = String::new();
-        html::push_html(&mut html_content, transformed_parser);
-
-        // Replace newlines with spaces
-        let mut formatted_html = html_content
-            .chars()
-            .map(|c| if c == '\n' { '\u{0020}' } else { c })
-            .collect::<String>();
-
-        // Only colorize Google mentions on the index/readme page
-        if is_readme_file(markdown_path) {
-            formatted_html = formatted_html.replace("Google", r#"<span style="color: var(--gblue)">G</span><span style="color: var(--gred)">o</span><span style="color: var(--gyellow)">o</span><span style="color: var(--gblue)">g</span><span style="color: var(--ggreen)">l</span><span style="color: var(--gred)">e</span>"#);
-        }
-
-        // Write the final HTML file
-        fs::write(
-            target_html_path,
-            html_page(&html_output_path, formatted_html),
-        )
-        .expect("Failed to write html");
+        fs::write(&out_path, html_page(&rel_html, html_fragment))?;
     }
+
+    Ok(())
 }
 
-fn is_readme_file(path: &Path) -> bool {
-    path.file_name()
+// ---------- helpers ----------
+
+/// Return a set of markdown file paths discovered from a WalkDir iterator,
+/// skipping directories configured in `IGNORED_MD_DIRECTORIES`.
+fn get_markdown_files(iter: walkdir::IntoIter) -> Result<HashSet<PathBuf>> {
+    Ok(iter
+        .filter_entry(|e| {
+            !IGNORED_MD_DIRECTORIES
+                .iter()
+                .any(|ignore| e.path().starts_with(ignore))
+        })
+        .collect::<Result<Vec<_>, _>>()?
+        .into_iter()
+        .map(|e| e.into_path())
+        .filter(|p| p.extension().and_then(|s| s.to_str()) == Some("md"))
+        .collect::<HashSet<_>>())
+}
+
+fn is_readme(p: &Path) -> bool {
+    p.file_name()
         .and_then(|n| n.to_str())
-        .map(|s| s.to_lowercase())
-        == Some("readme.md".to_string())
+        .map(|s| s.eq_ignore_ascii_case("readme.md"))
+        .unwrap_or(false)
 }
 
-fn make_html_path(md_path: &Path) -> PathBuf {
-    let mut html_path = md_path.to_path_buf();
-    let is_readme = is_readme_file(md_path);
+/// Copy a directory tree from `src` into `dst`, preserving the relative layout.
+fn copy_dir_tree(src: &str, dst: &str) -> Result<()> {
+    let src = Path::new(src).canonicalize()?;
+    let dst = Path::new(dst);
 
-    if is_readme {
-        html_path.set_file_name("index");
+    for entry in WalkDir::new(&src).into_iter() {
+        let entry = entry?;
+        let path = entry.path();
+        let rel = path.strip_prefix(&src).unwrap(); // safe by construction
+        let target = dst.join(rel);
+
+        if entry.file_type().is_dir() {
+            fs::create_dir_all(&target)?;
+        } else if entry.file_type().is_file() {
+            if let Some(parent) = target.parent() {
+                fs::create_dir_all(parent)?;
+            }
+            fs::copy(path, &target)?;
+        }
     }
-    html_path.set_extension("html");
-    html_path
+    Ok(())
 }
 
-fn html_page(html_path: &Path, html_fragment: String) -> String {
-    let file_stem = html_path
+/// Return the output relative HTML path for a given markdown file.
+/// `README.md` → `index.html` in the same directory; otherwise `foo.md` → `foo.html`.
+fn make_html_path_rel(md: &Path) -> PathBuf {
+    let mut rel = md.strip_prefix("./").unwrap_or(md).to_path_buf();
+    if is_readme(md) {
+        rel.set_file_name("index");
+    }
+    rel.set_extension("html");
+    rel
+}
+
+/// Build the full HTML page around a fragment.
+fn html_page(html_rel_path: &Path, fragment: String) -> String {
+    let stem = html_rel_path
         .file_stem()
         .and_then(|s| s.to_str())
-        .expect("md file_name");
-
-    let is_index = file_stem == "index";
-
-    let page_title = if is_index {
+        .unwrap_or("index");
+    let is_index = stem == "index";
+    let title = if is_index {
         "Juliette Pluto".to_string()
     } else {
-        format!("{} — Juliette Pluto", file_stem)
+        format!("{stem} — Juliette Pluto")
     };
-
-    let main_content = if is_index {
+    let main = if is_index {
         format!(
-            r#"
-        <main class="wide">
-            <div class="index-photo"><img src="./static/photo.jpg" alt="Photo of Juliette Pluto"></div>
-            <div class="index-content">{}</div>
-        </main>"#,
-            html_fragment
+            r#"<main class="wide">
+  <div class="index-photo"><img src="./static/headshot.jpg" alt="Photo of Juliette Pluto"></div>
+  <div class="index-content">{}</div>
+</main>"#,
+            fragment
         )
     } else {
-        format!("<main>{}</main>", html_fragment)
+        format!(r#"<main>{fragment}</main>"#)
     };
 
     format!(
-        r##"
-<!DOCTYPE html>
+        r##"<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
-        <title>{page_title}</title>
-        <meta name="description" content="Engineer at Google" />
-        <link rel="stylesheet" href="./static/main.css" />
-        <link rel="preload" href="./static/iosevka-julsh-curly-regular.woff2" as="font" type="font/woff2" />
-        <link rel="preload" href="./static/iosevka-julsh-curly-bold.woff2" as="font" type="font/woff2" />
-        <link rel="apple-touch-icon" sizes="180x180" href="./static/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="./static/favicon-32x32.png" />
-        <meta name="theme-color" content="#11161d" />
-    </head>
-    <body>
-        {main_content}
-    </body>
-    <!-- 🗽 -->
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/>
+    <title>{title}</title>
+    <meta name="description" content="Engineer at Google"/>
+    <link rel="stylesheet" href="./static/main.css"/>
+    <link rel="preload" href="./static/iosevka-julsh-curly-regular.woff2" as="font" type="font/woff2"/>
+    <link rel="preload" href="./static/iosevka-julsh-curly-bold.woff2" as="font" type="font/woff2"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="./static/apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="./static/favicon-32x32.png"/>
+    <meta name="theme-color" content="#11161d"/>
+  </head>
+  <body>
+    {main}
+  </body>
+  <!-- 🗽 -->
 </html>
-"##,
+"##
     )
+}
+
+/// Parser transform:
+/// - If a markdown link points to an existing .md in the project, rewrite to its .html path.
+/// - If the link is external (http/https), append an inline SVG icon *before* the end tag.
+fn transform_events<'a>(
+    current_md: &Path,
+    markdown: &'a str,
+    all_md: &HashSet<PathBuf>,
+) -> Result<Vec<Event<'a>>> {
+    let mut out = Vec::new();
+    let is_readme_file = is_readme(current_md);
+
+    const GOOGLE_HTML: &str = r#"<span style="color: var(--gblue)">G</span><span style="color: var(--gred)">o</span><span style="color: var(--gyellow)">o</span><span style="color: var(--gblue)">g</span><span style="color: var(--ggreen)">l</span><span style="color: var(--gred)">e</span>"#;
+
+    for ev in Parser::new(markdown) {
+        match ev {
+            Event::Start(Tag::Link(link_ty, mut dest, title)) => {
+                if dest.ends_with(".md") {
+                    // Resolve relative to current file directory.
+                    let dest_string = dest.to_string();
+                    let dest_rel = Path::new(&dest_string);
+                    let full = current_md
+                        .parent()
+                        .unwrap_or(Path::new("./"))
+                        .join(dest_rel);
+
+                    if all_md.contains(&full) {
+                        let html_rel = make_html_path_rel(dest_rel);
+                        dest = html_rel.to_string_lossy().into_owned().into();
+                    }
+                }
+                out.push(Event::Start(Tag::Link(link_ty, dest, title)));
+            }
+            Event::End(Tag::Link(link_ty, dest, title)) => {
+                let is_external = dest.starts_with("http://") || dest.starts_with("https://");
+                if is_external {
+                    // Inject icon before we actually close the link.
+                    out.push(Event::Html(
+                        r#"<svg style="width:0.9em;vertical-align:middle;margin-left:0.2em" focusable="false" aria-hidden="true" viewBox="3 6 23 20"><path stroke="currentcolor" stroke-width="2" fill="none" d="M24 8L8 24M8 8H24v16"/></svg>"#
+                            .into(),
+                    ));
+                }
+                out.push(Event::End(Tag::Link(link_ty, dest, title)));
+            }
+            Event::Text(text) if is_readme_file && text.contains("Google") => {
+                let s = text.into_string();
+                out.extend(
+                    s.split("Google")
+                        .scan(true, |first, part| {
+                            let sep = (!*first)
+                                .then(|| std::iter::once(Event::Html(GOOGLE_HTML.into())))
+                                .into_iter()
+                                .flatten();
+                            *first = false;
+                            Some(sep.chain(std::iter::once(Event::Text(part.to_string().into()))))
+                        })
+                        .flatten()
+                        .filter(|ev| match ev {
+                            Event::Text(t) => !t.is_empty(),
+                            _ => true,
+                        }),
+                );
+            }
+            other => out.push(other),
+        }
+    }
+    Ok(out)
 }
