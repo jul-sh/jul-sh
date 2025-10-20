@@ -15,6 +15,8 @@ static OUTPUT_DIR: &str = "./build";
 static STATIC_DIR: &str = "./static";
 // Don't look for markdown files in these directories.
 static IGNORED_MD_DIRECTORIES: &[&str] = &["./target", "./.git", STATIC_DIR, OUTPUT_DIR];
+// Whether and what image of me on index.html
+static INDEX_IMAGE: Option<&str> = None;
 
 fn main() -> Result<()> {
     if let Err(e) = fs::remove_dir_all(OUTPUT_DIR) {
@@ -122,18 +124,17 @@ fn html_page(html_rel_path: &Path, fragment: String) -> String {
     } else {
         format!("{stem} — Juliette Pluto")
     };
-    let main = if is_index {
+    let main = if is_index && let Some(image_file) = INDEX_IMAGE {
         format!(
             r#"<main class="wide">
-  <div class="index-photo"><img src="./static/headshot.jpg" alt="Photo of Juliette Pluto"></div>
-  <div class="index-content">{}</div>
-</main>"#,
-            fragment
+      <div class="index-photo"><img src="./static/{}" alt="Photo of Juliette Pluto"></div>
+      <div class="index-content">{}</div>
+    </main>"#,
+            image_file, fragment
         )
     } else {
         format!(r#"<main>{fragment}</main>"#)
     };
-
     format!(
         r##"<!DOCTYPE html>
 <html lang="en">
@@ -158,9 +159,6 @@ fn html_page(html_rel_path: &Path, fragment: String) -> String {
     )
 }
 
-/// Parser transform:
-/// - If a markdown link points to an existing .md in the project, rewrite to its .html path.
-/// - If the link is external (http/https), append an inline SVG icon *before* the end tag.
 fn transform_events<'a>(
     current_md: &Path,
     markdown: &'a str,
@@ -173,6 +171,7 @@ fn transform_events<'a>(
 
     for ev in Parser::new(markdown) {
         match ev {
+            // If a markdown link points to an existing .md in the project, rewrite to its .html path.
             Event::Start(Tag::Link(link_ty, mut dest, title)) => {
                 if dest.ends_with(".md") {
                     // Resolve relative to current file directory.
@@ -190,6 +189,7 @@ fn transform_events<'a>(
                 }
                 out.push(Event::Start(Tag::Link(link_ty, dest, title)));
             }
+            // If the link is external (http/https), append an inline SVG icon *before* the end tag.
             Event::End(Tag::Link(link_ty, dest, title)) => {
                 let is_external = dest.starts_with("http://") || dest.starts_with("https://");
                 if is_external {
@@ -201,24 +201,14 @@ fn transform_events<'a>(
                 }
                 out.push(Event::End(Tag::Link(link_ty, dest, title)));
             }
+            // In text on readme, colorize Google.
             Event::Text(text) if is_readme_file && text.contains("Google") => {
                 let s = text.into_string();
-                out.extend(
-                    s.split("Google")
-                        .scan(true, |first, part| {
-                            let sep = (!*first)
-                                .then(|| std::iter::once(Event::Html(GOOGLE_HTML.into())))
-                                .into_iter()
-                                .flatten();
-                            *first = false;
-                            Some(sep.chain(std::iter::once(Event::Text(part.to_string().into()))))
-                        })
-                        .flatten()
-                        .filter(|ev| match ev {
-                            Event::Text(t) => !t.is_empty(),
-                            _ => true,
-                        }),
-                );
+                out.extend(s.split("Google").enumerate().flat_map(|(i, part)| {
+                    let html = (i > 0).then(|| Event::Html(GOOGLE_HTML.into()));
+                    let txt = (!part.is_empty()).then(|| Event::Text(part.to_string().into()));
+                    html.into_iter().chain(txt)
+                }));
             }
             other => out.push(other),
         }
