@@ -1,7 +1,7 @@
 //! Minimal static-site generator: convert *.md → HTML, mirror ./static.
 
 use eyre::Result;
-use pulldown_cmark::{html, Event, Parser, Tag};
+use pulldown_cmark::{Event, Parser, Tag, html};
 use std::{
     collections::HashSet,
     fs, io,
@@ -191,14 +191,6 @@ fn transform_events<'a>(
             }
             // If the link is external (http/https), append an inline SVG icon *before* the end tag.
             Event::End(Tag::Link(link_ty, dest, title)) => {
-                let is_external = dest.starts_with("http://") || dest.starts_with("https://");
-                if is_external {
-                    // Inject icon before we actually close the link.
-                    out.push(Event::Html(
-                        r#"<svg style="width:0.9em;vertical-align:middle;margin-left:0.2em" focusable="false" aria-hidden="true" viewBox="3 6 23 20"><path stroke="currentcolor" stroke-width="2" fill="none" d="M24 8L8 24M8 8H24v16"/></svg>"#
-                            .into(),
-                    ));
-                }
                 out.push(Event::End(Tag::Link(link_ty, dest, title)));
             }
             // In text on readme, colorize Google.
