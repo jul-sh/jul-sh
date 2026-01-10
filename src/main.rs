@@ -16,7 +16,18 @@ static STATIC_DIR: &str = "./static";
 // Don't look for markdown files in these directories.
 static IGNORED_MD_DIRECTORIES: &[&str] = &["./target", "./.git", STATIC_DIR, OUTPUT_DIR];
 // Whether and what image of me on index.html
-static INDEX_IMAGE: Option<&str> = None;
+const INDEX_IMAGE: IndexImage = IndexImage::None;
+
+#[derive(Clone, Copy)]
+enum IndexImage {
+    None,
+    Photo(&'static str),
+}
+
+enum PageKind {
+    Index { title: String, image: IndexImage },
+    Regular { title: String },
+}
 
 fn main() -> Result<()> {
     if let Err(e) = fs::remove_dir_all(OUTPUT_DIR) {
@@ -47,7 +58,7 @@ fn main() -> Result<()> {
         if let Some(parent) = out_path.parent() {
             fs::create_dir_all(parent)?;
         }
-        fs::write(&out_path, html_page(&rel_html, html_fragment))?;
+        fs::write(&out_path, html_page(&rel_html, html_fragment)?)?;
     }
 
     Ok(())
@@ -113,27 +124,23 @@ fn make_html_path_rel(md: &Path) -> PathBuf {
 }
 
 /// Build the full HTML page around a fragment.
-fn html_page(html_rel_path: &Path, fragment: String) -> String {
-    let stem = html_rel_path
-        .file_stem()
-        .and_then(|s| s.to_str())
-        .unwrap_or("index");
-    let is_index = stem == "index";
-    let title = if is_index {
-        "Juliette Pluto".to_string()
-    } else {
-        format!("{stem} — Juliette Pluto")
-    };
-    let main = if is_index && let Some(image_file) = INDEX_IMAGE {
-        format!(
-            r#"<main class="wide">
+fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
+    let fragment_ref = fragment.as_str();
+    let (title, main) = match PageKind::try_from(html_rel_path)? {
+        PageKind::Index { title, image } => {
+            let main = match image {
+                IndexImage::None => format!(r#"<main>{fragment_ref}</main>"#),
+                IndexImage::Photo(image_file) => format!(
+                    r#"<main class="wide">
       <div class="index-photo"><img src="./static/{}" alt="Photo of Juliette Pluto"></div>
       <div class="index-content">{}</div>
     </main>"#,
-            image_file, fragment
-        )
-    } else {
-        format!(r#"<main>{fragment}</main>"#)
+                    image_file, fragment_ref
+                ),
+            };
+            (title, main)
+        }
+        PageKind::Regular { title } => (title, format!(r#"<main>{fragment_ref}</main>"#)),
     };
     format!(
         r##"<!DOCTYPE html>
@@ -157,6 +164,38 @@ fn html_page(html_rel_path: &Path, fragment: String) -> String {
 </html>
 "##
     )
+    .into()
+}
+
+impl TryFrom<&Path> for PageKind {
+    type Error = eyre::Report;
+
+    fn try_from(html_rel_path: &Path) -> Result<Self> {
+        let ext = html_rel_path
+            .extension()
+            .and_then(|s| s.to_str())
+            .unwrap_or("");
+        if ext != "html" {
+            return Err(eyre::eyre!(
+                "expected .html path for page kind, got {}",
+                html_rel_path.display()
+            ));
+        }
+        let stem = html_rel_path
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .unwrap_or("index");
+        if stem == "index" {
+            Ok(PageKind::Index {
+                title: "Juliette Pluto".to_string(),
+                image: INDEX_IMAGE,
+            })
+        } else {
+            Ok(PageKind::Regular {
+                title: format!("{stem} — Juliette Pluto"),
+            })
+        }
+    }
 }
 
 fn transform_events<'a>(
