@@ -20,6 +20,14 @@ enum PageKind {
     Regular { title: String },
 }
 
+impl PageKind {
+    fn title(self) -> String {
+        match self {
+            Self::Index { title } | Self::Regular { title } => title,
+        }
+    }
+}
+
 fn main() -> Result<()> {
     if let Err(e) = fs::remove_dir_all(OUTPUT_DIR) {
         if e.kind() != io::ErrorKind::NotFound {
@@ -116,12 +124,8 @@ fn make_html_path_rel(md: &Path) -> PathBuf {
 
 /// Build the full HTML page around a fragment.
 fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
-    let fragment_ref = fragment.as_str();
-    let (title, main) = match PageKind::try_from(html_rel_path)? {
-        PageKind::Index { title } | PageKind::Regular { title } => {
-            (title, format!(r#"<main>{fragment_ref}</main>"#))
-        }
-    };
+    let title = PageKind::try_from(html_rel_path)?.title();
+    let main = format!(r#"<main>{fragment}</main>"#);
     Ok(format!(
         r##"<!DOCTYPE html>
 <html lang="en">
