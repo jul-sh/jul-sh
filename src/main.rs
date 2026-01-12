@@ -15,17 +15,8 @@ static OUTPUT_DIR: &str = "./build";
 static STATIC_DIR: &str = "./static";
 // Don't look for markdown files in these directories.
 static IGNORED_MD_DIRECTORIES: &[&str] = &["./target", "./.git", STATIC_DIR, OUTPUT_DIR];
-// Whether and what image of me on index.html
-const INDEX_IMAGE: IndexImage = IndexImage::None;
-
-#[derive(Clone, Copy)]
-enum IndexImage {
-    None,
-    Photo(&'static str),
-}
-
 enum PageKind {
-    Index { title: String, image: IndexImage },
+    Index { title: String },
     Regular { title: String },
 }
 
@@ -127,22 +118,11 @@ fn make_html_path_rel(md: &Path) -> PathBuf {
 fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     let fragment_ref = fragment.as_str();
     let (title, main) = match PageKind::try_from(html_rel_path)? {
-        PageKind::Index { title, image } => {
-            let main = match image {
-                IndexImage::None => format!(r#"<main>{fragment_ref}</main>"#),
-                IndexImage::Photo(image_file) => format!(
-                    r#"<main class="wide">
-      <div class="index-photo"><img src="./static/{}" alt="Photo of Juliette Pluto"></div>
-      <div class="index-content">{}</div>
-    </main>"#,
-                    image_file, fragment_ref
-                ),
-            };
-            (title, main)
+        PageKind::Index { title } | PageKind::Regular { title } => {
+            (title, format!(r#"<main>{fragment_ref}</main>"#))
         }
-        PageKind::Regular { title } => (title, format!(r#"<main>{fragment_ref}</main>"#)),
     };
-    format!(
+    Ok(format!(
         r##"<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -163,8 +143,7 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
   <!-- 🗽 -->
 </html>
 "##
-    )
-    .into()
+    ))
 }
 
 impl TryFrom<&Path> for PageKind {
@@ -188,7 +167,6 @@ impl TryFrom<&Path> for PageKind {
         if stem == "index" {
             Ok(PageKind::Index {
                 title: "Juliette Pluto".to_string(),
-                image: INDEX_IMAGE,
             })
         } else {
             Ok(PageKind::Regular {
