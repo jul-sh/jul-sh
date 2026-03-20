@@ -6,7 +6,7 @@ _Enterprising software engineer with a penchant for pragmatic solutions to compl
 
 ## Experience
 
-### Sr Software Engineer at Google DeepMind; 2020-04 to present; New York, NY (via London, UK)
+### Sr Software Engineer at Google DeepMind; 2020-04 to present; New York City & London
 
 ML security and privacy; systems engineering.
 
@@ -14,7 +14,7 @@ ML security and privacy; systems engineering.
 - [Presentation I gave at OC3](https://www.youtube.com/watch?v=LaT_vgz3Dd4) on our implementation of remote attestation to verify a server's entire software stack, from firmware to application
 - Confidential federated computation ([blogpost](https://research.google/blog/discovering-new-words-with-confidential-federated-analytics/), [paper](https://arxiv.org/abs/2404.10764))
 
-### Web Engineer at N26; 2018-01 to 2020-03; Berlin, Europe
+### Web Engineer at N26; 2018-01 to 2020-03; Berlin
 
 Joined a small team of four engineers at a fintech startup rebuilding the web platform from scratch. Grew the team to 20+ engineers as the company scaled to unicorn status.
 
@@ -25,20 +25,20 @@ Joined a small team of four engineers at a fintech startup rebuilding the web pl
 - Improved time-to-interactive by 1.4s with code splitting
 - Doubled font loading speed via range-splitting & preloading
 
-### Lead Engineer at Language Academy; 2016-08 to 2017-12; Berlin, Europe
+### Lead Engineer at Language Academy; 2016-08 to 2017-12; Berlin
 
 - Led development of the web platform
 - Achieved a 63% faster time-to-interactive than competiting platforms
 - Accomplished a 10% visitor-to-subscriber rate on marketing pages
 
-### Web Developer & Design Researcher at Clue; 2015-10 to 2016-08; Berlin, Europe
+### Web Developer & Design Researcher at Clue; 2015-10 to 2016-08; Berlin
 
 - Rebuilt the self-service support website, increasing ussage by 20%
 - Created & implemented company-wide processes for user research
 
 ## Education
 
-- Humboldt University; 2013-10 to 2016-03; Berlin, Europe
+- Humboldt University; 2013-10 to 2016-03; Berlin
 
 ## Recognition
 
