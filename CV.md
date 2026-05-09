@@ -1,20 +1,21 @@
 # Juliette Pluto
 
-_Enterprising software engineer with a penchant for pragmatic solutions to complex problems._
+_Enterprising software engineer with a penchant for pragmatic solutions to complex problems at the edge of research._
 
 [j@jul.sh](mailto:j@jul.sh)
 
 ## Experience
 
-### Sr Software Engineer at Google DeepMind; 2020-04 to present; New York City & London
+### **Google DeepMind** | Staff Software Engineer (L6) | 2020-04 to Present | NYC
+*(Promoted to Staff in 2026; Senior in 2024)*
 
-ML security and privacy; systems engineering.
+* **Agentic Threat Modeling:** Started GDM's first effort to defend against prompt injection. Established the core security evaluation bundle utilized directly by GenAI leadership for frontier model selection. Expanded state-of-the-art adversarial evaluation coverage across all critical agentic distributions in production (Workspace, Cloud, Search).
+* **Data-Centric Robustness Mitigations:** Selected by leadership to close a critical prompt injection robustness gap for a multi-billion-dollar enterprise contract. Conducted deep data analysis unlocking 2x robustness gains through targeted training mitigations, advising the customer's Head of ML Safety, and securing final acceptance.
+* **Defensive Architecture:** Invented the *User Instruction Classifier*, an early policy-based defense achieving 99.97% robustness against adaptive prompt injection attacks on the team's internal benchmark; the technique was subsequently adopted to improve resilience against human red-teaming in production safety systems. 
+* **Cross-Organizational Threat Intelligence:** Discovered unaddressed attack surfaces in Google Search ahead of organizational awareness, directing a cross-org technical response executed by 4 FTEs. Authored sections of Google-Wide Prompt Injection Playbook.
+* **Systems Security & Privacy-Preserving ML (Pre-2024):** Designed an Trusted-Execution-Enviroment orchestrator to drastically reduce the Trusted Computing Base for remotely attested production ML launches (e.g., Gboard). Engineered end-to-end encryption for Private Inference extending directly to the browser, and prevented critical zero-day vulnerabilities during infrastructure design.
 
-- [Google Security blogpost](https://security.googleblog.com/2025/01/how-we-estimate-risk-from-prompt.html) on indirect prompt injection that I co-authored
-- [Presentation I gave at OC3](https://www.youtube.com/watch?v=LaT_vgz3Dd4) on our implementation of remote attestation to verify a server's entire software stack, from firmware to application
-- Confidential federated computation ([blogpost](https://research.google/blog/discovering-new-words-with-confidential-federated-analytics/), [paper](https://arxiv.org/abs/2404.10764))
-
-### Web Engineer at N26; 2018-01 to 2020-03; Berlin
+### **N26** | Software Engineer | 2018-01 to 2020-03 | Berlin
 
 Joined a small team of four engineers at a fintech startup rebuilding the web platform from scratch. Grew the team to 20+ engineers as the company scaled to unicorn status.
 
@@ -25,13 +26,11 @@ Joined a small team of four engineers at a fintech startup rebuilding the web pl
 - Improved time-to-interactive by 1.4s with code splitting
 - Doubled font loading speed via range-splitting & preloading
 
-### Lead Engineer at Language Academy; 2016-08 to 2017-12; Berlin
+### **Language Academy** | Lead Engineer | 2016-08 to 2017-12 | Berlin
 
 - Led development of the web platform
-- Achieved a 63% faster time-to-interactive than competiting platforms
-- Accomplished a 10% visitor-to-subscriber rate on marketing pages
 
-### Web Developer & Design Researcher at Clue; 2015-10 to 2016-08; Berlin
+### **Clue** | Web Developer & Design Researcher | 2015-10 to 2016-08 | Berlin
 
 - Rebuilt the self-service support website, increasing ussage by 20%
 - Created & implemented company-wide processes for user research
@@ -43,8 +42,3 @@ Joined a small team of four engineers at a fintech startup rebuilding the web pl
 ## Recognition
 
 - Google Developer Expert for Web Technologies; 2019-03 to 2020-02
-
-## Personal Projects
-
-- [agnostic-axe](https://github.com/dequelabs/agnostic-axe): Developer tool that reports accessibility issues to the browser console. (Now maintained by Deque Systems).
-- [co-commit](https://github.com/jul-sh/npx-co-commit): Friendly CLI to quickly co-author commits on GitHub when pair programming. Featured on the front page of Product Hunt.
