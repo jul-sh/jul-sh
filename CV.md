@@ -18,23 +18,15 @@ _Enterprising engineer with a penchant for pragmatic work on complex research pr
 
 ### **N26** | Software Engineer | 2018-01 to 2020-03 | Berlin
 
-Joined a small team of four engineers at a fintech startup rebuilding the web platform from scratch. Grew the team to 20+ engineers as the company scaled to unicorn status.
-
-- Led development of key products across the stack
-- Mentored junior & mid-level engineers, proactively took charge of team processes
-- Reduced errors in prod by 30% via deterministic script loading
-- Sped up time-to-first-meaningful-paint by 20% via improved server-side rendering
-- Improved time-to-interactive by 1.4s with code splitting
-- Doubled font loading speed via range-splitting & preloading
+Joined a four-engineer web platform rebuild and helped scale the team past 20 engineers as N26 became a unicorn. Led full-stack product work, mentored engineers, and improved production reliability/performance: 30% fewer prod errors, 20% faster time-to-first-meaningful-paint, 1.4s faster time-to-interactive.
 
 ### **Language Academy** | Lead Engineer | 2016-08 to 2017-12 | Berlin
 
-- Led development of the web platform
+Led development of the web platform.
 
 ### **Clue** | Web Developer & Design Researcher | 2015-10 to 2016-08 | Berlin
 
-- Rebuilt the self-service support website, increasing usage by 20%
-- Created & implemented company-wide processes for user research
+Rebuilt the self-service support website, increasing usage by 20%, and created company-wide user research processes.
 
 ## Education
 
