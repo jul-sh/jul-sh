@@ -1,6 +1,6 @@
 # Juliette Pluto
 
-_Enterprising software engineer with a penchant for pragmatic solutions to complex problems at the edge of research._
+_Enterprising engineer with a penchant for pragmatic work on complex research problems._
 
 [j@jul.sh](mailto:j@jul.sh)
 
@@ -9,11 +9,12 @@ _Enterprising software engineer with a penchant for pragmatic solutions to compl
 ### **Google DeepMind** | Staff Software Engineer (L6) | 2020-04 to Present | NYC
 *(Promoted to Staff in 2026; Senior in 2024)*
 
-* **Agentic Threat Modeling:** Started GDM's first effort to defend against prompt injection. Established the core security evaluation bundle utilized directly by GenAI leadership for frontier model selection. Expanded state-of-the-art adversarial evaluation coverage across all critical agentic distributions in production (Workspace, Cloud, Search).
-* **Data-Centric Robustness Mitigations:** Selected by leadership to close a critical prompt injection robustness gap for a multi-billion-dollar enterprise contract. Conducted deep data analysis unlocking 2x robustness gains through targeted training mitigations, advising the customer's Head of ML Safety, and securing final acceptance.
-* **Defensive Architecture:** Invented the *User Instruction Classifier*, an early policy-based defense achieving 99.97% robustness against adaptive prompt injection attacks on the team's internal benchmark; the technique was subsequently adopted to improve resilience against human red-teaming in production safety systems. 
-* **Cross-Organizational Threat Intelligence:** Discovered unaddressed attack surfaces in Google Search ahead of organizational awareness, directing a cross-org technical response executed by 4 FTEs. Authored sections of Google-Wide Prompt Injection Playbook.
-* **Systems Security & Privacy-Preserving ML (Pre-2024):** Designed an Trusted-Execution-Enviroment orchestrator to drastically reduce the Trusted Computing Base for remotely attested production ML launches (e.g., Gboard). Engineered end-to-end encryption for Private Inference extending directly to the browser, and prevented critical zero-day vulnerabilities during infrastructure design.
+* **Agentic Safety Evaluations:** Started GDM's first effort to defend against prompt injection and established the core security evaluation bundle used directly by GenAI leadership for frontier model selection. Expanded adversarial evaluation coverage across critical production agentic surfaces: Workspace, Cloud, and Search.
+* **Gemini Prompt Injection Robustness Strategy:** Originated and socialized a novel mitigation strategy for adaptive prompt injection robustness, overcoming initial resistance and securing resourcing for implementation; applying the strategy under the same data budget delivered a 5x improvement on an internal automated red-teaming benchmark used as a team OKR.
+* **Data-Centric Robustness Mitigations:** Selected by leadership to close a critical prompt injection robustness gap for a multi-billion-dollar enterprise contract. Analyzed failure modes and targeted training distributions, doubling robustness on an internal benchmark; advised the customer's Head of ML Safety and helped secure final acceptance.
+* **Defensive Architecture:** Invented the *User Instruction Classifier*, an early policy-based defense achieving 99.97% robustness against adaptive prompt injection attacks on the team's internal benchmark; the technique was subsequently adopted to improve resilience against human red-teaming in production safety systems.
+* **Cross-Organizational Threat Intelligence:** Discovered unaddressed attack surfaces in Google Search ahead of organizational awareness; directed a cross-org technical response executed by 4 FTEs and co-authored sections of the Google-wide Prompt Injection Playbook.
+* **Systems Security & Privacy-Preserving ML (Pre-2024):** Designed a Trusted Execution Environment orchestrator to reduce the Trusted Computing Base (TCB) for remote-attested production ML launches (e.g., Gboard). Engineered browser-to-enclave end-to-end encryption for Private Inference and prevented critical zero-day vulnerabilities during infrastructure design.
 
 ### **N26** | Software Engineer | 2018-01 to 2020-03 | Berlin
 
@@ -32,7 +33,7 @@ Joined a small team of four engineers at a fintech startup rebuilding the web pl
 
 ### **Clue** | Web Developer & Design Researcher | 2015-10 to 2016-08 | Berlin
 
-- Rebuilt the self-service support website, increasing ussage by 20%
+- Rebuilt the self-service support website, increasing usage by 20%
 - Created & implemented company-wide processes for user research
 
 ## Education
