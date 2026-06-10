@@ -109,9 +109,10 @@ main.wide .index-photo img {
     }
 }
 
-h1 {
-    font-size: 2em;
-    margin: 0.2em 0 0.67em 0;
+/* Strapline directly under a page title, e.g. the CV tagline. */
+h1 + p em {
+    color: var(--lightBlue);
+    font-size: 0.85em;
 }
 
 h1,
@@ -128,9 +129,11 @@ h2 a {
     color: var(--yellow);
 }
 
+/* CV entries: "### **Company** Â· Role" â€” company leads via weight. */
 h3 {
     font-size: 1rem;
-    margin: 2.5em 0 1em 0;
+    font-weight: normal;
+    margin: 2.5em 0 0 0;
 }
 
 h3,
@@ -138,10 +141,21 @@ h3 a {
     color: var(--orange);
 }
 
+h3 strong {
+    font-weight: bold;
+}
+
+/* "#### dates Â· location" meta line under each CV entry. */
 h4,
 h4 a {
-    font-size: 1rem;
-    color: var(--blue);
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: var(--lightBlue);
+}
+
+h4 {
+    letter-spacing: 0.02em;
+    margin: 0.35em 0 1em 0;
 }
 
 h1:first-child,
