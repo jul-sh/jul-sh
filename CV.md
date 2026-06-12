@@ -27,6 +27,17 @@ Joined the web platform rebuild as one of four engineers and helped scale the te
 ### **Clue** · Web Developer & Design Researcher
 #### 2015-10 — 2016-08 · Berlin
 
+## Papers
+
+* *The Attacker Moves Second: Stronger Adaptive Attacks Bypass Defenses Against LLM Jailbreaks and Prompt Injections.* Nasr, Carlini, Sitawarin, Schulhoff, Hayes, Ilie, **Pluto**, Song, Chaudhari, Shumailov, Thakurta, Xiao, Terzis, Tramèr. [arXiv:2510.09023](https://arxiv.org/abs/2510.09023), 2025.
+* *Lessons from Defending Gemini Against Indirect Prompt Injections.* Shi, Lin, Song, Hayes, Shumailov, Yona, **Pluto**, Pappu, Choquette-Choo, Nasr, Sitawarin, Gibson, Terzis, Flynn. [arXiv:2505.14534](https://arxiv.org/abs/2505.14534), 2025.
+* *Gemini 2.5: Pushing the Frontier with Advanced Reasoning, Multimodality, Long Context, and Next Generation Agentic Capabilities.* Gemini Team, incl. **Pluto**. [arXiv:2507.06261](https://arxiv.org/abs/2507.06261), 2025.
+
+## Talks
+
+* *DICE Attestation on AMD SEV-SNP.* With Ivan Petrov. [OC3 2024](https://www.youtube.com/watch?v=LaT_vgz3Dd4).
+* *Beyond the Paper: Operationalizing Auto Red Teaming for Measurable Model Evaluation & Development.* AI Red Team Colloquium.
+
 ## Education
 
 ### **Humboldt University**
