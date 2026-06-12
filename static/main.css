@@ -22,6 +22,7 @@
     --blue: hsl(209, 36%, 70%);
     --lightBlue: hsl(179, 40%, 70%);
     --green: hsl(152, 25%, 53%);
+    --dimGreen: hsl(152, 22%, 45%);
 
     --gblue: hsl(216, 64%, 68%);
     --gred: hsl(5, 63%, 70%);
@@ -29,14 +30,22 @@
     --ggreen: hsl(104, 38%, 64%);
 
     --background: hsl(217, 12%, 9%);
+    --statusline-background: hsl(217, 14%, 13%);
 
     --responsive-padding: 2.3rem;
 
     background: var(--background);
     color: var(--green);
+    color-scheme: dark;
     font-family: iosevka_julsh, monospace;
     font-size: 26px;
     line-height: 1.4;
+}
+
+/* Terminal inverse-video selection. */
+::selection {
+    background: var(--green);
+    color: var(--background);
 }
 
 body,
@@ -50,6 +59,12 @@ html {
     flex-grow: 1;
     justify-content: center;
     align-items: center;
+}
+
+/* Keep content clear of the fixed statusline. */
+body {
+    box-sizing: border-box;
+    padding-bottom: 2.4rem;
 }
 
 main {
@@ -120,6 +135,38 @@ h1 a {
     color: var(--pink);
 }
 
+/* Markdown source sigils: the site is generated from markdown, so show it.
+   The "/ ''" alt text keeps screen readers from announcing the hashes. */
+h1::before {
+    content: "# " / "";
+    font-weight: normal;
+    color: var(--dimGreen);
+}
+
+/* A resting block cursor after the page title. */
+h1::after {
+    content: "";
+    display: inline-block;
+    width: 0.5em;
+    height: 1.05em;
+    margin-left: 0.12em;
+    vertical-align: text-bottom;
+    background: var(--pink);
+    animation: cursor-blink 1.3s step-end infinite;
+}
+
+@keyframes cursor-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    h1::after {
+        animation: none;
+    }
+}
+
 h2 {
     margin: 1.75em 0 0.75em 0;
 }
@@ -129,7 +176,13 @@ h2 a {
     color: var(--yellow);
 }
 
-/* CV entries: "### **Company** Â· Role" â€” company leads via weight. */
+h2::before {
+    content: "## " / "";
+    font-weight: normal;
+    color: var(--dimGreen);
+}
+
+/* CV entries: "### **Company** · Role" — company leads via weight. */
 h3 {
     font-size: 1rem;
     font-weight: normal;
@@ -145,7 +198,7 @@ h3 strong {
     font-weight: bold;
 }
 
-/* "#### dates Â· location" meta line under each CV entry. */
+/* "#### dates · location" meta line under each CV entry. */
 h4,
 h4 a {
     font-size: 0.75rem;
@@ -166,6 +219,20 @@ h2 + h3 {
     margin-top: 0;
 }
 
+/* Markdown source list markers. */
+ul {
+    list-style-type: "- ";
+    padding-left: 1.4em;
+}
+
+li::marker {
+    color: var(--dimGreen);
+}
+
+li + li {
+    margin-top: 0.6em;
+}
+
 a {
     text-decoration: underline;
     color: var(--blue);
@@ -180,6 +247,50 @@ a:active {
     color: var(--darkBlue);
 }
 
+:focus-visible {
+    outline: 2px solid var(--lightBlue);
+    outline-offset: 3px;
+}
+
+/* tmux-style statusline. */
+footer.statusline {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    padding: 0.45em 1.1em;
+    box-sizing: border-box;
+    background: var(--statusline-background);
+    color: hsl(152, 18%, 55%);
+    font-size: 0.6rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.statusline-session a {
+    color: var(--green);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.statusline-session a:hover,
+.statusline-session a:active {
+    color: var(--lightBlue);
+    text-decoration: underline;
+}
+
+.statusline-meta a {
+    color: inherit;
+}
+
+.statusline-meta a:hover,
+.statusline-meta a:active {
+    color: var(--lightBlue);
+}
+
 @media only screen and (max-width: 700px) {
     :root {
         font-size: 20px;
@@ -189,6 +300,15 @@ a:active {
 
     h1 {
         font-size: 1.75em;
+    }
+
+    footer.statusline {
+        font-size: 12px;
+        padding: 0.5em 0.9em;
+    }
+
+    body {
+        padding-bottom: 2.2rem;
     }
 }
 
@@ -202,6 +322,7 @@ a:active {
     :root {
         font-size: 11pt;
         line-height: 1.1;
+        background: none;
     }
 
     * {
@@ -210,6 +331,7 @@ a:active {
 
     body {
         background: none;
+        padding-bottom: 0;
     }
 
     main {
@@ -223,5 +345,23 @@ a:active {
 
     h3 {
         margin-top: 1.5em;
+    }
+
+    /* Screen-only terminal furniture. */
+    h1::after {
+        display: none;
+    }
+
+    h1::before,
+    h2::before {
+        content: none;
+    }
+
+    li::marker {
+        color: black;
+    }
+
+    footer.statusline {
+        display: none;
     }
 }
