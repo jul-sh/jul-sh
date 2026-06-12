@@ -126,6 +126,19 @@ fn make_html_path_rel(md: &Path) -> PathBuf {
 fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     let title = PageKind::try_from(html_rel_path)?.title();
     let main = format!(r#"<main>{fragment}</main>"#);
+    // tmux-style statusline: the page as a shell path, contact on the right.
+    let stem = html_rel_path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("index");
+    let path_label = if stem == "index" {
+        "~".to_string()
+    } else {
+        format!("~/{}", stem.to_lowercase())
+    };
+    let footer = format!(
+        r#"<footer class="statusline"><span class="statusline-context"><span class="statusline-session"><a href="index.html">[jul.sh]</a></span> {path_label}</span><span class="statusline-meta">new york · <a href="mailto:j@jul.sh">j@jul.sh</a></span></footer>"#
+    );
     Ok(format!(
         r##"<!DOCTYPE html>
 <html lang="en">
@@ -135,14 +148,15 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     <title>{title}</title>
     <meta name="description" content="Engineer at Google"/>
     <link rel="stylesheet" href="./static/main.css"/>
-    <link rel="preload" href="./static/iosevka-julsh-curly-regular.woff2" as="font" type="font/woff2"/>
-    <link rel="preload" href="./static/iosevka-julsh-curly-bold.woff2" as="font" type="font/woff2"/>
+    <link rel="preload" href="./static/IosevkaCharon-Regular.woff2" as="font" type="font/woff2" crossorigin/>
+    <link rel="preload" href="./static/IosevkaCharon-Bold.woff2" as="font" type="font/woff2" crossorigin/>
     <link rel="apple-touch-icon" sizes="180x180" href="./static/apple-touch-icon.png"/>
     <link rel="icon" type="image/png" sizes="32x32" href="./static/favicon-32x32.png"/>
-    <meta name="theme-color" content="#11161d"/>
+    <meta name="theme-color" content="#14161a"/>
   </head>
   <body>
     {main}
+    {footer}
   </body>
   <!-- 🗽 -->
 </html>
