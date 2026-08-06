@@ -29,7 +29,7 @@ Joined the web platform rebuild as one of four engineers and helped scale the te
 
 ## Papers
 
-* *The Attacker Moves Second: Stronger Adaptive Attacks Bypass Defenses Against LLM Jailbreaks and Prompt Injections.* Nasr, Carlini, Sitawarin, Schulhoff, Hayes, Ilie, **Pluto**, Song, Chaudhari, Shumailov, Thakurta, Xiao, Terzis, Tramèr. [arXiv:2510.09023](https://arxiv.org/abs/2510.09023), 2025.
+* *The Attacker Moves Second: Stronger Adaptive Attacks Bypass Defenses Against LLM Jailbreaks and Prompt Injections.* Nasr, Carlini, Sitawarin, Schulhoff, Hayes, Ilie, **Pluto**, Song, Chaudhari, Shumailov, Thakurta, Xiao, Terzis, Tramèr. [USENIX Security 2026](https://www.usenix.org/conference/usenixsecurity26/presentation/nasr), 2026.
 * *Lessons from Defending Gemini Against Indirect Prompt Injections.* Shi, Lin, Song, Hayes, Shumailov, Yona, **Pluto**, Pappu, Choquette-Choo, Nasr, Sitawarin, Gibson, Terzis, Flynn. [arXiv:2505.14534](https://arxiv.org/abs/2505.14534), 2025.
 * *Gemini 2.5: Pushing the Frontier with Advanced Reasoning, Multimodality, Long Context, and Next Generation Agentic Capabilities.* Gemini Team, incl. **Pluto**. [arXiv:2507.06261](https://arxiv.org/abs/2507.06261), 2025.
 
