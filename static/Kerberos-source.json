@@ -1,0 +1,88 @@
+{
+  "upstream": "https://github.com/jul-sh/Kerberos",
+  "release": "v1.2.1",
+  "release_url": "https://github.com/jul-sh/Kerberos/releases/tag/v1.2.1",
+  "released_at": "2026-10-12T12:30:41Z",
+  "source_commit": "1fd04ab087201ca0bfcb5b69927305fdb37cce02",
+  "checked_on": "2026-10-12",
+  "main_equals_release_commit": true,
+  "notes": "Official release binaries. Local filenames retained for existing CSS URLs. Latest release tag and main were the same commit at verification. All font tables parsed with fontTools, WOFF2 signatures and published asset SHA-256 digests checked.",
+  "fonts": [
+    {
+      "file": "Kerberos[wght].woff2",
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.2.1/Kerberos-VF.woff2",
+      "sha256": "fb82990f8056263b20b7ee3483c60c6e364e4202fe0e395973eb4d9455f66ee2",
+      "bytes": 602168,
+      "font_version": "Version 1.201",
+      "font_revision": 1.2010040283203125,
+      "family": "Kerberos",
+      "style": "Regular",
+      "glyph_count": 2159,
+      "unicode_codepoint_count": 1255,
+      "axes": [
+        {
+          "tag": "wght",
+          "minimum": 300.0,
+          "default": 400.0,
+          "maximum": 700.0
+        },
+        {
+          "tag": "opsz",
+          "minimum": 8.0,
+          "default": 14.0,
+          "maximum": 72.0
+        },
+        {
+          "tag": "GRAD",
+          "minimum": -50.0,
+          "default": 0.0,
+          "maximum": 100.0
+        }
+      ],
+      "replaced": {
+        "sha256": "9d4273a9a27d88ac0cf60ebcac64fb7bb91c4fdaa14c2ad116b5cdcd3756c6a5",
+        "bytes": 209664,
+        "font_version": "Version 1.101",
+        "font_revision": 1.1009979248046875
+      }
+    },
+    {
+      "file": "Kerberos-Italic[wght].woff2",
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.2.1/Kerberos-Italic-VF.woff2",
+      "sha256": "35275ffe88278d8b9d55d801794586dbf43fc470236daef54bf402a60c9803fc",
+      "bytes": 660452,
+      "font_version": "Version 1.201",
+      "font_revision": 1.2010040283203125,
+      "family": "Kerberos",
+      "style": "Italic",
+      "glyph_count": 2166,
+      "unicode_codepoint_count": 1255,
+      "axes": [
+        {
+          "tag": "wght",
+          "minimum": 300.0,
+          "default": 400.0,
+          "maximum": 700.0
+        },
+        {
+          "tag": "opsz",
+          "minimum": 8.0,
+          "default": 14.0,
+          "maximum": 72.0
+        },
+        {
+          "tag": "GRAD",
+          "minimum": -50.0,
+          "default": 0.0,
+          "maximum": 100.0
+        }
+      ],
+      "replaced": {
+        "sha256": "2e1e3930b90ba114fc4cc72b4f055c4a83fd22b88a88f9f534915925ebfa7620",
+        "bytes": 222936,
+        "font_version": "Version 1.101",
+        "font_revision": 1.1009979248046875
+      }
+    }
+  ]
+}

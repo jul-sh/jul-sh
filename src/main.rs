@@ -3,8 +3,10 @@
 use eyre::Result;
 use pulldown_cmark::{Event, Parser, Tag, html};
 use std::{
-    collections::HashSet,
-    fs, io,
+    collections::{HashSet, hash_map::DefaultHasher},
+    fs,
+    hash::{Hash, Hasher},
+    io,
     path::{Path, PathBuf},
 };
 use walkdir::WalkDir;
@@ -14,18 +16,18 @@ static OUTPUT_DIR: &str = "./build";
 // Copy this static directory into output. Used for font files, images, etc.
 static STATIC_DIR: &str = "./static";
 // Don't look for markdown files in these directories.
-static IGNORED_MD_DIRECTORIES: &[&str] = &["./target", "./.git", STATIC_DIR, OUTPUT_DIR];
+static IGNORED_MD_DIRECTORIES: &[&str] = &[
+    "./target",
+    "./.git",
+    "./src",
+    "./explorations",
+    STATIC_DIR,
+    OUTPUT_DIR,
+];
 enum PageKind {
-    Index { title: String },
+    About,
+    Cv,
     Regular { title: String },
-}
-
-impl PageKind {
-    fn title(self) -> String {
-        match self {
-            Self::Index { title } | Self::Regular { title } => title,
-        }
-    }
 }
 
 fn main() -> Result<()> {
@@ -124,21 +126,37 @@ fn make_html_path_rel(md: &Path) -> PathBuf {
 
 /// Build the full HTML page around a fragment.
 fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
-    let title = PageKind::try_from(html_rel_path)?.title();
-    let main = format!(r#"<main>{fragment}</main>"#);
-    // tmux-style statusline: the page as a shell path, contact on the right.
-    let stem = html_rel_path
-        .file_stem()
-        .and_then(|s| s.to_str())
-        .unwrap_or("index");
-    let path_label = if stem == "index" {
-        "~".to_string()
-    } else {
-        format!("~/{}", stem.to_lowercase())
+    let depth = html_rel_path.parent().map_or(0, |p| p.components().count());
+    let prefix = "../".repeat(depth);
+    let static_root = format!("{prefix}static");
+    let about_link = format!("{prefix}index.html");
+    let stylesheet = asset_url(&static_root, "main.css")?;
+    let (title, body_class, contents, after_main) = match PageKind::try_from(html_rel_path)? {
+        PageKind::About => (
+            "Juliette Pluto".to_string(),
+            "home variant-inline",
+            include_str!("about.html").to_string(),
+            format!(
+                r#"<div id="image-preview" class="image-preview" aria-hidden="true" hidden><img alt=""></div><script src="{}" defer></script>"#,
+                asset_url(&static_root, "preview.js")?
+            ),
+        ),
+        PageKind::Cv => (
+            "CV — Juliette Pluto".to_string(),
+            "cv variant-inline",
+            format!(
+                r#"<article class="resume">{}</article>"#,
+                cv_fragment(fragment)
+            ),
+            format!(r#"<footer class="cv-footer"><a href="{about_link}">← About</a></footer>"#),
+        ),
+        PageKind::Regular { title } => (
+            title,
+            "cv variant-inline",
+            format!(r#"<article class="resume">{fragment}</article>"#),
+            format!(r#"<footer class="cv-footer"><a href="{about_link}">← About</a></footer>"#),
+        ),
     };
-    let footer = format!(
-        r#"<footer class="statusline"><span class="statusline-context"><span class="statusline-session"><a href="index.html">[jul.sh]</a></span> {path_label}</span><span class="statusline-meta">new york · <a href="mailto:j@jul.sh">j@jul.sh</a></span></footer>"#
-    );
     Ok(format!(
         r##"<!DOCTYPE html>
 <html lang="en">
@@ -146,22 +164,62 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/>
     <title>{title}</title>
-    <meta name="description" content="Engineer at Google"/>
-    <link rel="stylesheet" href="./static/main.css"/>
-    <link rel="preload" href="./static/IosevkaCharon-Regular.woff2" as="font" type="font/woff2" crossorigin/>
-    <link rel="preload" href="./static/IosevkaCharon-Bold.woff2" as="font" type="font/woff2" crossorigin/>
-    <link rel="apple-touch-icon" sizes="180x180" href="./static/apple-touch-icon.png"/>
-    <link rel="icon" type="image/png" sizes="32x32" href="./static/favicon-32x32.png"/>
-    <meta name="theme-color" content="#14161a"/>
+    <meta name="description" content="Juliette Pluto, Staff Software Engineer at Google DeepMind in New York City. Adversarial robustness for frontier AI systems."/>
+    <link rel="stylesheet" href="{stylesheet}"/>
+    <link rel="preload" href="{static_root}/Kerberos[wght].woff2?v=1.2.1" as="font" type="font/woff2" crossorigin/>
+    <link rel="preload" href="{static_root}/IosevkaCharon-Bold.woff2" as="font" type="font/woff2" crossorigin/>
+    <link rel="apple-touch-icon" sizes="180x180" href="{static_root}/apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="{static_root}/favicon-32x32.png"/>
+    <meta name="theme-color" content="#eef1f0"/>
   </head>
-  <body>
-    {main}
-    {footer}
+  <body class="{body_class}">
+    <a class="skip" href="#main">Skip to content</a>
+    <main id="main">{contents}</main>
+    {after_main}
   </body>
   <!-- 🗽 -->
 </html>
 "##
     ))
+}
+
+/// Fingerprint mutable assets so rebuilding also refreshes cached CSS and JS.
+fn asset_url(static_root: &str, name: &str) -> Result<String> {
+    let mut hash = DefaultHasher::new();
+    fs::read(Path::new(STATIC_DIR).join(name))?.hash(&mut hash);
+    Ok(format!("{static_root}/{name}?v={:x}", hash.finish()))
+}
+
+/// Preserve the Markdown CV as the content source, adding its typographic structure.
+fn cv_fragment(fragment: String) -> String {
+    let mut cv = fragment
+        .replace(
+            "<h1>Juliette Pluto</h1>",
+            r#"<h1><a href="index.html">Juliette Pluto</a></h1>"#,
+        )
+        .replace("<h4>", r#"<p class="dates">"#)
+        .replace("</h4>", "</p>");
+    for heading in ["Experience", "Papers", "Talks", "Education", "Recognition"] {
+        cv = cv.replace(
+            &format!("<h2>{heading}</h2>"),
+            &format!(r#"<h2 id="{}">{heading}</h2>"#, heading.to_lowercase()),
+        );
+    }
+    for (needle, text, city, viewbox) in [
+        ("· NYC ·", "NYC", "liberty", "185 2 491 695"),
+        (
+            "2018-01 — 2020-03 · Berlin",
+            "Berlin",
+            "bear",
+            "1603 87 401 612",
+        ),
+    ] {
+        let art = format!(
+            r#"<span class="place">{text}<span class="image-wrap {city}" aria-hidden="true"><svg class="inline-art" viewBox="{viewbox}" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="static/woodcut-cities.png" width="2172" height="724"/></svg></span></span>"#
+        );
+        cv = cv.replace(needle, &needle.replace(text, &art));
+    }
+    cv
 }
 
 impl TryFrom<&Path> for PageKind {
@@ -182,14 +240,12 @@ impl TryFrom<&Path> for PageKind {
             .file_stem()
             .and_then(|s| s.to_str())
             .unwrap_or("index");
-        if stem == "index" {
-            Ok(PageKind::Index {
-                title: "Juliette Pluto".to_string(),
-            })
-        } else {
-            Ok(PageKind::Regular {
+        match html_rel_path.to_str() {
+            Some("index.html") => Ok(PageKind::About),
+            Some("CV.html") => Ok(PageKind::Cv),
+            _ => Ok(PageKind::Regular {
                 title: format!("{stem} — Juliette Pluto"),
-            })
+            }),
         }
     }
 }
@@ -200,9 +256,6 @@ fn transform_events<'a>(
     all_md: &HashSet<PathBuf>,
 ) -> Result<Vec<Event<'a>>> {
     let mut out = Vec::new();
-    let is_readme_file = is_readme(current_md);
-
-    const GOOGLE_HTML: &str = r#"<span style="color: var(--gblue)">G</span><span style="color: var(--gred)">o</span><span style="color: var(--gyellow)">o</span><span style="color: var(--gblue)">g</span><span style="color: var(--ggreen)">l</span><span style="color: var(--gred)">e</span>"#;
 
     for ev in Parser::new(markdown) {
         match ev {
@@ -223,19 +276,6 @@ fn transform_events<'a>(
                     }
                 }
                 out.push(Event::Start(Tag::Link(link_ty, dest, title)));
-            }
-            // If the link is external (http/https), append an inline SVG icon *before* the end tag.
-            Event::End(Tag::Link(link_ty, dest, title)) => {
-                out.push(Event::End(Tag::Link(link_ty, dest, title)));
-            }
-            // In text on readme, colorize Google.
-            Event::Text(text) if is_readme_file && text.contains("Google") => {
-                let s = text.into_string();
-                out.extend(s.split("Google").enumerate().flat_map(|(i, part)| {
-                    let html = (i > 0).then(|| Event::Html(GOOGLE_HTML.into()));
-                    let txt = (!part.is_empty()).then(|| Event::Text(part.to_string().into()));
-                    html.into_iter().chain(txt)
-                }));
             }
             other => out.push(other),
         }

@@ -1,367 +1,253 @@
-@font-face {
-    font-family: "iosevka_julsh";
-    src: url("./IosevkaCharon-Regular.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+@font-face{font-family:Kerberos;src:url('./Kerberos[wght].woff2?v=1.2.1') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}
+@font-face{font-family:Kerberos;src:url('./Kerberos-Italic[wght].woff2?v=1.2.1') format('woff2');font-weight:300 700;font-style:italic;font-display:swap}
+@font-face{font-family:Charon;src:url('./IosevkaCharon-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+:root{font-synthesis:none;color-scheme:light;font-family:Kerberos,Georgia,serif;font-size:20px;line-height:1.5}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}body{margin:0}h1,h2,h3,h4,p,figure{margin:0}h1,h2,h3,h4,.mono,nav,figcaption,.label{font-family:Charon,monospace;font-weight:700;font-feature-settings:'calt' 0}h1,h2,h3{line-height:1.12;text-wrap:balance}p+p{margin-top:1em}a{color:inherit;text-underline-offset:.18em;text-decoration-thickness:1px}a:hover{text-decoration-thickness:2px}a:focus-visible{outline:2px solid currentColor;outline-offset:5px}img{max-width:100%;display:block}button,input,select{font:inherit}.skip{position:absolute;top:-100px;left:20px;background:white;color:black;padding:12px;z-index:20}.skip:focus{top:12px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+:root{--paper:#eef1f0;--ink:#202a2e;--link:#264653;background:var(--paper);color:var(--ink)}
+body{display:flow-root;min-height:100vh;font-weight:350}
+main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px}
+.introduction{display:flow-root}
+.name{font:700 .9em Charon,monospace}
+.introduction a{color:var(--link);text-decoration:none}
+.introduction a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.14em}
+.introduction a:focus-visible{outline-color:var(--ink)}
+.cv-link{font:700 .9em Charon,monospace;letter-spacing:-.025em}
+/* Small ornaments have a horizontal footprint only; the type sets the leading. */
+.image-wrap{--art-height:1.22em;--art-drop:.23em;position:relative;display:inline-block;width:1.02em;height:0;line-height:0;vertical-align:baseline;margin:0 .08em 0 .1em}
+.image-wrap .inline-art{position:absolute;left:0;top:calc(var(--art-drop) - var(--art-height));display:block;width:100%;height:var(--art-height);max-width:none;object-fit:contain;pointer-events:none;mix-blend-mode:multiply}
+.image-wrap.liberty{width:.87em;--art-height:1.28em}
+.image-wrap.bus{width:1.36em;--art-height:1.04em;--art-drop:.18em;margin-left:.18em}
+.image-wrap.bear{width:1em;--art-height:1.17em}
+.place,.section-start{white-space:nowrap}
+.asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:700 .85em/1 Charon,monospace;letter-spacing:0}
+.asterism>span{position:absolute;top:-.79em;font-size:.64em;line-height:1;width:.8em;text-align:center}
+.asterism>span:first-child{left:.38em;top:-1.37em}
+.asterism>span:nth-child(2){left:0}.asterism>span:nth-child(3){right:0}
+.inline-portrait{cursor:zoom-in}
+.inline-portrait>img,.image-preview>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%;pointer-events:none}
+.image-preview{position:fixed;z-index:100;display:block;overflow:hidden;border-radius:3px;pointer-events:auto;box-shadow:0 0 0 5px var(--paper),0 10px 30px #171b1630;opacity:0;transform:scale(.94);transition:opacity .4s ease,transform .4s ease}
+.image-preview[data-phase="open"]{opacity:1;transform:scale(1)}
+.image-preview[data-phase="closing"]{pointer-events:none}
+.image-preview[hidden]{display:none}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+::selection{background:var(--ink);color:var(--paper)}
+.cv main{max-width:850px;margin-top:72px;margin-bottom:60px}
+.resume{font-size:25px;line-height:1.55;letter-spacing:-.005em}
+.resume h1{font-size:44px;line-height:1.25;letter-spacing:-.035em;margin:0 0 32px}
+.resume h1 a{text-decoration:none}
+.resume>p:first-of-type{font-size:29px}.resume>p:first-of-type em{font-style:normal}
+.resume>p:nth-of-type(2){font-size:20px;margin-top:22px}
+.resume h2{font-size:27px;margin:80px 0 30px;scroll-margin-top:30px;letter-spacing:-.02em}
+.resume h3{font:350 24px/1.5 Kerberos,serif;margin:50px 0 8px;letter-spacing:-.005em}
+.resume h3 strong{font:700 1em Charon,monospace}
+.resume h2+h3{margin-top:0}.resume strong{font-weight:550}
+.resume p{margin:0}.resume .dates{font:700 15px/1.8 Charon,monospace;color:#696b64;letter-spacing:0;margin:0 0 24px}
+.dates .image-wrap{width:36px;--art-height:40px;--art-drop:.8em;margin-left:.28em}.dates .image-wrap.bear{width:39px}
+.resume ul{padding-left:1em;margin:0}.resume li{padding-left:.18em}.resume li+li{margin-top:1.05em}.resume li a{overflow-wrap:anywhere}
+@media(max-width:900px){main{width:calc(100% - 72px);margin-top:48px}}
+@media(max-width:560px){main{width:calc(100% - 44px);margin:32px auto 60px}.place{white-space:normal}.cv main{margin-top:48px}.resume{font-size:22px;letter-spacing:0}.resume h1{font-size:34px}.resume>p:first-of-type{font-size:25px}.resume h2{font-size:25px;margin-top:64px}.resume h3{font-size:22px;margin-top:42px}.resume .dates{font-size:13px;margin-bottom:22px}}
+@media(max-width:360px){.resume h1{font-size:30px}}
+@media print{body,.cv{background:white;color:black}.skip,.image-preview{display:none!important}main,.cv main{width:auto;margin:0}.introduction a{color:inherit}.resume{font-size:12pt}.resume h1{font-size:28pt}.resume>p:first-of-type{font-size:14pt}.resume>p:nth-of-type(2){font-size:11pt}.resume h2{font-size:16pt;margin:35px 0 18px}.resume h3{font-size:13pt;margin-top:25px}.resume .dates{font-size:10pt;margin-bottom:14px}.resume li+li{margin-top:12px}h1,h2,h3,.dates{break-after:avoid}.resume li{break-inside:avoid}}
+
+/* The main site: a single flowing paragraph with inline portraits and woodcuts. */
+.variant-inline {
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 350;
 }
 
-@font-face {
-    font-family: "iosevka_julsh";
-    src: url("./IosevkaCharon-Bold.woff2") format("woff2");
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
+.home.variant-inline main {
+  width: min(1110px, calc(100% - 112px));
+  margin: 0 auto;
+  padding: 76px 0 104px;
 }
 
-:root {
-    --pink: hsl(10, 82%, 85%);
-    --yellow: hsl(37, 55%, 75%);
-    --orange: hsl(26, 55%, 71%);
-    --darkBlue: hsl(209, 80%, 80%);
-    --blue: hsl(209, 36%, 70%);
-    --lightBlue: hsl(179, 40%, 70%);
-    --green: hsl(152, 25%, 53%);
-    --dimGreen: hsl(152, 22%, 45%);
-
-    --gblue: hsl(216, 64%, 68%);
-    --gred: hsl(5, 63%, 70%);
-    --gyellow: hsl(45, 64%, 64%);
-    --ggreen: hsl(104, 38%, 64%);
-
-    --background: hsl(217, 12%, 9%);
-    --statusline-background: hsl(217, 14%, 13%);
-
-    --responsive-padding: 2.3rem;
-
-    background: var(--background);
-    color: var(--green);
-    color-scheme: dark;
-    font-family: iosevka_julsh, monospace;
-    font-size: 26px;
-    line-height: 1.4;
+.variant-inline .introduction {
+  margin: 0;
+  font-size: clamp(38px, 3.78vw, 50px);
+  line-height: 1.43;
+  letter-spacing: -.018em;
+  text-wrap: pretty;
 }
 
-/* Terminal inverse-video selection. */
-::selection {
-    background: var(--green);
-    color: var(--background);
+.variant-inline .name {
+  font-size: .9em;
+  letter-spacing: -.045em;
+  white-space: nowrap;
 }
 
-body,
-html {
+.variant-inline .introduction a {
+  color: var(--link);
+  text-decoration-line: underline;
+  text-decoration-color: #26465365;
+  text-decoration-thickness: .025em;
+  text-underline-offset: .14em;
+  text-decoration-skip-ink: auto;
+}
+
+.variant-inline .introduction a:hover {
+  text-decoration-color: currentColor;
+}
+
+.variant-inline .introduction a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.variant-inline .cv-link {
+  font-size: .9em;
+}
+
+.variant-inline .asterism {
+  color: var(--ink);
+  font-size: .75em;
+  margin-inline: .24em;
+}
+
+/* Absolute artwork leaves the paragraph's baseline rhythm undisturbed. */
+.variant-inline .inline-portrait {
+  --portrait-width: 1.35em;
+  --portrait-height: 1.48em;
+  --portrait-drop: .28em;
+  display: inline-block;
+  float: none;
+  position: relative;
+  width: var(--portrait-width);
+  height: 0;
+  overflow: visible;
+  vertical-align: baseline;
+  margin: 0 .14em 0 .13em;
+  border-radius: 0;
+  line-height: 0;
+}
+
+.variant-inline .inline-portrait > img {
+  position: absolute;
+  top: calc(var(--portrait-drop) - var(--portrait-height));
+  left: 0;
+  display: block;
+  width: var(--portrait-width);
+  height: var(--portrait-height);
+  max-width: none;
+  object-fit: cover;
+  object-position: center 40%;
+  border-radius: 50%;
+  transform: none;
+  pointer-events: auto;
+}
+
+.variant-inline .inline-portrait:focus-visible {
+  outline: none;
+}
+
+.variant-inline .inline-portrait:focus-visible > img {
+  outline: 2px solid var(--link);
+  outline-offset: 4px;
+}
+
+.variant-inline .image-preview {
+  border-radius: 50%;
+}
+
+.variant-inline .image-preview > img {
+  object-position: center 40%;
+  transform: none;
+}
+
+.variant-inline .image-wrap {
+  margin-inline: .08em;
+}
+
+.variant-inline ::selection {
+  background: #c5d8db;
+  color: #17262c;
+}
+
+@media (max-width: 850px) {
+  .home.variant-inline main {
+    width: calc(100% - 72px);
+    padding-top: 56px;
+    padding-bottom: 80px;
+  }
+
+  .variant-inline .introduction {
+    font-size: 38px;
+    line-height: 1.45;
+  }
+}
+
+@media (max-width: 560px) {
+  .home.variant-inline main {
+    width: calc(100% - 44px);
+    padding-top: 34px;
+    padding-bottom: 62px;
+  }
+
+  .variant-inline .introduction {
+    font-size: 30px;
+    line-height: 1.49;
+    letter-spacing: -.012em;
+  }
+
+  .variant-inline .name {
+    white-space: normal;
+  }
+
+  .variant-inline .inline-portrait {
+    --portrait-width: 1.4em;
+    --portrait-height: 1.54em;
+    --portrait-drop: .29em;
+    margin-inline: .1em;
+  }
+}
+
+@media (max-width: 360px) {
+  .variant-inline .introduction {
+    font-size: 28px;
+  }
+}
+
+@media print {
+  .home.variant-inline main {
     width: 100%;
-    min-height: 100%;
-    margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    justify-content: center;
-    align-items: center;
+  }
+
+  .variant-inline .introduction {
+    font-size: 20pt;
+  }
 }
 
-/* Keep content clear of the fixed statusline. */
-body {
-    box-sizing: border-box;
-    padding-bottom: 2.4rem;
+/* The CV alone has a quiet route back to the about page. */
+.cv-footer {
+  width: min(850px, calc(100% - 96px));
+  margin: 0 auto 56px;
+  padding-top: 24px;
+  border-top: 1px solid #202a2e26;
+  font: 700 16px/1.5 Charon, monospace;
 }
 
-main {
-    padding: var(--responsive-padding);
-    max-width: 30em;
+.cv-footer a {
+  color: var(--link);
+  text-decoration-color: #26465365;
+  text-underline-offset: .2em;
 }
 
-main.wide {
-    display: flex;
-    align-items: center;
-    max-width: 42.5em;
-}
-
-main.wide .index-photo {
-    width: 32.5%;
-    flex: none;
-    margin-right: 1.5em;
-}
-
-main.wide .index-photo img {
-    max-width: 100%;
+.cv-footer a:hover {
+  text-decoration-color: currentColor;
 }
 
 @media (max-width: 900px) {
-    main.wide {
-        display: block;
-    }
-
-    main.wide .index-photo {
-        float: left;
-        width: 40%;
-    }
+  .cv-footer { width: calc(100% - 72px); }
 }
 
-@media (max-width: 450px) {
-    main.wide .index-photo {
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-        margin: 0;
-        float: none;
-        right: 0;
-        margin-bottom: var(--responsive-padding);
-    }
-
-    main.wide .index-photo img {
-        margin-top: -6%;
-        margin-right: 0;
-        margin-bottom: -33%;
-        margin-left: 0;
-    }
+@media (max-width: 560px) {
+  .cv-footer { width: calc(100% - 44px); margin-bottom: 40px; }
 }
 
 @media print {
-    main.wide {
-        max-width: 100%;
-    }
-}
-
-/* Strapline directly under a page title, e.g. the CV tagline. */
-h1 + p em {
-    color: var(--lightBlue);
-    font-size: 0.85em;
-}
-
-h1,
-h1 a {
-    color: var(--pink);
-}
-
-/* Markdown source sigils: the site is generated from markdown, so show it.
-   The "/ ''" alt text keeps screen readers from announcing the hashes. */
-h1::before {
-    content: "# " / "";
-    font-weight: normal;
-    color: var(--dimGreen);
-}
-
-/* A resting block cursor after the page title. */
-h1::after {
-    content: "";
-    display: inline-block;
-    width: 0.5em;
-    height: 1.05em;
-    margin-left: 0.12em;
-    vertical-align: text-bottom;
-    background: var(--pink);
-    animation: cursor-blink 1.3s step-end infinite;
-}
-
-@keyframes cursor-blink {
-    50% {
-        opacity: 0;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    h1::after {
-        animation: none;
-    }
-}
-
-h2 {
-    margin: 1.75em 0 0.75em 0;
-}
-
-h2,
-h2 a {
-    color: var(--yellow);
-}
-
-h2::before {
-    content: "## " / "";
-    font-weight: normal;
-    color: var(--dimGreen);
-}
-
-/* CV entries: "### **Company** · Role" — company leads via weight. */
-h3 {
-    font-size: 1rem;
-    font-weight: normal;
-    margin: 2.5em 0 0 0;
-}
-
-h3,
-h3 a {
-    color: var(--orange);
-}
-
-h3 strong {
-    font-weight: bold;
-}
-
-/* "#### dates · location" meta line under each CV entry. */
-h4,
-h4 a {
-    font-size: 0.75rem;
-    font-weight: normal;
-    color: var(--lightBlue);
-}
-
-h4 {
-    letter-spacing: 0.02em;
-    margin: 0.35em 0 1em 0;
-}
-
-h1:first-child,
-h2:first-child,
-h3:first-child,
-h4:first-child,
-h2 + h3 {
-    margin-top: 0;
-}
-
-/* Markdown source list markers. */
-ul {
-    list-style-type: "- ";
-    padding-left: 1.4em;
-}
-
-li::marker {
-    color: var(--dimGreen);
-}
-
-li + li {
-    margin-top: 0.6em;
-}
-
-a {
-    text-decoration: underline;
-    color: var(--blue);
-}
-
-a:has(> svg) {
-    display: inline-block;
-}
-
-a:hover,
-a:active {
-    color: var(--darkBlue);
-}
-
-:focus-visible {
-    outline: 2px solid var(--lightBlue);
-    outline-offset: 3px;
-}
-
-/* tmux-style statusline. */
-footer.statusline {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    gap: 1em;
-    padding: 0.45em 1.1em;
-    box-sizing: border-box;
-    background: var(--statusline-background);
-    color: hsl(152, 18%, 55%);
-    font-size: 0.6rem;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-}
-
-.statusline-session a {
-    color: var(--green);
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.statusline-session a:hover,
-.statusline-session a:active {
-    color: var(--lightBlue);
-    text-decoration: underline;
-}
-
-.statusline-meta a {
-    color: inherit;
-}
-
-.statusline-meta a:hover,
-.statusline-meta a:active {
-    color: var(--lightBlue);
-}
-
-@media only screen and (max-width: 700px) {
-    :root {
-        font-size: 20px;
-        line-height: 1.3;
-        --responsive-padding: 1.1rem;
-    }
-
-    h1 {
-        font-size: 1.75em;
-    }
-
-    footer.statusline {
-        font-size: 12px;
-        padding: 0.5em 0.9em;
-    }
-
-    body {
-        padding-bottom: 2.2rem;
-    }
-}
-
-@media only screen and (max-width: 370px) {
-    :root {
-        --responsive-padding: 0.625rem;
-    }
-}
-
-@media print {
-    :root {
-        font-size: 11pt;
-        line-height: 1.1;
-        background: none;
-    }
-
-    * {
-        color: black !important;
-    }
-
-    body {
-        background: none;
-        padding-bottom: 0;
-    }
-
-    main {
-        max-width: none;
-    }
-
-    h1,
-    h2 {
-        margin-top: 1em;
-    }
-
-    h3 {
-        margin-top: 1.5em;
-    }
-
-    /* Screen-only terminal furniture. */
-    h1::after {
-        display: none;
-    }
-
-    h1::before,
-    h2::before {
-        content: none;
-    }
-
-    li::marker {
-        color: black;
-    }
-
-    footer.statusline {
-        display: none;
-    }
+  :root, .variant-inline { background: white; color: black; }
+  .cv-footer { display: none; }
 }
