@@ -1,7 +1,7 @@
 //! Minimal static-site generator: convert *.md → HTML, mirror ./static.
 
 use eyre::Result;
-use pulldown_cmark::{Event, Parser, Tag, html};
+use pulldown_cmark::{Event, HeadingLevel, Parser, Tag, html};
 use std::{
     collections::HashSet,
     fs, io,
@@ -122,23 +122,46 @@ fn make_html_path_rel(md: &Path) -> PathBuf {
     rel
 }
 
-/// Build the full HTML page around a fragment.
+///// Build the full HTML page around a fragment.
 fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     let title = PageKind::try_from(html_rel_path)?.title();
-    let main = format!(r#"<main>{fragment}</main>"#);
-    // tmux-style statusline: the page as a shell path, contact on the right.
     let stem = html_rel_path
         .file_stem()
         .and_then(|s| s.to_str())
         .unwrap_or("index");
-    let path_label = if stem == "index" {
-        "~".to_string()
+    let is_index = stem == "index";
+    let page_class = if is_index { "index" } else { "page" };
+    let idx_current = if is_index { r#" aria-current="page""# } else { "" };
+    let cv_current = if stem.eq_ignore_ascii_case("cv") {
+        r#" aria-current="page""#
     } else {
-        format!("~/{}", stem.to_lowercase())
+        ""
     };
-    let footer = format!(
-        r#"<footer class="statusline"><span class="statusline-context"><span class="statusline-session"><a href="index.html">[jul.sh]</a></span> {path_label}</span><span class="statusline-meta">new york · <a href="mailto:j@jul.sh">j@jul.sh</a></span></footer>"#
+    let masthead = format!(
+        r#"<header class="masthead"><a class="cell brand" href="index.html">jul.sh</a><span class="cell spacer"></span><nav class="masthead-nav"><a class="cell"{idx_current} href="index.html">Index</a><a class="cell"{cv_current} href="CV.html">CV</a></nav></header>"#
     );
+    let cities_strip = if is_index {
+        r#"<section class="cities-strip" aria-label="Cities">
+        <div class="city-card">
+          <div class="city-card-head"><span class="num">01</span><span>Berlin</span></div>
+          <div class="city-art"><img src="./static/berlin.png" alt="Berlin bear illustration"/></div>
+          <div class="city-card-foot"><span>52°31′N 13°24′E</span><span>2013 — 2020</span></div>
+        </div>
+        <div class="city-card">
+          <div class="city-card-head"><span class="num">02</span><span>London</span></div>
+          <div class="city-art"><img src="./static/london.png" alt="London double-decker bus illustration"/></div>
+          <div class="city-card-foot"><span>51°30′N 0°07′W</span><span>2020 — 2022</span></div>
+        </div>
+        <div class="city-card">
+          <div class="city-card-head"><span class="num">03</span><span>New York</span></div>
+          <div class="city-art"><img src="./static/nyc.png" alt="Statue of Liberty illustration"/></div>
+          <div class="city-card-foot"><span>40°43′N 74°00′W</span><span>2022 — Present</span></div>
+        </div>
+      </section>"#
+    } else {
+        ""
+    };
+    let footer = r#"<footer class="foot"><span class="cell">New York · London · Berlin</span><a class="cell" href="mailto:j@jul.sh">j@jul.sh</a></footer>"#;
     Ok(format!(
         r##"<!DOCTYPE html>
 <html lang="en">
@@ -146,17 +169,22 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/>
     <title>{title}</title>
-    <meta name="description" content="Engineer at Google"/>
+    <meta name="description" content="Staff Software Engineer at Google DeepMind"/>
     <link rel="stylesheet" href="./static/main.css"/>
-    <link rel="preload" href="./static/IosevkaCharon-Regular.woff2" as="font" type="font/woff2" crossorigin/>
+    <link rel="preload" href="./static/Kerberos-Roman.woff2" as="font" type="font/woff2" crossorigin/>
+    <link rel="preload" href="./static/Kerberos-Italic.woff2" as="font" type="font/woff2" crossorigin/>
     <link rel="preload" href="./static/IosevkaCharon-Bold.woff2" as="font" type="font/woff2" crossorigin/>
     <link rel="apple-touch-icon" sizes="180x180" href="./static/apple-touch-icon.png"/>
     <link rel="icon" type="image/png" sizes="32x32" href="./static/favicon-32x32.png"/>
-    <meta name="theme-color" content="#14161a"/>
+    <meta name="theme-color" content="#ffffff"/>
   </head>
-  <body>
-    {main}
-    {footer}
+  <body class="{page_class}">
+    <main>
+      {masthead}
+      {fragment}
+      {cities_strip}
+      {footer}
+    </main>
   </body>
   <!-- 🗽 -->
 </html>
@@ -202,10 +230,119 @@ fn transform_events<'a>(
     let mut out = Vec::new();
     let is_readme_file = is_readme(current_md);
 
-    const GOOGLE_HTML: &str = r#"<span style="color: var(--gblue)">G</span><span style="color: var(--gred)">o</span><span style="color: var(--gyellow)">o</span><span style="color: var(--gblue)">g</span><span style="color: var(--ggreen)">l</span><span style="color: var(--gred)">e</span>"#;
+    let mut in_intro = false;
+    let mut in_section = false;
+    let mut in_entry = false;
+    let mut in_entry_head = false;
+    let mut in_h4 = false;
+    let mut section_idx: usize = 0;
 
     for ev in Parser::new(markdown) {
+        // Close `<header class="entry-head">` before non-H4 elements start inside an entry.
+        if in_entry_head && !in_h4 {
+            let close_head = match &ev {
+                Event::Start(Tag::Heading(HeadingLevel::H4, _, _)) => false,
+                Event::Start(_) => true,
+                _ => false,
+            };
+            if close_head {
+                out.push(Event::Html("</header>".into()));
+                in_entry_head = false;
+            }
+        }
+
         match ev {
+            Event::Start(Tag::Heading(HeadingLevel::H1, id, classes)) => {
+                out.push(Event::Html(r#"<div class="hero-block"><div class="hero-main">"#.into()));
+                out.push(Event::Start(Tag::Heading(HeadingLevel::H1, id, classes)));
+                in_intro = true;
+            }
+            Event::End(Tag::Heading(HeadingLevel::H1, id, classes)) => {
+                out.push(Event::End(Tag::Heading(HeadingLevel::H1, id, classes)));
+                if is_readme_file {
+                    out.push(Event::Html(
+                        r#"</div></div><div class="index-body">"#.into(),
+                    ));
+                }
+            }
+            Event::Start(Tag::Heading(HeadingLevel::H2, id, classes)) => {
+                if in_entry_head {
+                    out.push(Event::Html("</header>".into()));
+                    in_entry_head = false;
+                }
+                if in_entry {
+                    out.push(Event::Html("</article>".into()));
+                    in_entry = false;
+                }
+                if in_section {
+                    out.push(Event::Html("</div></section>".into()));
+                }
+                if in_intro {
+                    if is_readme_file {
+                        out.push(Event::Html("</div>".into()));
+                    } else {
+                        out.push(Event::Html(
+                            r#"</div><div class="hero-stamps" aria-hidden="true"><img src="./static/berlin.png" alt=""/><img src="./static/london.png" alt=""/><img src="./static/nyc.png" alt=""/></div></div>"#.into(),
+                        ));
+                    }
+                    in_intro = false;
+                }
+                section_idx += 1;
+                out.push(Event::Html(
+                    format!(
+                        r#"<section class="block"><aside class="block-label"><span class="num">{section_idx:02}</span>"#
+                    )
+                    .into(),
+                ));
+                out.push(Event::Start(Tag::Heading(HeadingLevel::H2, id, classes)));
+                in_section = true;
+            }
+            Event::End(Tag::Heading(HeadingLevel::H2, id, classes)) => {
+                out.push(Event::End(Tag::Heading(HeadingLevel::H2, id, classes)));
+                out.push(Event::Html(r#"</aside><div class="block-content">"#.into()));
+            }
+            Event::Start(Tag::Heading(HeadingLevel::H3, id, classes)) if in_section => {
+                if in_entry_head {
+                    out.push(Event::Html("</header>".into()));
+                }
+                if in_entry {
+                    out.push(Event::Html("</article>".into()));
+                }
+                out.push(Event::Html(
+                    r#"<article class="entry"><header class="entry-head">"#.into(),
+                ));
+                out.push(Event::Start(Tag::Heading(HeadingLevel::H3, id, classes)));
+                in_entry = true;
+                in_entry_head = true;
+            }
+            Event::Start(Tag::Heading(HeadingLevel::H4, id, classes)) => {
+                in_h4 = true;
+                out.push(Event::Start(Tag::Heading(HeadingLevel::H4, id, classes)));
+            }
+            Event::End(Tag::Heading(HeadingLevel::H4, id, classes)) => {
+                in_h4 = false;
+                out.push(Event::End(Tag::Heading(HeadingLevel::H4, id, classes)));
+                if in_entry_head {
+                    out.push(Event::Html("</header>".into()));
+                    in_entry_head = false;
+                }
+            }
+            Event::Text(text) if in_h4 => {
+                let rendered = text
+                    .replace(
+                        "NYC",
+                        r#"<span class="city-chip"><img src="./static/nyc.png" alt=""/>NYC</span>"#,
+                    )
+                    .replace(
+                        "London",
+                        r#"<span class="city-chip"><img src="./static/london.png" alt=""/>London</span>"#,
+                    )
+                    .replace(
+                        "Berlin",
+                        r#"<span class="city-chip"><img src="./static/berlin.png" alt=""/>Berlin</span>"#,
+                    );
+                out.push(Event::Html(rendered.into()));
+            }
             // If a markdown link points to an existing .md in the project, rewrite to its .html path.
             Event::Start(Tag::Link(link_ty, mut dest, title)) => {
                 if dest.ends_with(".md") {
@@ -224,21 +361,26 @@ fn transform_events<'a>(
                 }
                 out.push(Event::Start(Tag::Link(link_ty, dest, title)));
             }
-            // If the link is external (http/https), append an inline SVG icon *before* the end tag.
-            Event::End(Tag::Link(link_ty, dest, title)) => {
-                out.push(Event::End(Tag::Link(link_ty, dest, title)));
-            }
-            // In text on readme, colorize Google.
-            Event::Text(text) if is_readme_file && text.contains("Google") => {
-                let s = text.into_string();
-                out.extend(s.split("Google").enumerate().flat_map(|(i, part)| {
-                    let html = (i > 0).then(|| Event::Html(GOOGLE_HTML.into()));
-                    let txt = (!part.is_empty()).then(|| Event::Text(part.to_string().into()));
-                    html.into_iter().chain(txt)
-                }));
-            }
             other => out.push(other),
         }
     }
+
+    if in_entry_head {
+        out.push(Event::Html("</header>".into()));
+    }
+    if in_entry {
+        out.push(Event::Html("</article>".into()));
+    }
+    if in_section {
+        out.push(Event::Html("</div></section>".into()));
+    }
+    if in_intro {
+        if is_readme_file {
+            out.push(Event::Html("</div>".into()));
+        } else {
+            out.push(Event::Html("</div></div>".into()));
+        }
+    }
+
     Ok(out)
 }
