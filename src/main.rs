@@ -253,7 +253,15 @@ fn transform_events<'a>(
 
         match ev {
             Event::Start(Tag::Heading(HeadingLevel::H1, id, classes)) => {
-                out.push(Event::Html(r#"<div class="hero-block"><div class="hero-main">"#.into()));
+                if is_readme_file {
+                    out.push(Event::Html(
+                        r#"<div class="index-split"><figure class="index-portrait"><img src="./static/photo.jpg" alt="Portrait of Juliette Pluto"/></figure><div class="index-content"><div class="hero-block"><div class="hero-main">"#.into(),
+                    ));
+                } else {
+                    out.push(Event::Html(
+                        r#"<div class="hero-block"><div class="hero-main">"#.into(),
+                    ));
+                }
                 out.push(Event::Start(Tag::Heading(HeadingLevel::H1, id, classes)));
                 in_intro = true;
             }
@@ -376,7 +384,7 @@ fn transform_events<'a>(
     }
     if in_intro {
         if is_readme_file {
-            out.push(Event::Html("</div>".into()));
+            out.push(Event::Html("</div></div></div>".into()));
         } else {
             out.push(Event::Html("</div></div>".into()));
         }

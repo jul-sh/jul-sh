@@ -153,6 +153,38 @@ footer.foot a.cell:hover {
     color: var(--paper);
 }
 
+/* Index split with portrait in left column aligned to masthead spine */
+body.index {
+    --col-aside: clamp(16rem, 27vw, 23rem);
+}
+
+.index-split {
+    display: grid;
+    grid-template-columns: var(--col-aside) 1fr;
+    border-bottom: var(--rule);
+}
+
+.index-portrait {
+    margin: 0;
+    border-right: var(--rule);
+    overflow: hidden;
+    display: flex;
+    background: var(--ink);
+}
+
+.index-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
+.index-content {
+    display: flex;
+    flex-direction: column;
+}
+
 /* Hero block */
 .hero-block {
     padding: clamp(2.25rem, 5vw, 4.25rem) var(--pad);
@@ -200,7 +232,7 @@ h1 {
 .index-body {
     display: flex;
     flex-direction: column;
-    border-bottom: var(--rule);
+    flex-grow: 1;
 }
 
 .index-body > p {
@@ -473,6 +505,16 @@ footer.foot .cell:first-child {
 
     header.masthead > .spacer {
         display: none;
+    }
+
+    .index-split {
+        grid-template-columns: 1fr;
+    }
+
+    .index-portrait {
+        border-right: 0;
+        border-bottom: var(--rule);
+        max-height: 26rem;
     }
 
     .cities-strip {
