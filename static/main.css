@@ -20,6 +20,31 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .image-wrap.liberty{width:.87em;--art-height:1.28em}
 .image-wrap.bus{width:1.36em;--art-height:1.04em;--art-drop:.18em;margin-left:.18em}
 .image-wrap.bear{width:1em;--art-height:1.17em}
+.image-wrap>.inline-art{pointer-events:auto}
+.image-wrap>.art-animation{opacity:0;overflow:hidden;pointer-events:none}
+.animation-strip{transform-box:fill-box;transform-origin:0 0}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .image-wrap:hover>.inline-art:not(.art-animation){opacity:0}
+  .image-wrap:hover>.art-animation{opacity:1}
+  .image-wrap:hover .animation-strip{animation:woodcut-frames 1.5s step-end infinite}
+}
+@keyframes woodcut-frames{
+  0%{transform:translateX(0)}
+  6.6667%{transform:translateX(-6.666667%)}
+  13.3333%{transform:translateX(-13.333333%)}
+  20%{transform:translateX(-20%)}
+  26.6667%{transform:translateX(-26.666667%)}
+  33.3333%{transform:translateX(-33.333333%)}
+  40%{transform:translateX(-40%)}
+  46.6667%{transform:translateX(-46.666667%)}
+  53.3333%{transform:translateX(-53.333333%)}
+  60%{transform:translateX(-60%)}
+  66.6667%{transform:translateX(-66.666667%)}
+  73.3333%{transform:translateX(-73.333333%)}
+  80%{transform:translateX(-80%)}
+  86.6667%{transform:translateX(-86.666667%)}
+  93.3333%,100%{transform:translateX(-93.333333%)}
+}
 .place,.section-start{white-space:nowrap}
 .asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:700 .85em/1 Charon,monospace;letter-spacing:0}
 .asterism>span{position:absolute;top:-.79em;font-size:.64em;line-height:1;width:.8em;text-align:center}

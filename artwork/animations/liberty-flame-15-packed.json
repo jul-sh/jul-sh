@@ -1,0 +1,147 @@
+{
+  "frameCount": 15,
+  "frameWidth": 128,
+  "frameHeight": 96,
+  "durationMs": 1500,
+  "layout": "horizontal strip",
+  "source": "liberty-flame-15-source.png",
+  "columns": [
+    0,
+    333,
+    655,
+    974,
+    1293,
+    1619
+  ],
+  "rows": [
+    0,
+    362,
+    650,
+    971
+  ],
+  "scale": 0.30927835051546393,
+  "frames": [
+    {
+      "left": 58,
+      "top": 116,
+      "width": 223,
+      "height": 227,
+      "anchorX": 154
+    },
+    {
+      "left": 403,
+      "top": 113,
+      "width": 199,
+      "height": 230,
+      "anchorX": 504.5
+    },
+    {
+      "left": 708,
+      "top": 53,
+      "width": 214,
+      "height": 291,
+      "anchorX": 814
+    },
+    {
+      "left": 1024,
+      "top": 131,
+      "width": 223,
+      "height": 213,
+      "anchorX": 1124.5
+    },
+    {
+      "left": 1348,
+      "top": 119,
+      "width": 223,
+      "height": 225,
+      "anchorX": 1451.5
+    },
+    {
+      "left": 52,
+      "top": 379,
+      "width": 232,
+      "height": 251,
+      "anchorX": 161.5
+    },
+    {
+      "left": 380,
+      "top": 421,
+      "width": 228,
+      "height": 208,
+      "anchorX": 485.5
+    },
+    {
+      "left": 705,
+      "top": 454,
+      "width": 219,
+      "height": 174,
+      "anchorX": 810.5
+    },
+    {
+      "left": 1031,
+      "top": 462,
+      "width": 215,
+      "height": 166,
+      "anchorX": 1128
+    },
+    {
+      "left": 1351,
+      "top": 465,
+      "width": 211,
+      "height": 163,
+      "anchorX": 1448
+    },
+    {
+      "left": 62,
+      "top": 722,
+      "width": 224,
+      "height": 207,
+      "anchorX": 168
+    },
+    {
+      "left": 382,
+      "top": 711,
+      "width": 218,
+      "height": 218,
+      "anchorX": 485
+    },
+    {
+      "left": 703,
+      "top": 671,
+      "width": 217,
+      "height": 258,
+      "anchorX": 810
+    },
+    {
+      "left": 1024,
+      "top": 696,
+      "width": 219,
+      "height": 233,
+      "anchorX": 1129.5
+    },
+    {
+      "left": 1341,
+      "top": 712,
+      "width": 220,
+      "height": 216,
+      "anchorX": 1436.5
+    }
+  ],
+  "hashes": [
+    "bd234aa80084812255cb998b1b460cc4011a71c0ddff8c2811119e1a560d64da",
+    "a21f056b6d0bb94a4f540b9cc2ae9d71ba3a02f3784f96391eca57adbb624a7e",
+    "a9b8cf30fff1d01ca401fcd4e4003aab7b12991f151c23f5b5d1642a9815cfed",
+    "e6ffbb33167702706a16ef8a10704dae720ebf90993ec232cb4430edca6978bc",
+    "e7d1903a434000a6b8ab6269142908ac58bf5ce871845273a7285d9ebd3557da",
+    "4bb1075b8d448186a7cea848638b36f3be22d34c24ea4fa6b980ea9457eb48c3",
+    "a0ab06a2a5fab5373ef36c66e13eb5257e157f4950b4086ea76bc96f2cdef9fb",
+    "ed40ad1ac63270900c6d2ccc36433cf4ca40ecbc8049f1aaca27d128a244b109",
+    "4576fe1cf2ef41a2897b60bb3ad0793515afa2b972531b1f4569fc2c4ee96d71",
+    "97145859d3166385dab6ca9db1dd99548b545d58d8a0a51a97bfff3696ba01a6",
+    "9834622f60f27dbbab423f396d927b0665346f4fbc0335f590a3eb57cce47cbc",
+    "78810f99eb88c9637b8a4cf5c5d802ccae7e08b89937094aafab360973bc6fbf",
+    "e5265adb5aa498d5d1f3d1c0b5c8c5b83f5e65614d89b75731e8ed6249df416a",
+    "d574481997c2f642aa4e3e5d4a91bdfb1ce29ba570b14bf92f6c55297909820f",
+    "f5138b56ceefbb2190165623caa37a348a4de83d6db16da06a79bf55eaed6660"
+  ]
+}
