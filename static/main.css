@@ -28,6 +28,15 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   .image-wrap:hover>.inline-art:not(.art-animation){opacity:0}
   .image-wrap:hover>.art-animation{opacity:1}
   .image-wrap:hover .animation-strip{animation:woodcut-frames 1.5s step-end infinite}
+  .image-wrap.bear:hover .animation-strip{animation-name:woodcut-roar;animation-duration:2.4s}
+}
+/* Use the gentler opening poses, then settle before the next breath. */
+@keyframes woodcut-roar{
+  0%,60%,100%{transform:translateX(0)}
+  6.6667%,53.3333%{transform:translateX(-6.666667%)}
+  13.3333%,46.6667%{transform:translateX(-13.333333%)}
+  20%,40%{transform:translateX(-20%)}
+  26.6667%,33.3333%{transform:translateX(-26.666667%)}
 }
 @keyframes woodcut-frames{
   0%{transform:translateX(0)}
