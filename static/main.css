@@ -1,367 +1,524 @@
+/* Editorial Swiss broadsheet: Kerberos body, Iosevka Charon Bold titles, woodcut city vignettes. */
+
 @font-face {
-    font-family: "iosevka_julsh";
-    src: url("./IosevkaCharon-Regular.woff2") format("woff2");
-    font-weight: normal;
+    font-family: "Kerberos Web";
+    src: url("./Kerberos-Roman.woff2") format("woff2");
+    font-weight: 300 700;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: "iosevka_julsh";
+    font-family: "Kerberos Web";
+    src: url("./Kerberos-Italic.woff2") format("woff2");
+    font-weight: 300 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Iosevka Charon";
+    src: url("./IosevkaCharon-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Iosevka Charon";
     src: url("./IosevkaCharon-Bold.woff2") format("woff2");
-    font-weight: bold;
+    font-weight: 700;
     font-style: normal;
     font-display: swap;
 }
 
 :root {
-    --pink: hsl(10, 82%, 85%);
-    --yellow: hsl(37, 55%, 75%);
-    --orange: hsl(26, 55%, 71%);
-    --darkBlue: hsl(209, 80%, 80%);
-    --blue: hsl(209, 36%, 70%);
-    --lightBlue: hsl(179, 40%, 70%);
-    --green: hsl(152, 25%, 53%);
-    --dimGreen: hsl(152, 22%, 45%);
-
-    --gblue: hsl(216, 64%, 68%);
-    --gred: hsl(5, 63%, 70%);
-    --gyellow: hsl(45, 64%, 64%);
-    --ggreen: hsl(104, 38%, 64%);
-
-    --background: hsl(217, 12%, 9%);
-    --statusline-background: hsl(217, 14%, 13%);
-
-    --responsive-padding: 2.3rem;
-
-    background: var(--background);
-    color: var(--green);
-    color-scheme: dark;
-    font-family: iosevka_julsh, monospace;
-    font-size: 26px;
-    line-height: 1.4;
+    --ink: #000;
+    --paper: #fff;
+    --muted: #555;
+    --red: #e00000;
+    --rule: 2px solid var(--ink);
+    --thin-rule: 1px solid var(--ink);
+    --pad: clamp(1.75rem, 3.8vw, 3.5rem);
+    --col-aside: clamp(13rem, 19vw, 18.5rem);
+    --font-body: "Kerberos Web", Georgia, serif;
+    --font-display: "Iosevka Charon", monospace;
 }
 
-/* Terminal inverse-video selection. */
-::selection {
-    background: var(--green);
-    color: var(--background);
-}
-
-body,
-html {
-    width: 100%;
-    min-height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Keep content clear of the fixed statusline. */
-body {
+* {
     box-sizing: border-box;
-    padding-bottom: 2.4rem;
 }
 
-main {
-    padding: var(--responsive-padding);
-    max-width: 30em;
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
-main.wide {
-    display: flex;
-    align-items: center;
-    max-width: 42.5em;
+body {
+    margin: 0;
+    padding: clamp(0.75rem, 2.2vw, 2.25rem);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: clamp(22px, 1.6vw, 26px);
+    line-height: 1.54;
+    font-kerning: normal;
+    font-optical-sizing: auto;
+    font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
 }
 
-main.wide .index-photo {
-    width: 32.5%;
-    flex: none;
-    margin-right: 1.5em;
-}
-
-main.wide .index-photo img {
-    max-width: 100%;
-}
-
-@media (max-width: 900px) {
-    main.wide {
-        display: block;
-    }
-
-    main.wide .index-photo {
-        float: left;
-        width: 40%;
-    }
-}
-
-@media (max-width: 450px) {
-    main.wide .index-photo {
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-        margin: 0;
-        float: none;
-        right: 0;
-        margin-bottom: var(--responsive-padding);
-    }
-
-    main.wide .index-photo img {
-        margin-top: -6%;
-        margin-right: 0;
-        margin-bottom: -33%;
-        margin-left: 0;
-    }
-}
-
-@media print {
-    main.wide {
-        max-width: 100%;
-    }
-}
-
-/* Strapline directly under a page title, e.g. the CV tagline. */
-h1 + p em {
-    color: var(--lightBlue);
-    font-size: 0.85em;
-}
-
-h1,
-h1 a {
-    color: var(--pink);
-}
-
-/* Markdown source sigils: the site is generated from markdown, so show it.
-   The "/ ''" alt text keeps screen readers from announcing the hashes. */
-h1::before {
-    content: "# " / "";
-    font-weight: normal;
-    color: var(--dimGreen);
-}
-
-/* A resting block cursor after the page title. */
-h1::after {
-    content: "";
-    display: inline-block;
-    width: 0.5em;
-    height: 1.05em;
-    margin-left: 0.12em;
-    vertical-align: text-bottom;
-    background: var(--pink);
-    animation: cursor-blink 1.3s step-end infinite;
-}
-
-@keyframes cursor-blink {
-    50% {
-        opacity: 0;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    h1::after {
-        animation: none;
-    }
-}
-
-h2 {
-    margin: 1.75em 0 0.75em 0;
-}
-
-h2,
-h2 a {
-    color: var(--yellow);
-}
-
-h2::before {
-    content: "## " / "";
-    font-weight: normal;
-    color: var(--dimGreen);
-}
-
-/* CV entries: "### **Company** · Role" — company leads via weight. */
-h3 {
-    font-size: 1rem;
-    font-weight: normal;
-    margin: 2.5em 0 0 0;
-}
-
-h3,
-h3 a {
-    color: var(--orange);
-}
-
-h3 strong {
-    font-weight: bold;
-}
-
-/* "#### dates · location" meta line under each CV entry. */
-h4,
-h4 a {
-    font-size: 0.75rem;
-    font-weight: normal;
-    color: var(--lightBlue);
-}
-
-h4 {
-    letter-spacing: 0.02em;
-    margin: 0.35em 0 1em 0;
-}
-
-h1:first-child,
-h2:first-child,
-h3:first-child,
-h4:first-child,
-h2 + h3 {
-    margin-top: 0;
-}
-
-/* Markdown source list markers. */
-ul {
-    list-style-type: "- ";
-    padding-left: 1.4em;
-}
-
-li::marker {
-    color: var(--dimGreen);
-}
-
-li + li {
-    margin-top: 0.6em;
+::selection {
+    background: var(--red);
+    color: var(--paper);
 }
 
 a {
-    text-decoration: underline;
-    color: var(--blue);
-}
-
-a:has(> svg) {
-    display: inline-block;
+    color: inherit;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.18em;
 }
 
 a:hover,
 a:active {
-    color: var(--darkBlue);
-}
-
-:focus-visible {
-    outline: 2px solid var(--lightBlue);
-    outline-offset: 3px;
-}
-
-/* tmux-style statusline. */
-footer.statusline {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    gap: 1em;
-    padding: 0.45em 1.1em;
-    box-sizing: border-box;
-    background: var(--statusline-background);
-    color: hsl(152, 18%, 55%);
-    font-size: 0.6rem;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-}
-
-.statusline-session a {
-    color: var(--green);
-    font-weight: bold;
+    background: var(--ink);
+    color: var(--paper);
     text-decoration: none;
 }
 
-.statusline-session a:hover,
-.statusline-session a:active {
-    color: var(--lightBlue);
-    text-decoration: underline;
+:focus-visible {
+    outline: 3px solid var(--red);
+    outline-offset: -3px;
 }
 
-.statusline-meta a {
-    color: inherit;
+/* Framed broadsheet */
+main {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    border: var(--rule);
+    display: flex;
+    flex-direction: column;
 }
 
-.statusline-meta a:hover,
-.statusline-meta a:active {
-    color: var(--lightBlue);
+/* Display & technical furniture: Iosevka Charon */
+.masthead,
+.cities-strip,
+.block-label,
+h1,
+h2,
+h3,
+h4,
+.foot {
+    font-family: var(--font-display);
+    font-variant-numeric: lining-nums tabular-nums;
 }
 
-@media only screen and (max-width: 700px) {
-    :root {
-        font-size: 20px;
-        line-height: 1.3;
-        --responsive-padding: 1.1rem;
-    }
+/* Interlocking cell bars (Masthead & Footer) */
+header.masthead {
+    display: grid;
+    grid-template-columns: var(--col-aside) 1fr auto;
+    border-bottom: var(--rule);
+    font-size: 0.62em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
 
-    h1 {
-        font-size: 1.75em;
-    }
+header.masthead .cell,
+footer.foot .cell {
+    padding: 0.9rem 1.4rem;
+    border-right: var(--thin-rule);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
 
-    footer.statusline {
-        font-size: 12px;
-        padding: 0.5em 0.9em;
-    }
+header.masthead > .brand {
+    border-right: var(--rule);
+}
 
+header.masthead .masthead-nav {
+    display: flex;
+}
+
+header.masthead .masthead-nav .cell:last-child,
+footer.foot .cell:last-child {
+    border-right: 0;
+}
+
+header.masthead a.cell:hover,
+header.masthead a.cell[aria-current="page"],
+footer.foot a.cell:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+/* Hero block */
+.hero-block {
+    padding: clamp(2.25rem, 5vw, 4.25rem) var(--pad);
+    border-bottom: var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.hero-main {
+    max-width: 48rem;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(2.6rem, 6vw, 4.75rem);
+    font-weight: 700;
+    line-height: 0.96;
+    letter-spacing: -0.015em;
+}
+
+/* CV subtitle inside hero-block */
+.hero-main p {
+    margin: 1rem 0 0;
+    font-size: clamp(1.35rem, 2.1vw, 1.8rem);
+    line-height: 1.35;
+}
+
+/* Trio of woodcut stamps in CV header */
+.hero-stamps {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+}
+
+.hero-stamps img {
+    height: clamp(54px, 5.5vw, 76px);
+    width: auto;
+    display: block;
+}
+
+/* Index page reading section */
+.index-body {
+    display: flex;
+    flex-direction: column;
+    border-bottom: var(--rule);
+}
+
+.index-body > p {
+    margin: 0;
+    padding: var(--pad);
+    font-size: clamp(1.35rem, 2vw, 1.75rem);
+    line-height: 1.52;
+    max-width: 52ch;
+}
+
+.index-body > p:first-child {
+    max-width: 46ch;
+    font-size: clamp(1.75rem, 3vw, 2.55rem);
+    line-height: 1.28;
+    border-bottom: var(--thin-rule);
+    padding: clamp(2.25rem, 4.5vw, 4rem) var(--pad);
+}
+
+.index-body > p:nth-child(2) {
+    padding-top: clamp(2rem, 4vw, 3.25rem);
+    padding-bottom: 1rem;
+}
+
+.index-body > p:last-child {
+    padding-top: 0.25rem;
+    padding-bottom: clamp(2.25rem, 4.5vw, 3.75rem);
+}
+
+/* Three-city woodcut triptych on Index */
+.cities-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: var(--rule);
+    font-size: 0.62em;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.city-card {
+    padding: 1.4rem var(--pad);
+    border-right: var(--thin-rule);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.city-card:last-child {
+    border-right: 0;
+}
+
+.city-card-head,
+.city-card-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+}
+
+.city-card-head {
+    font-weight: 700;
+}
+
+.city-card-foot {
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 0.92em;
+}
+
+.city-art {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 108px;
+    padding: 0.5rem 0;
+}
+
+.city-art img {
+    height: clamp(76px, 7.5vw, 104px);
+    width: auto;
+    display: block;
+}
+
+/* Two-column interlocking CV sections */
+.block {
+    display: grid;
+    grid-template-columns: var(--col-aside) 1fr;
+    border-bottom: var(--rule);
+}
+
+.block-label {
+    border-right: var(--rule);
+    padding: var(--pad);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    font-size: 0.68em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.num {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.block-label h2 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    position: sticky;
+    top: 1.5rem;
+}
+
+/* CV section right column (.block-content) */
+.block-content {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Each role entry is an interlocking cell block */
+.entry {
+    padding: var(--pad);
+    border-bottom: var(--thin-rule);
+}
+
+/* Compact row padding for entries without body text/bullets */
+.entry:has(> .entry-head:only-child) {
+    padding: 1.35rem var(--pad);
+}
+
+.entry:last-child {
+    border-bottom: 0;
+}
+
+.entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem 2rem;
+    flex-wrap: wrap;
+}
+
+.entry-head:not(:last-child) {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: var(--thin-rule);
+}
+
+h3 {
+    margin: 0;
+    font-size: 1.02em;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+h3 strong {
+    font-weight: 700;
+}
+
+h4 {
+    margin: 0;
+    font-size: 0.64em;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.6;
+}
+
+/* Inline woodcut badge next to city names in CV entries */
+.city-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--ink);
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+.city-chip img {
+    height: 1.9em;
+    width: auto;
+    display: inline-block;
+    vertical-align: -0.35em;
+}
+
+.entry p {
+    margin: 0;
+    max-width: 58ch;
+}
+
+.entry ul {
+    margin: 0;
+    padding-left: 1.3rem;
+    list-style-type: square;
+    max-width: 58ch;
+}
+
+.entry li + li {
+    margin-top: 0.85em;
+}
+
+/* Standalone lists in sections (Papers & Talks): full-bleed numbered rows */
+.block-content > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: item;
+}
+
+.block-content > ul > li {
+    counter-increment: item;
+    position: relative;
+    padding: clamp(1.35rem, 2.5vw, 2rem) var(--pad) clamp(1.35rem, 2.5vw, 2rem) calc(var(--pad) + 4rem);
+    border-bottom: var(--thin-rule);
+    max-width: none;
+}
+
+.block-content > ul > li:last-child {
+    border-bottom: 0;
+}
+
+.block-content > ul > li::before {
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: var(--pad);
+    top: clamp(1.55rem, 2.7vw, 2.2rem);
+    font-family: var(--font-display);
+    font-size: 0.66em;
+    line-height: 1;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+}
+
+/* Footer cell bar */
+footer.foot {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    font-size: 0.62em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+footer.foot .cell:first-child {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+@media (max-width: 960px) {
     body {
-        padding-bottom: 2.2rem;
+        padding: 0;
     }
-}
 
-@media only screen and (max-width: 370px) {
-    :root {
-        --responsive-padding: 0.625rem;
+    main {
+        border-left: 0;
+        border-right: 0;
+    }
+
+    header.masthead {
+        grid-template-columns: 1fr auto;
+    }
+
+    header.masthead > .spacer {
+        display: none;
+    }
+
+    .cities-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .city-card {
+        border-right: 0;
+        border-bottom: var(--thin-rule);
+    }
+
+    .city-card:last-child {
+        border-bottom: 0;
+    }
+
+    .block {
+        grid-template-columns: 1fr;
+    }
+
+    .block-label {
+        border-right: 0;
+        border-bottom: var(--thin-rule);
+        padding: 1.25rem var(--pad);
     }
 }
 
 @media print {
     :root {
-        font-size: 11pt;
-        line-height: 1.1;
-        background: none;
-    }
-
-    * {
-        color: black !important;
+        font-size: 10pt;
+        line-height: 1.35;
+        --pad: 1rem;
+        --col-aside: 9rem;
     }
 
     body {
-        background: none;
-        padding-bottom: 0;
+        padding: 0;
+        font-size: 10pt;
     }
 
     main {
         max-width: none;
+        border: 0;
     }
 
-    h1,
-    h2 {
-        margin-top: 1em;
-    }
-
-    h3 {
-        margin-top: 1.5em;
-    }
-
-    /* Screen-only terminal furniture. */
-    h1::after {
-        display: none;
-    }
-
-    h1::before,
-    h2::before {
-        content: none;
-    }
-
-    li::marker {
-        color: black;
-    }
-
-    footer.statusline {
+    header.masthead,
+    footer.foot {
         display: none;
     }
 }
