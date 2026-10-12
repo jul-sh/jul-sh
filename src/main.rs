@@ -157,6 +157,7 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
             format!(r#"<footer class="cv-footer"><a href="{about_link}">← About</a></footer>"#),
         ),
     };
+    let contents = add_illustration_animations(contents, &static_root)?;
     Ok(format!(
         r##"<!DOCTYPE html>
 <html lang="en">
@@ -188,6 +189,32 @@ fn asset_url(static_root: &str, name: &str) -> Result<String> {
     let mut hash = DefaultHasher::new();
     fs::read(Path::new(STATIC_DIR).join(name))?.hash(&mut hash);
     Ok(format!("{static_root}/{name}?v={:x}", hash.finish()))
+}
+
+/// Keep the original woodcuts at rest; hover reveals their registered frame strips.
+fn add_illustration_animations(mut contents: String, static_root: &str) -> Result<String> {
+    for (city, sprite_name, width, height) in [
+        ("liberty", "liberty-flame", 128, 96),
+        ("bus", "bus", 192, 128),
+        ("bear", "bear", 128, 192),
+    ] {
+        let opening = format!(r#"<span class="image-wrap {city}" aria-hidden="true">"#);
+        if !contents.contains(&opening) {
+            continue;
+        }
+        let sprite = asset_url(static_root, &format!("animations/{sprite_name}-15.webp"))?;
+        let strip_width = width * 15;
+        let animated = match city {
+            "liberty" => format!(
+                r#"<svg class="inline-art art-animation" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><svg x="185" y="88" width="491" height="609" viewBox="185 88 491 609" overflow="hidden"><image href="{static_root}/woodcut-cities.png" width="2172" height="724"/></svg><svg x="192" y="0" width="142" height="94" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMax meet" overflow="hidden"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></svg></svg>"#
+            ),
+            _ => format!(
+                r#"<svg class="inline-art art-animation" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMid meet" focusable="false"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></svg>"#
+            ),
+        };
+        contents = contents.replace(&opening, &format!("{opening}{animated}"));
+    }
+    Ok(contents)
 }
 
 /// Preserve the Markdown CV as the content source, adding its typographic structure.
