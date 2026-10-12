@@ -22,6 +22,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .image-wrap.bear{width:1em;--art-height:1.17em}
 .image-wrap>.inline-art{pointer-events:auto}
 .image-wrap>.art-animation{opacity:0;overflow:hidden;pointer-events:none}
+.image-wrap.bear>.art-animation{overflow:visible}
 .animation-strip{transform-box:fill-box;transform-origin:0 0}
 @media (hover:hover) and (prefers-reduced-motion:no-preference){
   .image-wrap:hover>.inline-art:not(.art-animation){opacity:0}

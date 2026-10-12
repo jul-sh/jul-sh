@@ -196,7 +196,7 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
     for (city, sprite_name, width, height) in [
         ("liberty", "liberty-flame", 128, 96),
         ("bus", "bus", 192, 128),
-        ("bear", "bear", 128, 192),
+        ("bear", "bear-roar", 192, 192),
     ] {
         let opening = format!(r#"<span class="image-wrap {city}" aria-hidden="true">"#);
         if !contents.contains(&opening) {
@@ -207,6 +207,9 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
         let animated = match city {
             "liberty" => format!(
                 r#"<svg class="inline-art art-animation" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><svg x="185" y="88" width="491" height="609" viewBox="185 88 491 609" overflow="hidden"><image href="{static_root}/woodcut-cities.png" width="2172" height="724"/></svg><svg x="192" y="0" width="142" height="94" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMax meet" overflow="hidden"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></svg></svg>"#
+            ),
+            "bear" => format!(
+                r#"<svg class="inline-art art-animation" viewBox="1603 87 401 612" preserveAspectRatio="xMidYMid meet" focusable="false"><defs><clipPath id="bear-roar-body"><path clip-rule="evenodd" d="M1603 87H2004V699H1603Z M1725 80H1960V256H1768V236H1725Z"/></clipPath></defs><image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-roar-body)"/><svg x="1698" y="24" width="248" height="248" viewBox="0 0 {width} {height}" overflow="hidden"><defs><linearGradient id="bear-neck-fade" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="180" y2="189"><stop stop-color="white"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient><mask id="bear-roar-neck" maskUnits="userSpaceOnUse" x="0" y="0" width="192" height="192"><rect width="192" height="192" fill="url(#bear-neck-fade)"/></mask></defs><g mask="url(#bear-roar-neck)"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></g></svg></svg>"#
             ),
             _ => format!(
                 r#"<svg class="inline-art art-animation" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMid meet" focusable="false"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></svg>"#
