@@ -25,11 +25,12 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .asterism>span{position:absolute;top:-.79em;font-size:.64em;line-height:1;width:.8em;text-align:center}
 .asterism>span:first-child{left:.38em;top:-1.37em}
 .asterism>span:nth-child(2){left:0}.asterism>span:nth-child(3){right:0}
-.inline-portrait{cursor:zoom-in}
+.inline-portrait{padding:0;border:0;background:none;color:inherit;font:inherit;appearance:none;cursor:zoom-in;-webkit-tap-highlight-color:transparent}
 .inline-portrait>img,.image-preview>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%;pointer-events:none}
 .image-preview{position:fixed;z-index:100;display:block;overflow:hidden;border-radius:3px;pointer-events:auto;box-shadow:0 0 0 5px var(--paper),0 10px 30px #171b1630;opacity:0;transform:scale(.94);transition:opacity .4s ease,transform .4s ease}
 .image-preview[data-phase="open"]{opacity:1;transform:scale(1)}
 .image-preview[data-phase="closing"]{pointer-events:none}
+.image-preview[data-phase="closing"][data-input="tap"]{pointer-events:auto}
 .image-preview[hidden]{display:none}
 .visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 ::selection{background:var(--ink);color:var(--paper)}
@@ -196,9 +197,9 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   }
 
   .variant-inline .inline-portrait {
-    --portrait-width: 1.4em;
-    --portrait-height: 1.54em;
-    --portrait-drop: .29em;
+    --portrait-width: 1.8em;
+    --portrait-height: 1.98em;
+    --portrait-drop: .22em;
     margin-inline: .1em;
   }
 }
