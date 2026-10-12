@@ -192,25 +192,27 @@ for (const trigger of triggers) {
   });
 }
 
-preview.addEventListener('click', event => {
+// Capture before the trigger's handler: the opening click passes through while
+// a later click anywhere dismisses without reopening or following a link.
+document.addEventListener('click', event => {
   switch (state.kind) {
+    case 'hover':
+    case 'focus':
     case 'tap':
       event.preventDefault();
       event.stopPropagation();
       show({kind: 'dismissed', trigger: state.trigger});
       break;
     case 'closing':
-      // The fading touch preview still shields links beneath it from rapid taps.
+      // Let the closing animation finish before another click activates a link.
       event.preventDefault();
       event.stopPropagation();
       break;
     case 'closed':
     case 'dismissed':
-    case 'hover':
-    case 'focus':
       break;
   }
-});
+}, {capture: true});
 
 preview.addEventListener('pointerleave', event => {
   switch (state.kind) {
