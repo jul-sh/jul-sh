@@ -182,7 +182,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 @media (max-width: 560px) {
   .home.variant-inline main {
     width: calc(100% - 44px);
-    padding-top: 34px;
+    padding-top: 46px;
     padding-bottom: 62px;
   }
 
@@ -197,8 +197,8 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   }
 
   .variant-inline .inline-portrait {
-    --portrait-width: 1.8em;
-    --portrait-height: 1.98em;
+    --portrait-width: 2.15em;
+    --portrait-height: 2.365em;
     --portrait-drop: .22em;
     margin-inline: .1em;
   }
