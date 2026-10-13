@@ -108,7 +108,12 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .asterism>span:first-child{left:.38em;top:-1.37em}
 .asterism>span:nth-child(2){left:0}.asterism>span:nth-child(3){right:0}
 .inline-portrait{padding:0;border:0;background:none;color:inherit;font:inherit;appearance:none;cursor:zoom-in;-webkit-tap-highlight-color:transparent}
-.inline-portrait>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%;pointer-events:none}
+.inline-portrait>img,.image-preview>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%;pointer-events:none}
+.image-preview{position:fixed;z-index:100;display:block;overflow:hidden;border-radius:3px;pointer-events:auto;box-shadow:0 0 0 5px var(--paper),0 10px 30px #171b1630;opacity:0;transform:scale(.94);transition:opacity .4s ease,transform .4s ease}
+.image-preview[data-phase="open"]{opacity:1;transform:scale(1)}
+.image-preview[data-phase="closing"]{pointer-events:none}
+.image-preview[data-phase="closing"][data-input="tap"]{pointer-events:auto}
+.image-preview[hidden]{display:none}
 .visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 ::selection{background:var(--ink);color:var(--paper)}
 .cv main{max-width:850px;margin-top:72px;margin-bottom:60px}
@@ -127,7 +132,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 @media(max-width:900px){main{width:calc(100% - 72px);margin-top:48px}}
 @media(max-width:560px){main{width:calc(100% - 44px);margin:32px auto 60px}.place{white-space:normal}.cv main{margin-top:48px}.resume{font-size:22px;letter-spacing:0}.resume h1{font-size:34px}.resume>p:first-of-type{font-size:25px}.resume h2{font-size:25px;margin-top:64px}.resume h3{font-size:22px;margin-top:42px}.resume .dates{font-size:13px;margin-bottom:22px}}
 @media(max-width:360px){.resume h1{font-size:30px}}
-@media print{body,.cv{background:white;color:black}.skip,.portrait-popover{display:none!important}main,.cv main{width:auto;margin:0}.introduction a{color:inherit}.resume{font-size:12pt}.resume h1{font-size:28pt}.resume>p:first-of-type{font-size:14pt}.resume>p:nth-of-type(2){font-size:11pt}.resume h2{font-size:16pt;margin:35px 0 18px}.resume h3{font-size:13pt;margin-top:25px}.resume .dates{font-size:10pt;margin-bottom:14px}.resume li+li{margin-top:12px}h1,h2,h3,.dates{break-after:avoid}.resume li{break-inside:avoid}}
+@media print{body,.cv{background:white;color:black}.skip,.image-preview{display:none!important}main,.cv main{width:auto;margin:0}.introduction a{color:inherit}.resume{font-size:12pt}.resume h1{font-size:28pt}.resume>p:first-of-type{font-size:14pt}.resume>p:nth-of-type(2){font-size:11pt}.resume h2{font-size:16pt;margin:35px 0 18px}.resume h3{font-size:13pt;margin-top:25px}.resume .dates{font-size:10pt;margin-bottom:14px}.resume li+li{margin-top:12px}h1,h2,h3,.dates{break-after:avoid}.resume li{break-inside:avoid}}
 
 /* The main site: a single flowing paragraph with inline portraits and woodcuts. */
 .variant-inline {
@@ -213,17 +218,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   object-position: center 40%;
   border-radius: 50%;
   transform: none;
-  transform-origin: center top;
-  transition: transform .4s ease, filter .4s ease;
   pointer-events: auto;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .variant-inline .inline-portrait:hover > img {
-    z-index: 20;
-    transform: scale(3.2);
-    filter: drop-shadow(0 8px 18px rgb(23 27 22 / .18));
-  }
 }
 
 .variant-inline .inline-portrait:focus-visible {
@@ -235,54 +230,13 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   outline-offset: 4px;
 }
 
-.portrait-popover {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100dvh;
-  max-width: none;
-  max-height: none;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  opacity: 0;
-  transition: opacity .4s ease, display .4s allow-discrete, overlay .4s allow-discrete;
-}
-
-.portrait-popover:popover-open { opacity: 1; }
-.portrait-popover::backdrop { background: transparent; }
-
-.portrait-popover > button {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: zoom-out;
-}
-
-.portrait-popover img {
-  display: block;
-  width: auto;
-  height: min(280px, calc(100dvh - 32px));
-  max-width: calc(100vw - 32px);
-  object-fit: cover;
-  object-position: center 40%;
+.variant-inline .image-preview {
   border-radius: 50%;
-  box-shadow: 0 0 0 5px var(--paper), 0 10px 30px rgb(23 27 22 / .18);
-  transform: scale(.94);
-  transition: transform .4s ease;
 }
 
-.portrait-popover:popover-open img { transform: scale(1); }
-.portrait-popover > button:focus-visible img { outline: 2px solid var(--link); outline-offset: 7px; }
-
-@starting-style {
-  .portrait-popover:popover-open { opacity: 0; }
-  .portrait-popover:popover-open img { transform: scale(.94); }
+.variant-inline .image-preview > img {
+  object-position: center 40%;
+  transform: none;
 }
 
 .variant-inline .image-wrap {
