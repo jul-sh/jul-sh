@@ -22,8 +22,9 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .image-wrap.bear{width:1em;--art-height:1.17em}
 .image-wrap>.inline-art{pointer-events:auto}
 .image-wrap>.art-animation{opacity:0;overflow:hidden;pointer-events:none}
-.image-wrap.bear>.inline-art:not(.art-animation){opacity:0}
-.image-wrap.bear>.art-animation{opacity:1;overflow:visible}
+.image-wrap.bear>.inline-art:not(.art-animation){opacity:0;pointer-events:none}
+.image-wrap.bear>.art-animation{opacity:1;overflow:visible;pointer-events:auto}
+.image-wrap.bear>.art-animation image{pointer-events:none}
 .bear-head,.bear-jaw{transform-box:fill-box;transform:rotate(0deg)}
 .bear-head{transform-origin:1908px 220px}
 .bear-jaw{transform-origin:1837px 179px}
@@ -37,12 +38,12 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 }
 /* Fifteen poses of the original ink, with a quiet pause between roars. */
 @keyframes bear-head-lift{
-  0%,10%,70%,100%{transform:rotate(0deg)}
-  35%,45%{transform:rotate(3deg)}
+  0%,75%,100%{transform:rotate(0deg)}
+  30%,45%{transform:rotate(5deg)}
 }
 @keyframes bear-jaw-open{
-  0%,10%,70%,100%{transform:rotate(0deg)}
-  35%,45%{transform:rotate(-5deg)}
+  0%,75%,100%{transform:rotate(0deg)}
+  30%,45%{transform:rotate(-11deg)}
 }
 @keyframes woodcut-frames{
   0%{transform:translateX(0)}
