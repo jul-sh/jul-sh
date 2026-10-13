@@ -37,8 +37,7 @@ async function pack(city, frameWidth, frameHeight, sourceName = `${city}-15-sour
     if (alpha(x, y) >= 128) { xs[x]++; ys[y]++; }
   }
   const columns = separators(xs, 5);
-  // The generated roar atlas has extra space above its first row.
-  const rows = city === 'bear-roar' ? [0, 533, 840, info.height] : separators(ys, 3);
+  const rows = separators(ys, 3);
   const frames = [];
   for (let i = 0; i < 15; i++) {
     const col = i % 5, row = Math.floor(i / 5);
@@ -54,9 +53,7 @@ async function pack(city, frameWidth, frameHeight, sourceName = `${city}-15-sour
     for (let y = Math.round(bottom - (bottom - top) * .28); y <= bottom; y++) for (let x = left; x <= right; x++) {
       if (alpha(x, y) >= 128) { baseLeft = Math.min(baseLeft, x); baseRight = Math.max(baseRight, x); }
     }
-    let anchorX = (baseLeft + baseRight) / 2;
-    // Keep the back of the neck fixed while the muzzle tilts and the jaw opens.
-    if (city === 'bear-roar') anchorX = baseRight;
+    const anchorX = (baseLeft + baseRight) / 2;
     frames.push({left, top, width:right - left + 1, height:bottom - top + 1, anchorX});
   }
   const leftExtent = Math.max(...frames.map(f => f.anchorX - f.left));
@@ -91,5 +88,5 @@ async function pack(city, frameWidth, frameHeight, sourceName = `${city}-15-sour
 
 (async () => {
   await fs.mkdir(outputDir, {recursive:true});
-  for (const args of [['liberty-flame',128,96], ['bus',192,128], ['bear-roar',192,192]]) await pack(...args);
+  for (const args of [['liberty-flame',128,96], ['bus',192,128]]) await pack(...args);
 })().catch(error => { console.error(error); process.exitCode = 1; });

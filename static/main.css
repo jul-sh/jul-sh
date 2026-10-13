@@ -22,21 +22,27 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .image-wrap.bear{width:1em;--art-height:1.17em}
 .image-wrap>.inline-art{pointer-events:auto}
 .image-wrap>.art-animation{opacity:0;overflow:hidden;pointer-events:none}
-.image-wrap.bear>.art-animation{overflow:visible}
+.image-wrap.bear>.inline-art:not(.art-animation){opacity:0}
+.image-wrap.bear>.art-animation{opacity:1;overflow:visible}
+.bear-head,.bear-jaw{transform-box:fill-box;transform:rotate(0deg)}
+.bear-head{transform-origin:1908px 220px}
+.bear-jaw{transform-origin:1837px 179px}
 .animation-strip{transform-box:fill-box;transform-origin:0 0}
 @media (hover:hover) and (prefers-reduced-motion:no-preference){
   .image-wrap:hover>.inline-art:not(.art-animation){opacity:0}
   .image-wrap:hover>.art-animation{opacity:1}
   .image-wrap:hover .animation-strip{animation:woodcut-frames 1.5s step-end infinite}
-  .image-wrap.bear:hover .animation-strip{animation-name:woodcut-roar;animation-duration:2.4s}
+  .image-wrap.bear:hover .bear-head{animation:bear-head-lift 2.4s steps(14,end) infinite}
+  .image-wrap.bear:hover .bear-jaw{animation:bear-jaw-open 2.4s steps(14,end) infinite}
 }
-/* Use the gentler opening poses, then settle before the next breath. */
-@keyframes woodcut-roar{
-  0%,60%,100%{transform:translateX(0)}
-  6.6667%,53.3333%{transform:translateX(-6.666667%)}
-  13.3333%,46.6667%{transform:translateX(-13.333333%)}
-  20%,40%{transform:translateX(-20%)}
-  26.6667%,33.3333%{transform:translateX(-26.666667%)}
+/* Fifteen poses of the original ink, with a quiet pause between roars. */
+@keyframes bear-head-lift{
+  0%,10%,70%,100%{transform:rotate(0deg)}
+  35%,45%{transform:rotate(3deg)}
+}
+@keyframes bear-jaw-open{
+  0%,10%,70%,100%{transform:rotate(0deg)}
+  35%,45%{transform:rotate(-5deg)}
 }
 @keyframes woodcut-frames{
   0%{transform:translateX(0)}
