@@ -137,7 +137,8 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
             "home variant-inline",
             include_str!("about.html").to_string(),
             format!(
-                r#"<div id="portrait-preview" class="portrait-popover" popover="auto"><button type="button" popovertarget="portrait-preview" popovertargetaction="hide" aria-label="Close portrait"><img src="{static_root}/portrait.jpg" alt="Juliette Pluto" width="666" height="1000"></button></div>"#
+                r#"<div id="image-preview" class="image-preview" aria-hidden="true" hidden><img alt=""></div><script src="{}" defer></script>"#,
+                asset_url(&static_root, "preview.js")?
             ),
         ),
         PageKind::Cv => (
