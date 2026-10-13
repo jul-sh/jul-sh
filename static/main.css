@@ -40,7 +40,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   .image-wrap.liberty:hover .animation-strip{animation:woodcut-frames 1.5s step-end infinite}
   .image-wrap.bus:hover>.inline-art{animation:bus-settle 1.6s ease-in-out infinite}
   .image-wrap.bus:hover .bus-wheel{animation:bus-wheel-turn 1.6s steps(15,end) infinite}
-  .image-wrap.bus:hover .bus-lights{animation:bus-lights-glow 1.6s ease-in-out infinite}
+  .image-wrap.bus:hover .bus-lights{animation:bus-lights-glow 2.8s ease-in-out infinite}
   .image-wrap.bear:hover .bear-head{animation:bear-head-lift 2.4s steps(14,end) infinite}
   .image-wrap.bear:hover .bear-jaw{animation:bear-jaw-open 2.4s steps(14,end) infinite}
   .image-wrap.bear:hover .bear-paw{animation:bear-paw-lift 2.4s steps(14,end) infinite}
@@ -82,14 +82,13 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 }
 @keyframes bus-settle{
   0%,100%{transform:translate(0,0) rotate(0)}
-  28%{transform:translate(.3px,-.55px) rotate(-.12deg)}
-  55%{transform:translate(.1px,.1px) rotate(.04deg)}
-  76%{transform:translate(.1px,-.2px) rotate(-.04deg)}
+  28%{transform:translate(.12px,-.25px) rotate(-.05deg)}
+  55%{transform:translate(.04px,.04px) rotate(.02deg)}
+  76%{transform:translate(.04px,-.08px) rotate(-.02deg)}
 }
 @keyframes bus-lights-glow{
   0%,100%{opacity:0}
-  25%,62%{opacity:.72}
-  45%{opacity:.22}
+  45%,55%{opacity:.72}
 }
 .place,.section-start{white-space:nowrap}
 .asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:700 .85em/1 Charon,monospace;letter-spacing:0}
