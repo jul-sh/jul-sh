@@ -170,7 +170,7 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     <link rel="preload" href="{static_root}/IosevkaCharon-Bold.woff2" as="font" type="font/woff2" crossorigin/>
     <link rel="apple-touch-icon" sizes="180x180" href="{static_root}/apple-touch-icon.png"/>
     <link rel="icon" type="image/png" sizes="32x32" href="{static_root}/favicon-32x32.png"/>
-    <meta name="theme-color" content="#f3f0e6"/>
+    <meta name="theme-color" content="#ffffff"/>
   </head>
   <body class="{body_class}">
     <a class="skip" href="#main">Skip to content</a>
