@@ -191,7 +191,7 @@ fn asset_url(static_root: &str, name: &str) -> Result<String> {
     Ok(format!("{static_root}/{name}?v={:x}", hash.finish()))
 }
 
-/// Animate the original bear engraving and add a frame strip for Liberty's flame.
+/// Animate the original bear and bus engravings, plus Liberty's flame.
 fn add_illustration_animations(mut contents: String, static_root: &str) -> Result<String> {
     let bear_opening = r#"<span class="image-wrap bear" aria-hidden="true">"#;
     if contents.contains(bear_opening) {
@@ -227,6 +227,23 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
             r#"<svg class="inline-art art-animation" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><svg x="185" y="88" width="491" height="609" viewBox="185 88 491 609" overflow="hidden"><image href="{static_root}/woodcut-cities.png" width="2172" height="724"/></svg><svg x="192" y="0" width="142" height="94" viewBox="0 0 128 96" preserveAspectRatio="xMidYMax meet" overflow="hidden"><image class="animation-strip" href="{sprite}" width="1920" height="96"/></svg></svg>"#
         );
         contents = contents.replace(opening, &format!("{opening}{animated}"));
+    }
+    let bus_image = r#"<img class="inline-art" src="static/london-bus.png" alt="">"#;
+    if contents.contains(bus_image) {
+        let source = asset_url(static_root, "london-bus.png")?;
+        // Every moving layer samples the same original image. At rest they align pixel for pixel.
+        let bus = format!(
+            r#"<svg class="inline-art bus-engraving" viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+<defs>
+<clipPath id="bus-rear-wheel-clip"><ellipse cx="253" cy="872" rx="25" ry="49"/></clipPath>
+<clipPath id="bus-front-wheel-clip"><ellipse cx="800" cy="872" rx="32" ry="52"/></clipPath>
+</defs>
+<image href="{source}" width="1536" height="1024"/>
+<g clip-path="url(#bus-rear-wheel-clip)"><image class="bus-wheel bus-wheel-rear" href="{source}" width="1536" height="1024"/></g>
+<g clip-path="url(#bus-front-wheel-clip)"><image class="bus-wheel bus-wheel-front" href="{source}" width="1536" height="1024"/></g>
+</svg>"#
+        );
+        contents = contents.replace(bus_image, &bus);
     }
     Ok(contents)
 }
