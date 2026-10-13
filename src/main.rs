@@ -191,12 +191,33 @@ fn asset_url(static_root: &str, name: &str) -> Result<String> {
     Ok(format!("{static_root}/{name}?v={:x}", hash.finish()))
 }
 
-/// Keep the original woodcuts at rest; hover reveals their registered frame strips.
+/// Animate the original bear engraving and add frame strips for the bus and flame.
 fn add_illustration_animations(mut contents: String, static_root: &str) -> Result<String> {
+    let bear_opening = r#"<span class="image-wrap bear" aria-hidden="true">"#;
+    if contents.contains(bear_opening) {
+        // The same engraved head is present at rest and in motion; no artwork swap.
+        let head = "M1725 80H1960V236L1924 227L1896 217L1876 210L1853 219L1830 235L1803 245H1768V224H1725Z";
+        let jaw = "M1725 140H1774V163L1811 163L1829 168L1840 177L1850 192L1844 210L1818 218H1768V210H1725Z";
+        // Leave a little original neck beneath the moving head to keep the join closed.
+        let body_cut = "M1725 80H1960V224L1924 215L1896 205L1876 198L1853 207L1830 223L1803 233H1768V212H1725Z";
+        let bear = format!(
+            r#"<svg class="inline-art art-animation" viewBox="1603 87 401 612" preserveAspectRatio="xMidYMid meet" focusable="false">
+<defs>
+<clipPath id="bear-body"><path clip-rule="evenodd" d="M1603 87H2004V699H1603Z {body_cut}"/></clipPath>
+<clipPath id="bear-upper-head"><path clip-rule="evenodd" d="{head} {jaw}"/></clipPath>
+<clipPath id="bear-lower-jaw"><path d="{jaw}"/></clipPath>
+</defs>
+<image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-body)"/>
+<g class="bear-head">
+<image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-upper-head)"/>
+<g class="bear-jaw"><image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-lower-jaw)"/></g>
+</g></svg>"#
+        );
+        contents = contents.replace(bear_opening, &format!("{bear_opening}{bear}"));
+    }
     for (city, sprite_name, width, height) in [
         ("liberty", "liberty-flame", 128, 96),
         ("bus", "bus", 192, 128),
-        ("bear", "bear-roar", 192, 192),
     ] {
         let opening = format!(r#"<span class="image-wrap {city}" aria-hidden="true">"#);
         if !contents.contains(&opening) {
@@ -207,9 +228,6 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
         let animated = match city {
             "liberty" => format!(
                 r#"<svg class="inline-art art-animation" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><svg x="185" y="88" width="491" height="609" viewBox="185 88 491 609" overflow="hidden"><image href="{static_root}/woodcut-cities.png" width="2172" height="724"/></svg><svg x="192" y="0" width="142" height="94" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMax meet" overflow="hidden"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></svg></svg>"#
-            ),
-            "bear" => format!(
-                r#"<svg class="inline-art art-animation" viewBox="1603 87 401 612" preserveAspectRatio="xMidYMid meet" focusable="false"><defs><clipPath id="bear-roar-body"><path clip-rule="evenodd" d="M1603 87H2004V699H1603Z M1725 80H1960V256H1768V236H1725Z"/></clipPath></defs><image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-roar-body)"/><svg x="1698" y="24" width="248" height="248" viewBox="0 0 {width} {height}" overflow="hidden"><defs><linearGradient id="bear-neck-fade" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="180" y2="189"><stop stop-color="white"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient><mask id="bear-roar-neck" maskUnits="userSpaceOnUse" x="0" y="0" width="192" height="192"><rect width="192" height="192" fill="url(#bear-neck-fade)"/></mask></defs><g mask="url(#bear-roar-neck)"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></g></svg></svg>"#
             ),
             _ => format!(
                 r#"<svg class="inline-art art-animation" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMid meet" focusable="false"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></svg>"#
