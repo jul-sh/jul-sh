@@ -5,7 +5,7 @@
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}body{margin:0}h1,h2,h3,h4,p,figure{margin:0}h1,h2,h3,h4,.mono,nav,figcaption,.label{font-family:Charon,monospace;font-weight:700;font-feature-settings:'calt' 0}h1,h2,h3{line-height:1.12;text-wrap:balance}p+p{margin-top:1em}a{color:inherit;text-underline-offset:.18em;text-decoration-thickness:1px}a:hover{text-decoration-thickness:2px}a:focus-visible{outline:2px solid currentColor;outline-offset:5px}img{max-width:100%;display:block}button,input,select{font:inherit}.skip{position:absolute;top:-100px;left:20px;background:white;color:black;padding:12px;z-index:20}.skip:focus{top:12px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 
-:root{--paper:#eef1f0;--ink:#202a2e;--link:#264653;background:var(--paper);color:var(--ink)}
+:root{--paper:#f3f0e6;--ink:#242a27;--link:#2d5058;background:var(--paper);color:var(--ink)}
 body{display:flow-root;min-height:100vh;font-weight:350}
 main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px}
 .introduction{display:flow-root}
@@ -105,6 +105,17 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   background: var(--paper);
   color: var(--ink);
   font-weight: 350;
+}
+
+/* An uncoated paper texture beneath the lettering, never over it. */
+body.variant-inline {
+  background-color: var(--paper);
+  background-image:
+    url('./paper-grain.svg?v=2'),
+    radial-gradient(ellipse at 48% 8%, #fffdf590 0%, transparent 67%),
+    linear-gradient(125deg, #f1ede183, transparent 42%, #e6e2d547);
+  background-size: 256px 256px, 100% 100%, 100% 100%;
+  background-repeat: repeat, no-repeat, no-repeat;
 }
 
 .home.variant-inline main {
@@ -298,5 +309,6 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 
 @media print {
   :root, .variant-inline { background: white; color: black; }
+  body.variant-inline { background: white; }
   .cv-footer { display: none; }
 }
