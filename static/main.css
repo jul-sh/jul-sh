@@ -6,9 +6,9 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 
 :root{
-  --paper-hue:46deg;
-  --paper-saturation:35%;
-  --paper-lightness:92.7%;
+  --paper-hue:300deg;
+  --paper-saturation:36%;
+  --paper-lightness:95.7%;
   --paper:hsl(var(--paper-hue) var(--paper-saturation) var(--paper-lightness));
   --ink:#242a27;--link:#24444b;background:var(--paper);color:var(--ink)
 }
