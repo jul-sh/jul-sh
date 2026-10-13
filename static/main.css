@@ -27,6 +27,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .image-wrap.bus{width:1.36em;--art-height:1.04em;--art-drop:.18em;margin-left:.18em}
 .image-wrap.bear{width:1em;--art-height:1.17em}
 .image-wrap>.inline-art{pointer-events:auto}
+.image-wrap .art-halo{opacity:0;overflow:visible;pointer-events:none;mix-blend-mode:normal}
 .image-wrap>.art-animation{opacity:0;overflow:hidden;pointer-events:none}
 .image-wrap.bear>.inline-art:not(.art-animation){opacity:0;pointer-events:none}
 .image-wrap.bear>.art-animation{opacity:1;overflow:visible;pointer-events:auto}
@@ -41,12 +42,14 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .bus-wheel-front{transform-origin:800px 872px}
 .bus-lights{opacity:0;mix-blend-mode:screen;pointer-events:none}
 @media (hover:hover) and (prefers-reduced-motion:no-preference){
-  .image-wrap.liberty:hover>.inline-art:not(.art-animation){opacity:0}
+  .image-wrap.liberty:hover>.inline-art:not(.art-animation):not(.art-halo){opacity:0}
   .image-wrap.liberty:hover>.art-animation{opacity:1}
   .image-wrap.liberty:hover .animation-strip{animation:woodcut-frames 1.5s step-end infinite}
-  .image-wrap.bus:hover>.inline-art{animation:bus-settle 1.6s ease-in-out infinite}
+  .image-wrap.liberty:hover>.liberty-halo{animation:fog-glow 1.5s ease-in-out infinite}
+  .image-wrap.bus:hover>.bus-engraving{animation:bus-settle 1.6s ease-in-out infinite}
   .image-wrap.bus:hover .bus-wheel{animation:bus-wheel-turn 1.6s steps(15,end) infinite}
   .image-wrap.bus:hover .bus-lights{animation:bus-lights-glow 2.8s ease-in-out infinite}
+  .image-wrap.bus:hover>.bus-halo{animation:fog-glow 2.8s ease-in-out infinite}
   .image-wrap.bear:hover .bear-head{animation:bear-head-lift 2.4s steps(14,end) infinite}
   .image-wrap.bear:hover .bear-jaw{animation:bear-jaw-open 2.4s steps(14,end) infinite}
   .image-wrap.bear:hover .bear-paw{animation:bear-paw-lift 2.4s steps(14,end) infinite}
@@ -95,6 +98,10 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 @keyframes bus-lights-glow{
   0%,100%{opacity:0}
   45%,55%{opacity:.72}
+}
+@keyframes fog-glow{
+  0%,100%{opacity:0}
+  45%,55%{opacity:.88}
 }
 .place,.section-start{white-space:nowrap}
 .asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:700 .85em/1 Charon,monospace;letter-spacing:0}
