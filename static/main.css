@@ -28,6 +28,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .image-wrap.bear{width:1em;--art-height:1.17em}
 .image-wrap>.inline-art{pointer-events:auto}
 .image-wrap .art-halo{opacity:0;overflow:visible;pointer-events:none;mix-blend-mode:normal}
+.image-wrap.liberty>.liberty-halo{opacity:.82}
 .image-wrap>.art-animation{opacity:0;overflow:hidden;pointer-events:none}
 .image-wrap.bear>.inline-art:not(.art-animation){opacity:0;pointer-events:none}
 .image-wrap.bear>.art-animation{opacity:1;overflow:visible;pointer-events:auto}
@@ -45,7 +46,6 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   .image-wrap.liberty:hover>.inline-art:not(.art-animation):not(.art-halo){opacity:0}
   .image-wrap.liberty:hover>.art-animation{opacity:1}
   .image-wrap.liberty:hover .animation-strip{animation:woodcut-frames 1.5s step-end infinite}
-  .image-wrap.liberty:hover>.liberty-halo{animation:fog-glow 1.5s ease-in-out infinite}
   .image-wrap.bus:hover>.bus-engraving{animation:bus-settle 1.6s ease-in-out infinite}
   .image-wrap.bus:hover .bus-wheel{animation:bus-wheel-turn 1.6s steps(15,end) infinite}
   .image-wrap.bus:hover .bus-lights{animation:bus-lights-glow 2.8s ease-in-out infinite}
