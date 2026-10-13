@@ -134,7 +134,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 body.variant-inline {
   background-color: var(--paper);
   background-image:
-    url('./paper-grain.svg?v=2'),
+    url('./paper-grain.svg?v=3'),
     radial-gradient(ellipse at 48% 8%, #fffdf590 0%, transparent 67%),
     linear-gradient(125deg, #f1ede183, transparent 42%, #e6e2d547);
   background-size: 256px 256px, 100% 100%, 100% 100%;
