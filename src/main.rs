@@ -191,7 +191,7 @@ fn asset_url(static_root: &str, name: &str) -> Result<String> {
     Ok(format!("{static_root}/{name}?v={:x}", hash.finish()))
 }
 
-/// Animate the original bear engraving and add frame strips for the bus and flame.
+/// Animate the original bear engraving and add a frame strip for Liberty's flame.
 fn add_illustration_animations(mut contents: String, static_root: &str) -> Result<String> {
     let bear_opening = r#"<span class="image-wrap bear" aria-hidden="true">"#;
     if contents.contains(bear_opening) {
@@ -220,25 +220,13 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
         );
         contents = contents.replace(bear_opening, &format!("{bear_opening}{bear}"));
     }
-    for (city, sprite_name, width, height) in [
-        ("liberty", "liberty-flame", 128, 96),
-        ("bus", "bus", 192, 128),
-    ] {
-        let opening = format!(r#"<span class="image-wrap {city}" aria-hidden="true">"#);
-        if !contents.contains(&opening) {
-            continue;
-        }
-        let sprite = asset_url(static_root, &format!("animations/{sprite_name}-15.webp"))?;
-        let strip_width = width * 15;
-        let animated = match city {
-            "liberty" => format!(
-                r#"<svg class="inline-art art-animation" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><svg x="185" y="88" width="491" height="609" viewBox="185 88 491 609" overflow="hidden"><image href="{static_root}/woodcut-cities.png" width="2172" height="724"/></svg><svg x="192" y="0" width="142" height="94" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMax meet" overflow="hidden"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></svg></svg>"#
-            ),
-            _ => format!(
-                r#"<svg class="inline-art art-animation" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMid meet" focusable="false"><image class="animation-strip" href="{sprite}" width="{strip_width}" height="{height}"/></svg>"#
-            ),
-        };
-        contents = contents.replace(&opening, &format!("{opening}{animated}"));
+    let opening = r#"<span class="image-wrap liberty" aria-hidden="true">"#;
+    if contents.contains(opening) {
+        let sprite = asset_url(static_root, "animations/liberty-flame-15.webp")?;
+        let animated = format!(
+            r#"<svg class="inline-art art-animation" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><svg x="185" y="88" width="491" height="609" viewBox="185 88 491 609" overflow="hidden"><image href="{static_root}/woodcut-cities.png" width="2172" height="724"/></svg><svg x="192" y="0" width="142" height="94" viewBox="0 0 128 96" preserveAspectRatio="xMidYMax meet" overflow="hidden"><image class="animation-strip" href="{sprite}" width="1920" height="96"/></svg></svg>"#
+        );
+        contents = contents.replace(opening, &format!("{opening}{animated}"));
     }
     Ok(contents)
 }
