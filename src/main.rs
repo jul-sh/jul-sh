@@ -233,15 +233,17 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
         let source = asset_url(static_root, "london-bus.png")?;
         // Every moving layer samples the same original image. At rest they align pixel for pixel.
         let bus = format!(
-            r#"<svg class="inline-art bus-engraving" viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+            r##"<svg class="inline-art bus-engraving" viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
 <defs>
 <clipPath id="bus-rear-wheel-clip"><ellipse cx="253" cy="872" rx="25" ry="49"/></clipPath>
 <clipPath id="bus-front-wheel-clip"><ellipse cx="800" cy="872" rx="32" ry="52"/></clipPath>
+<radialGradient id="bus-headlight-glow"><stop offset="0" stop-color="#fff9d8" stop-opacity=".85"/><stop offset=".55" stop-color="#fff0aa" stop-opacity=".42"/><stop offset="1" stop-color="#fff0aa" stop-opacity="0"/></radialGradient>
 </defs>
 <image href="{source}" width="1536" height="1024"/>
 <g clip-path="url(#bus-rear-wheel-clip)"><image class="bus-wheel bus-wheel-rear" href="{source}" width="1536" height="1024"/></g>
 <g clip-path="url(#bus-front-wheel-clip)"><image class="bus-wheel bus-wheel-front" href="{source}" width="1536" height="1024"/></g>
-</svg>"#
+<g class="bus-lights"><ellipse cx="1099" cy="842" rx="49" ry="53" fill="url(#bus-headlight-glow)"/><ellipse cx="1428" cy="841" rx="39" ry="49" fill="url(#bus-headlight-glow)"/></g>
+</svg>"##
         );
         contents = contents.replace(bus_image, &bus);
     }

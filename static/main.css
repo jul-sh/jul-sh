@@ -33,12 +33,14 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .bus-wheel{transform-box:view-box;transform:rotate(0)}
 .bus-wheel-rear{transform-origin:253px 872px}
 .bus-wheel-front{transform-origin:800px 872px}
+.bus-lights{opacity:0;mix-blend-mode:screen;pointer-events:none}
 @media (hover:hover) and (prefers-reduced-motion:no-preference){
   .image-wrap.liberty:hover>.inline-art:not(.art-animation){opacity:0}
   .image-wrap.liberty:hover>.art-animation{opacity:1}
   .image-wrap.liberty:hover .animation-strip{animation:woodcut-frames 1.5s step-end infinite}
-  .image-wrap.bus:hover>.inline-art{animation:bus-settle 1.6s ease-in-out both}
-  .image-wrap.bus:hover .bus-wheel{animation:bus-wheel-turn 1.6s steps(15,end) both}
+  .image-wrap.bus:hover>.inline-art{animation:bus-settle 1.6s ease-in-out infinite}
+  .image-wrap.bus:hover .bus-wheel{animation:bus-wheel-turn 1.6s steps(15,end) infinite}
+  .image-wrap.bus:hover .bus-lights{animation:bus-lights-glow 1.6s ease-in-out infinite}
   .image-wrap.bear:hover .bear-head{animation:bear-head-lift 2.4s steps(14,end) infinite}
   .image-wrap.bear:hover .bear-jaw{animation:bear-jaw-open 2.4s steps(14,end) infinite}
   .image-wrap.bear:hover .bear-paw{animation:bear-paw-lift 2.4s steps(14,end) infinite}
@@ -73,16 +75,21 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   86.6667%{transform:translateX(-86.666667%)}
   93.3333%,100%{transform:translateX(-93.333333%)}
 }
-/* Fifteen steps rotate wheel pixels sampled from the original, with a tiny suspension bounce. */
+/* Fifteen steps rotate wheel pixels sampled from the original. */
 @keyframes bus-wheel-turn{
   0%{transform:rotate(0)}
   100%{transform:rotate(360deg)}
 }
 @keyframes bus-settle{
   0%,100%{transform:translate(0,0) rotate(0)}
-  28%{transform:translate(1px,-1.8px) rotate(-.5deg)}
-  55%{transform:translate(.5px,.3px) rotate(.15deg)}
-  76%{transform:translate(.2px,-.6px) rotate(-.15deg)}
+  28%{transform:translate(.3px,-.55px) rotate(-.12deg)}
+  55%{transform:translate(.1px,.1px) rotate(.04deg)}
+  76%{transform:translate(.1px,-.2px) rotate(-.04deg)}
+}
+@keyframes bus-lights-glow{
+  0%,100%{opacity:0}
+  25%,62%{opacity:.72}
+  45%{opacity:.22}
 }
 .place,.section-start{white-space:nowrap}
 .asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:700 .85em/1 Charon,monospace;letter-spacing:0}
