@@ -34,6 +34,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   .image-wrap:hover>.inline-art:not(.art-animation){opacity:0}
   .image-wrap:hover>.art-animation{opacity:1}
   .image-wrap:hover .animation-strip{animation:woodcut-frames 1.5s step-end infinite}
+  .image-wrap.bus:hover .animation-strip{animation:bus-frames 3.5s step-end infinite}
   .image-wrap.bear:hover .bear-head{animation:bear-head-lift 2.4s steps(14,end) infinite}
   .image-wrap.bear:hover .bear-jaw{animation:bear-jaw-open 2.4s steps(14,end) infinite}
   .image-wrap.bear:hover .bear-paw{animation:bear-paw-lift 2.4s steps(14,end) infinite}
@@ -67,6 +68,24 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   80%{transform:translateX(-80%)}
   86.6667%{transform:translateX(-86.666667%)}
   93.3333%,100%{transform:translateX(-93.333333%)}
+}
+/* The same fifteen bus poses play once, then the bus rests before moving again. */
+@keyframes bus-frames{
+  0%,60%,100%{transform:translateX(0)}
+  4%{transform:translateX(-6.666667%)}
+  8%{transform:translateX(-13.333333%)}
+  12%{transform:translateX(-20%)}
+  16%{transform:translateX(-26.666667%)}
+  20%{transform:translateX(-33.333333%)}
+  24%{transform:translateX(-40%)}
+  28%{transform:translateX(-46.666667%)}
+  32%{transform:translateX(-53.333333%)}
+  36%{transform:translateX(-60%)}
+  40%{transform:translateX(-66.666667%)}
+  44%{transform:translateX(-73.333333%)}
+  48%{transform:translateX(-80%)}
+  52%{transform:translateX(-86.666667%)}
+  56%{transform:translateX(-93.333333%)}
 }
 .place,.section-start{white-space:nowrap}
 .asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:700 .85em/1 Charon,monospace;letter-spacing:0}
