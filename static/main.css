@@ -28,7 +28,6 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .image-wrap.bear{width:1em;--art-height:1.17em}
 .image-wrap>.inline-art{pointer-events:auto}
 .image-wrap .art-halo{opacity:0;overflow:visible;pointer-events:none;mix-blend-mode:normal}
-.image-wrap.liberty>.liberty-halo{opacity:.82;animation:torch-flicker 2.8s ease-in-out infinite}
 .image-wrap>.art-animation{opacity:0;overflow:hidden;pointer-events:none}
 .image-wrap.bear>.inline-art:not(.art-animation){opacity:0;pointer-events:none}
 .image-wrap.bear>.art-animation{opacity:1;overflow:visible;pointer-events:auto}
@@ -43,7 +42,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .bus-wheel-front{transform-origin:800px 872px}
 .bus-lights{opacity:0;mix-blend-mode:screen;pointer-events:none}
 @media (hover:hover) and (prefers-reduced-motion:no-preference){
-  .image-wrap.liberty:hover>.inline-art:not(.art-animation):not(.art-halo){opacity:0}
+  .image-wrap.liberty:hover>.inline-art:not(.art-animation){opacity:0}
   .image-wrap.liberty:hover>.art-animation{opacity:1}
   .image-wrap.liberty:hover .animation-strip{animation:woodcut-frames 1.5s step-end infinite}
   .image-wrap.bus:hover>.bus-engraving{animation:bus-settle 1.6s ease-in-out infinite}
@@ -102,15 +101,6 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 @keyframes fog-glow{
   0%,100%{opacity:0}
   45%,55%{opacity:.88}
-}
-@keyframes torch-flicker{
-  0%,100%{opacity:.82}
-  16%{opacity:.79}
-  29%{opacity:.85}
-  44%{opacity:.75}
-  58%{opacity:.83}
-  73%{opacity:.78}
-  88%{opacity:.84}
 }
 .place,.section-start{white-space:nowrap}
 .asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:700 .85em/1 Charon,monospace;letter-spacing:0}
