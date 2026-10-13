@@ -226,7 +226,8 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
         let animated = format!(
             r#"<svg class="inline-art art-animation" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><svg x="185" y="88" width="491" height="609" viewBox="185 88 491 609" overflow="hidden"><image href="{static_root}/woodcut-cities.png" width="2172" height="724"/></svg><svg x="192" y="0" width="142" height="94" viewBox="0 0 128 96" preserveAspectRatio="xMidYMax meet" overflow="hidden"><image class="animation-strip" href="{sprite}" width="1920" height="96"/></svg></svg>"#
         );
-        contents = contents.replace(opening, &format!("{opening}{animated}"));
+        let halo = r##"<svg class="inline-art art-halo liberty-halo" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true"><defs><radialGradient id="liberty-torch-fog"><stop offset="0" stop-color="#fff9dd" stop-opacity=".95"/><stop offset=".3" stop-color="#f6d57b" stop-opacity=".58"/><stop offset=".7" stop-color="#eed092" stop-opacity=".4"/><stop offset="1" stop-color="#eed092" stop-opacity="0"/></radialGradient></defs><ellipse cx="260" cy="47" rx="200" ry="205" fill="url(#liberty-torch-fog)"/></svg>"##;
+        contents = contents.replace(opening, &format!("{opening}{animated}{halo}"));
     }
     let bus_image = r#"<img class="inline-art" src="static/london-bus.png" alt="">"#;
     if contents.contains(bus_image) {
@@ -243,7 +244,7 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
 <g clip-path="url(#bus-rear-wheel-clip)"><image class="bus-wheel bus-wheel-rear" href="{source}" width="1536" height="1024"/></g>
 <g clip-path="url(#bus-front-wheel-clip)"><image class="bus-wheel bus-wheel-front" href="{source}" width="1536" height="1024"/></g>
 <g class="bus-lights"><ellipse cx="1099" cy="842" rx="49" ry="53" fill="url(#bus-headlight-glow)"/><ellipse cx="1428" cy="841" rx="39" ry="49" fill="url(#bus-headlight-glow)"/></g>
-</svg>"##
+</svg><svg class="inline-art art-halo bus-halo" viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true"><defs><radialGradient id="bus-headlight-fog"><stop offset="0" stop-color="#fff9dd" stop-opacity=".95"/><stop offset=".3" stop-color="#f6d57b" stop-opacity=".58"/><stop offset=".7" stop-color="#eed092" stop-opacity=".4"/><stop offset="1" stop-color="#eed092" stop-opacity="0"/></radialGradient></defs><ellipse cx="1099" cy="842" rx="235" ry="220" fill="url(#bus-headlight-fog)"/><ellipse cx="1428" cy="841" rx="205" ry="205" fill="url(#bus-headlight-fog)"/></svg>"##
         );
         contents = contents.replace(bus_image, &bus);
     }
