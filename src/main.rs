@@ -198,17 +198,21 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
         // The same engraved head is present at rest and in motion; no artwork swap.
         let head = "M1725 80H1960V236L1924 227L1896 217L1876 210L1853 219L1830 235L1803 245H1768V224H1725Z";
         let jaw = "M1725 140H1774V163L1811 163L1829 168L1840 177L1850 192L1844 210L1818 218H1768V210H1725Z";
+        let paw =
+            "M1598 137H1710V229L1775 252L1768 264L1760 284L1755 304L1752 325L1680 291L1598 269Z";
         // Leave a little original neck beneath the moving head to keep the join closed.
         let body_cut = "M1725 80H1960V218L1924 209L1896 199L1876 192L1853 201L1830 217L1803 227H1768V206H1725Z";
         let bear = format!(
             r#"<svg class="inline-art art-animation" viewBox="1603 87 401 612" preserveAspectRatio="xMidYMid meet" focusable="false">
 <defs>
-<clipPath id="bear-body"><path clip-rule="evenodd" d="M1603 87H2004V699H1603Z {body_cut}"/></clipPath>
+<clipPath id="bear-body"><path clip-rule="evenodd" d="M1603 87H2004V699H1603Z {body_cut} {paw}"/></clipPath>
 <clipPath id="bear-upper-head"><path clip-rule="evenodd" d="{head} {jaw}"/></clipPath>
 <clipPath id="bear-lower-jaw"><path d="{jaw}"/></clipPath>
+<clipPath id="bear-upper-paw"><path d="{paw}"/></clipPath>
 </defs>
 <rect x="1603" y="87" width="401" height="612" fill="transparent" pointer-events="all"/>
 <image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-body)"/>
+<g class="bear-paw"><image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-upper-paw)"/></g>
 <g class="bear-head">
 <image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-upper-head)"/>
 <g class="bear-jaw"><image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-lower-jaw)"/></g>
