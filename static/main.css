@@ -136,14 +136,13 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 
 /* The main site: a single flowing paragraph with inline portraits and woodcuts. */
 .variant-inline {
-  background: var(--paper);
+  background: transparent;
   color: var(--ink);
   font-weight: 350;
 }
 
 /* An uncoated paper texture beneath the lettering, never over it. */
-body.variant-inline {
-  background-color: var(--paper);
+:root {
   background-image:
     url('./paper-grain.svg?v=3'),
     radial-gradient(ellipse at 48% 8%, hsl(var(--paper-hue) calc(var(--paper-saturation) * 2.857) calc(var(--paper-lightness) + 5.3%) / .565) 0%, transparent 67%),
@@ -151,6 +150,7 @@ body.variant-inline {
   background-size: 256px 256px, 100% 100%, 100% 100%;
   background-repeat: repeat, no-repeat, no-repeat;
 }
+body.variant-inline { background: transparent; }
 
 .home.variant-inline main {
   width: min(1110px, calc(100% - 112px));
