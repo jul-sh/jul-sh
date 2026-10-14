@@ -168,7 +168,7 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     <meta name="description" content="Juliette Pluto, Staff Software Engineer at Google DeepMind in New York City. Adversarial robustness for frontier AI systems."/>
     <link rel="stylesheet" href="{stylesheet}"/>
     <link rel="preload" href="{static_root}/Kerberos[wght].woff2?v=1.2.4" as="font" type="font/woff2" crossorigin/>
-    <link rel="preload" href="{static_root}/IosevkaCharon-Bold.woff2?v=34.802" as="font" type="font/woff2" crossorigin/>
+    <link rel="preload" href="{static_root}/IosevkaCharon-Medium.woff2?v=34.802" as="font" type="font/woff2" crossorigin/>
     <link rel="apple-touch-icon" sizes="180x180" href="{static_root}/apple-touch-icon.png"/>
     <link rel="icon" type="image/png" sizes="32x32" href="{static_root}/favicon-32x32.png"/>
     <meta name="theme-color" content="#fcf8fc"/>
