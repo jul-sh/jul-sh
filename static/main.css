@@ -199,7 +199,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   height: 0;
   overflow: visible;
   vertical-align: baseline;
-  margin: 0 .14em 0 .13em;
+  margin: 0 .14em 0 .3em;
   border-radius: 0;
   line-height: 0;
 }
@@ -280,7 +280,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
     --portrait-width: 2.15em;
     --portrait-height: 2.365em;
     --portrait-drop: .22em;
-    margin-inline: .1em;
+    margin-inline: .3em .1em;
   }
 }
 
