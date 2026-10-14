@@ -159,7 +159,6 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 }
 
 .variant-inline .name {
-  letter-spacing: -.045em;
   white-space: nowrap;
 }
 
