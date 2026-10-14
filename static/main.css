@@ -18,11 +18,11 @@ body{font-feature-settings:'liga' 1}
 body{display:flow-root;min-height:100vh;font-weight:400}
 main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px}
 .introduction{display:flow-root}
-.name{font:500 .9em Charon,monospace}
+.name{font:500 1em Charon,monospace}
 .introduction a{color:var(--link);text-decoration:none}
 .introduction a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.14em}
 .introduction a:focus-visible{outline-color:var(--ink)}
-.cv-link{font:500 .9em Charon,monospace;letter-spacing:-.025em}
+.cv-link{font:500 1em Charon,monospace;letter-spacing:-.025em}
 /* Small ornaments have a horizontal footprint only; the type sets the leading. */
 .image-wrap{--art-height:1.22em;--art-drop:.23em;position:relative;display:inline-block;width:1.02em;height:0;line-height:0;vertical-align:baseline;margin:0 .08em 0 .1em}
 .image-wrap .inline-art{position:absolute;left:0;top:calc(var(--art-drop) - var(--art-height));display:block;width:100%;height:var(--art-height);max-width:none;object-fit:contain;pointer-events:none;mix-blend-mode:multiply}
@@ -159,7 +159,6 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 }
 
 .variant-inline .name {
-  font-size: .9em;
   letter-spacing: -.045em;
   white-space: nowrap;
 }
@@ -180,10 +179,6 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .variant-inline .introduction a:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 4px;
-}
-
-.variant-inline .cv-link {
-  font-size: .9em;
 }
 
 .variant-inline .asterism {
