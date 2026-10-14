@@ -19,6 +19,15 @@
       "unicode_codepoint_count": 192
     },
     {
+      "file": "IosevkaCharon-Medium.woff2",
+      "archive_path": "latin/iosevkacharon/IosevkaCharon-Medium.woff2",
+      "sha256": "05e1358a86a41ade9ff46b74c144e08a40969102f56ee2dd2a8444ff788c5ad2",
+      "bytes": 31332,
+      "font_version": "Version 34.802",
+      "glyph_count": 645,
+      "unicode_codepoint_count": 192
+    },
+    {
       "file": "IosevkaCharon-Regular.woff2",
       "archive_path": "latin/iosevkacharon/IosevkaCharon-Regular.woff2",
       "sha256": "cb643225b039cad296f9001d9dc32219c74ccaeef6a4b7a40877f8a8a10d8e0a",
