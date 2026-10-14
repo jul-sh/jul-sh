@@ -1,6 +1,6 @@
-@font-face{font-family:Kerberos;src:url('./Kerberos[wght].woff2?v=1.2.3') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}
-@font-face{font-family:Kerberos;src:url('./Kerberos-Italic[wght].woff2?v=1.2.3') format('woff2');font-weight:300 700;font-style:italic;font-display:swap}
-@font-face{font-family:Charon;src:url('./IosevkaCharon-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:Kerberos;src:url('./Kerberos[wght].woff2?v=1.2.4') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}
+@font-face{font-family:Kerberos;src:url('./Kerberos-Italic[wght].woff2?v=1.2.4') format('woff2');font-weight:300 700;font-style:italic;font-display:swap}
+@font-face{font-family:Charon;src:url('./IosevkaCharon-Bold.woff2?v=34.802') format('woff2');font-weight:700;font-style:normal;font-display:swap}
 :root{font-synthesis:none;color-scheme:light;font-family:Kerberos,Georgia,serif;font-size:20px;line-height:1.5}
 /* Keep Kerberos's standard ligatures active in letter-spaced body copy. */
 body{font-feature-settings:'liga' 1}
