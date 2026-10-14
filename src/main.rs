@@ -131,6 +131,9 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     let static_root = format!("{prefix}static");
     let about_link = format!("{prefix}index.html");
     let stylesheet = asset_url(&static_root, "main.css")?;
+    let favicon = asset_url(&static_root, "favicon-32x32.png")?;
+    let favicon_svg = asset_url(&static_root, "favicon.svg")?;
+    let apple_touch_icon = asset_url(&static_root, "apple-touch-icon.png")?;
     let (title, body_class, contents, after_main) = match PageKind::try_from(html_rel_path)? {
         PageKind::About => (
             "Juliette Pluto".to_string(),
@@ -169,8 +172,9 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     <link rel="stylesheet" href="{stylesheet}"/>
     <link rel="preload" href="{static_root}/Kerberos[wght].woff2?v=1.2.4" as="font" type="font/woff2" crossorigin/>
     <link rel="preload" href="{static_root}/IosevkaCharon-Medium.woff2?v=34.802" as="font" type="font/woff2" crossorigin/>
-    <link rel="apple-touch-icon" sizes="180x180" href="{static_root}/apple-touch-icon.png"/>
-    <link rel="icon" type="image/png" sizes="32x32" href="{static_root}/favicon-32x32.png"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="{apple_touch_icon}"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="{favicon}"/>
+    <link rel="icon" type="image/svg+xml" href="{favicon_svg}"/>
     <meta name="theme-color" content="#fcf8fc"/>
   </head>
   <body class="{body_class}">
