@@ -11,6 +11,8 @@ use std::{
 };
 use walkdir::WalkDir;
 
+mod font_coverage;
+
 // Output the generated static site here.
 static OUTPUT_DIR: &str = "./build";
 // Copy this static directory into output. Used for font files, images, etc.
@@ -31,10 +33,12 @@ enum PageKind {
 }
 
 fn main() -> Result<()> {
-    if let Err(e) = fs::remove_dir_all(OUTPUT_DIR) {
-        if e.kind() != io::ErrorKind::NotFound {
-            return Err(e.into());
-        }
+    let font_coverage =
+        font_coverage::FontCoverage::load(Path::new(STATIC_DIR).join("Kerberos-source.json"))?;
+    if let Err(e) = fs::remove_dir_all(OUTPUT_DIR)
+        && e.kind() != io::ErrorKind::NotFound
+    {
+        return Err(e.into());
     }
     fs::create_dir_all(OUTPUT_DIR)?;
 
@@ -59,7 +63,9 @@ fn main() -> Result<()> {
         if let Some(parent) = out_path.parent() {
             fs::create_dir_all(parent)?;
         }
-        fs::write(&out_path, html_page(&rel_html, html_fragment)?)?;
+        let page = html_page(&rel_html, html_fragment)?;
+        font_coverage.check_page(&rel_html, &page)?;
+        fs::write(&out_path, page)?;
     }
 
     Ok(())
@@ -171,7 +177,7 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     <title>{title}</title>
     <meta name="description" content="Juliette Pluto, Staff Software Engineer at Google DeepMind in New York City. Adversarial robustness for frontier AI systems."/>
     <link rel="stylesheet" href="{stylesheet}"/>
-    <link rel="preload" href="{static_root}/Kerberos[wght].woff2?v=1.3.0" as="font" type="font/woff2" crossorigin/>
+    <link rel="preload" href="{static_root}/Kerberos[wght].woff2?v=1.3.0-latin" as="font" type="font/woff2" crossorigin/>
     <link rel="preload" href="{static_root}/IosevkaCaleuche-Medium[YTLC,opsz].woff2?v=0d2012a-opsz" as="font" type="font/woff2" crossorigin/>
     <link rel="apple-touch-icon" sizes="180x180" href="{apple_touch_icon}"/>
     <link rel="icon" type="image/png" sizes="32x32" href="{favicon}"/>
@@ -233,17 +239,17 @@ fn about_fragment(fragment: String) -> Result<String> {
     replace_readme_marker(
         &mut introduction,
         "New York City.<!-- liberty -->",
-        r#"<span class="place">New York City.<span class="image-wrap liberty" aria-hidden="true"><svg class="inline-art" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="static/woodcut-cities.png" width="2172" height="724"/></svg></span></span>"#,
+        r#"<span class="place">New York City.<span class="image-wrap liberty" aria-hidden="true"><svg class="inline-art" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="static/woodcut-cities.webp" width="2172" height="724"/></svg></span></span>"#,
     )?;
     replace_readme_marker(
         &mut introduction,
         "London<!-- bus -->",
-        r#"<span class="place">London<span class="image-wrap bus" aria-hidden="true"><img class="inline-art" src="static/london-bus.png" alt=""></span></span>"#,
+        r#"<span class="place">London<span class="image-wrap bus" aria-hidden="true"><img class="inline-art" src="static/london-bus.webp" alt=""></span></span>"#,
     )?;
     replace_readme_marker(
         &mut introduction,
         "Berlin.<!-- bear -->",
-        r#"<span class="place">Berlin.<span class="image-wrap bear" aria-hidden="true"><svg class="inline-art" viewBox="1603 87 401 612" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="static/woodcut-cities.png" width="2172" height="724"/></svg></span></span>"#,
+        r#"<span class="place">Berlin.<span class="image-wrap bear" aria-hidden="true"><svg class="inline-art" viewBox="1603 87 401 612" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="static/woodcut-cities.webp" width="2172" height="724"/></svg></span></span>"#,
     )?;
     replace_readme_marker(
         &mut introduction,
@@ -258,9 +264,7 @@ fn about_fragment(fragment: String) -> Result<String> {
 
 fn replace_readme_marker(html: &mut String, marker: &str, replacement: &str) -> Result<()> {
     if html.matches(marker).count() != 1 {
-        return Err(eyre::eyre!(
-            "expected one README marker {marker:?}"
-        ));
+        return Err(eyre::eyre!("expected one README marker {marker:?}"));
     }
     *html = html.replacen(marker, replacement, 1);
     Ok(())
@@ -286,11 +290,11 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
 <clipPath id="bear-upper-paw"><path d="{paw}"/></clipPath>
 </defs>
 <rect x="1603" y="87" width="401" height="612" fill="transparent" pointer-events="all"/>
-<image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-body)"/>
-<g class="bear-paw"><image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-upper-paw)"/></g>
+<image href="{static_root}/woodcut-cities.webp" width="2172" height="724" clip-path="url(#bear-body)"/>
+<g class="bear-paw"><image href="{static_root}/woodcut-cities.webp" width="2172" height="724" clip-path="url(#bear-upper-paw)"/></g>
 <g class="bear-head">
-<image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-upper-head)"/>
-<g class="bear-jaw"><image href="{static_root}/woodcut-cities.png" width="2172" height="724" clip-path="url(#bear-lower-jaw)"/></g>
+<image href="{static_root}/woodcut-cities.webp" width="2172" height="724" clip-path="url(#bear-upper-head)"/>
+<g class="bear-jaw"><image href="{static_root}/woodcut-cities.webp" width="2172" height="724" clip-path="url(#bear-lower-jaw)"/></g>
 </g></svg>"#
         );
         contents = contents.replace(bear_opening, &format!("{bear_opening}{bear}"));
@@ -299,13 +303,13 @@ fn add_illustration_animations(mut contents: String, static_root: &str) -> Resul
     if contents.contains(opening) {
         let sprite = asset_url(static_root, "animations/liberty-flame-15.webp")?;
         let animated = format!(
-            r#"<svg class="inline-art art-animation" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><svg x="185" y="88" width="491" height="609" viewBox="185 88 491 609" overflow="hidden"><image href="{static_root}/woodcut-cities.png" width="2172" height="724"/></svg><svg x="192" y="0" width="142" height="94" viewBox="0 0 128 96" preserveAspectRatio="xMidYMax meet" overflow="hidden"><image class="animation-strip" href="{sprite}" width="1920" height="96"/></svg></svg>"#
+            r#"<svg class="inline-art art-animation" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><svg x="185" y="88" width="491" height="609" viewBox="185 88 491 609" overflow="hidden"><image href="{static_root}/woodcut-cities.webp" width="2172" height="724"/></svg><svg x="192" y="0" width="142" height="94" viewBox="0 0 128 96" preserveAspectRatio="xMidYMax meet" overflow="hidden"><image class="animation-strip" href="{sprite}" width="1920" height="96"/></svg></svg>"#
         );
         contents = contents.replace(opening, &format!("{opening}{animated}"));
     }
-    let bus_image = r#"<img class="inline-art" src="static/london-bus.png" alt="">"#;
+    let bus_image = r#"<img class="inline-art" src="static/london-bus.webp" alt="">"#;
     if contents.contains(bus_image) {
-        let source = asset_url(static_root, "london-bus.png")?;
+        let source = asset_url(static_root, "london-bus.webp")?;
         // Every moving layer samples the same original image. At rest they align pixel for pixel.
         let bus = format!(
             r##"<svg class="inline-art bus-engraving" viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
@@ -350,7 +354,7 @@ fn cv_fragment(fragment: String) -> String {
         ),
     ] {
         let art = format!(
-            r#"<span class="place">{text}<span class="image-wrap {city}" aria-hidden="true"><svg class="inline-art" viewBox="{viewbox}" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="static/woodcut-cities.png" width="2172" height="724"/></svg></span></span>"#
+            r#"<span class="place">{text}<span class="image-wrap {city}" aria-hidden="true"><svg class="inline-art" viewBox="{viewbox}" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="static/woodcut-cities.webp" width="2172" height="724"/></svg></span></span>"#
         );
         cv = cv.replace(needle, &needle.replace(text, &art));
     }
