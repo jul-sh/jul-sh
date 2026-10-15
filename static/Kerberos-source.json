@@ -1,20 +1,20 @@
 {
   "upstream": "https://github.com/jul-sh/Kerberos",
-  "release": "v1.2.4",
-  "release_url": "https://github.com/jul-sh/Kerberos/releases/tag/v1.2.4",
-  "released_at": "2026-10-14T12:47:58Z",
-  "source_commit": "3a25ea3c03a3fd1f8aa422934cd2be06733bfa5c",
-  "checked_on": "2026-10-14",
+  "release": "v1.3.0",
+  "release_url": "https://github.com/jul-sh/Kerberos/releases/tag/v1.3.0",
+  "released_at": "2026-10-15T08:49:28Z",
+  "source_commit": "f9bec6ad48c5b37bc689a05847caf8fec4058338",
+  "checked_on": "2026-10-15",
   "main_equals_release_commit": true,
-  "notes": "Official v1.2.4 release binaries. Local filenames retained for existing CSS URLs. WOFF2 signatures, font tables, and published asset SHA-256 digests verified.",
+  "notes": "Official v1.3.0 release binaries. Local filenames retained for existing CSS URLs. WOFF2 signatures, font tables, and published asset SHA-256 digests verified.",
   "fonts": [
     {
       "file": "Kerberos[wght].woff2",
-      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.2.4/Kerberos-VF.woff2",
-      "sha256": "1e56e62d46faea78cfb3053c5889e3abaf239c4c0efcac020eba215a9c16383f",
-      "bytes": 608020,
-      "font_version": "Version 1.204",
-      "font_revision": 1.2039947509765625,
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.3.0/Kerberos-VF.woff2",
+      "sha256": "d8c5e8db47108be2702e1589432d6f3cf312bd2a5d095c79c97816dfe7cc5479",
+      "bytes": 772116,
+      "font_version": "Version 1.300",
+      "font_revision": 1.3000030517578125,
       "family": "Kerberos",
       "style": "Regular",
       "glyph_count": 2159,
@@ -37,22 +37,28 @@
           "minimum": -50.0,
           "default": 0.0,
           "maximum": 100.0
+        },
+        {
+          "tag": "YTLC",
+          "minimum": 500.0,
+          "default": 500.0,
+          "maximum": 550.0
         }
       ],
       "replaced": {
-        "sha256": "1491ec4d899ae591e7a14c56eee7202db5f91e9299d95d9c6bfe9b5710dca88d",
-        "bytes": 608224,
-        "font_version": "Version 1.203",
-        "font_revision": 1.2030029296875
+        "sha256": "1e56e62d46faea78cfb3053c5889e3abaf239c4c0efcac020eba215a9c16383f",
+        "bytes": 608020,
+        "font_version": "Version 1.204",
+        "font_revision": 1.2039947509765625
       }
     },
     {
       "file": "Kerberos-Italic[wght].woff2",
-      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.2.4/Kerberos-Italic-VF.woff2",
-      "sha256": "969322cd64d6ff253831864bea4a993ca16856aee521679f98af38b724837894",
-      "bytes": 646156,
-      "font_version": "Version 1.204",
-      "font_revision": 1.2039947509765625,
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.3.0/Kerberos-Italic-VF.woff2",
+      "sha256": "e2f28b4e1a982578929dedf2337b1652482ac5cb7c88957b0237a83f73ea6544",
+      "bytes": 832924,
+      "font_version": "Version 1.300",
+      "font_revision": 1.3000030517578125,
       "family": "Kerberos",
       "style": "Italic",
       "glyph_count": 2162,
@@ -75,13 +81,19 @@
           "minimum": -50.0,
           "default": 0.0,
           "maximum": 100.0
+        },
+        {
+          "tag": "YTLC",
+          "minimum": 500.0,
+          "default": 500.0,
+          "maximum": 550.0
         }
       ],
       "replaced": {
-        "sha256": "fa818690047d2fd994ee256639edeea1bab901b00c9124c22d04d6181ccb95a0",
-        "bytes": 646784,
-        "font_version": "Version 1.203",
-        "font_revision": 1.2030029296875
+        "sha256": "969322cd64d6ff253831864bea4a993ca16856aee521679f98af38b724837894",
+        "bytes": 646156,
+        "font_version": "Version 1.204",
+        "font_revision": 1.2039947509765625
       }
     }
   ]

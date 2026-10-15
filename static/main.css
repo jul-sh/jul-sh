@@ -1,11 +1,11 @@
-@font-face{font-family:Kerberos;src:url('./Kerberos[wght].woff2?v=1.2.4') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}
-@font-face{font-family:Kerberos;src:url('./Kerberos-Italic[wght].woff2?v=1.2.4') format('woff2');font-weight:300 700;font-style:italic;font-display:swap}
-@font-face{font-family:Charon;src:url('./IosevkaCharon-Medium.woff2?v=34.802') format('woff2');font-weight:500;font-style:normal;font-display:swap}
-@font-face{font-family:Charon;src:url('./IosevkaCharon-Bold.woff2?v=34.802') format('woff2');font-weight:700;font-style:normal;font-display:swap}
-:root{font-synthesis:none;color-scheme:light;font-family:Kerberos,Georgia,serif;font-size:20px;line-height:1.5}
+@font-face{font-family:Kerberos;src:url('./Kerberos[wght].woff2?v=1.3.0') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}
+@font-face{font-family:Kerberos;src:url('./Kerberos-Italic[wght].woff2?v=1.3.0') format('woff2');font-weight:300 700;font-style:italic;font-display:swap}
+@font-face{font-family:Caleuche;src:url('./IosevkaCaleuche-Medium[YTLC,opsz].woff2?v=0d2012a-opsz') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:Caleuche;src:url('./IosevkaCaleuche-Bold[YTLC,opsz].woff2?v=0d2012a-opsz') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+:root{font-synthesis:none;font-optical-sizing:auto;color-scheme:light;font-family:Kerberos,Georgia,serif;font-size:20px;line-height:1.5}
 /* Keep Kerberos's standard ligatures active in letter-spaced body copy. */
 body{font-feature-settings:'liga' 1}
-*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}body{margin:0}h1,h2,h3,h4,p,figure{margin:0}h1,h2,h3,h4,.mono,nav,figcaption,.label{font-family:Charon,monospace;font-weight:500;font-feature-settings:'calt' 0}h2{font-weight:700}h1,h2,h3{line-height:1.12;text-wrap:balance}p+p{margin-top:1em}a{color:inherit;text-underline-offset:.18em;text-decoration-thickness:1px}a:hover{text-decoration-thickness:2px}a:focus-visible{outline:2px solid currentColor;outline-offset:5px}img{max-width:100%;display:block}button,input,select{font:inherit}.skip{position:absolute;top:-100px;left:20px;background:white;color:black;padding:12px;z-index:20}.skip:focus{top:12px}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}body{margin:0}h1,h2,h3,h4,p,figure{margin:0}h1,h2,h3,h4,.mono,nav,figcaption,.label{font-family:Caleuche,monospace;font-weight:500;font-feature-settings:'calt' 0}h2{font-weight:700}h1,h2,h3{line-height:1.12;text-wrap:balance}p+p{margin-top:1em}a{color:inherit;text-underline-offset:.18em;text-decoration-thickness:1px}a:hover{text-decoration-thickness:2px}a:focus-visible{outline:2px solid currentColor;outline-offset:5px}img{max-width:100%;display:block}button,input,select{font:inherit}.skip{position:absolute;top:-100px;left:20px;background:white;color:black;padding:12px;z-index:20}.skip:focus{top:12px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 
 :root{
@@ -18,11 +18,11 @@ body{font-feature-settings:'liga' 1}
 body{display:flow-root;min-height:100vh;font-weight:400}
 main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px}
 .introduction{display:flow-root}
-.name{font:500 1em Charon,monospace}
+.name{font:500 1em Caleuche,monospace}
 .introduction a{color:var(--link);text-decoration:none}
 .introduction a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.14em}
 .introduction a:focus-visible{outline-color:var(--ink)}
-.cv-link{font:500 1em Charon,monospace;}
+.cv-link{font:500 1em Caleuche,monospace;}
 /* Small ornaments have a horizontal footprint only; the type sets the leading. */
 .image-wrap{--art-height:1.22em;--art-drop:.23em;position:relative;display:inline-block;width:1.02em;height:0;line-height:0;vertical-align:baseline;margin:0 .08em 0 .1em}
 .image-wrap .inline-art{position:absolute;left:0;top:calc(var(--art-drop) - var(--art-height));display:block;width:100%;height:var(--art-height);max-width:none;object-fit:contain;pointer-events:none;mix-blend-mode:multiply}
@@ -106,7 +106,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   45%,55%{opacity:.58}
 }
 .place,.section-start{white-space:nowrap}
-.asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:500 .85em/1 Charon,monospace;letter-spacing:0}
+.asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:500 .85em/1 Caleuche,monospace;letter-spacing:0}
 .asterism>span{position:absolute;top:-.79em;font-size:.64em;line-height:1;width:.8em;text-align:center}
 .asterism>span:first-child{left:.38em;top:-1.37em}
 .asterism>span:nth-child(2){left:0}.asterism>span:nth-child(3){right:0}
@@ -124,12 +124,12 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .resume h1{font-size:44px;line-height:1.25;margin:0 0 32px}
 .resume h1 a{text-decoration:none}
 .resume>p:first-of-type{font-size:29px}.resume>p:first-of-type em{font-style:normal}
-.resume>p:nth-of-type(2){font-family:Charon,monospace;font-size:20px;font-weight:500;font-feature-settings:'calt' 0;margin-top:22px}
+.resume>p:nth-of-type(2){font-family:Caleuche,monospace;font-size:20px;font-weight:500;font-feature-settings:'calt' 0;margin-top:22px}
 .resume h2{font-size:27px;margin:80px 0 30px;scroll-margin-top:30px;letter-spacing:-.02em}
 .resume h3{font:500 24px/1.5 Kerberos,serif;margin:50px 0 8px;letter-spacing:-.005em;font-feature-settings:'liga' 1}
-.resume h3 strong{font:500 1em Charon,monospace}
+.resume h3 strong{font:500 1em Caleuche,monospace}
 .resume h2+h3{margin-top:0}.resume strong{font-weight:550}
-.resume p{margin:0}.resume .dates{font:500 15px/1.8 Charon,monospace;color:#696b64;letter-spacing:0;margin:0 0 24px}
+.resume p{margin:0}.resume .dates{font:500 15px/1.8 Caleuche,monospace;color:#696b64;letter-spacing:0;margin:0 0 24px}
 .dates .image-wrap{width:36px;--art-height:40px;--art-drop:.8em;margin-left:.28em}.dates .image-wrap.bear{width:39px}
 .resume ul{padding-left:1em;margin:0}.resume li{padding-left:.18em}.resume li+li{margin-top:1.05em}.resume li a{overflow-wrap:anywhere}
 @media(max-width:900px){main{width:calc(100% - 72px);margin-top:48px}}
@@ -306,7 +306,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   margin: 0 auto 56px;
   padding-top: 24px;
   border-top: 1px solid #202a2e26;
-  font: 500 16px/1.5 Charon, monospace;
+  font: 500 16px/1.5 Caleuche, monospace;
 }
 
 .cv-footer a {
