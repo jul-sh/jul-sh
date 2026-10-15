@@ -138,7 +138,8 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
         PageKind::About => (
             "Juliette Pluto".to_string(),
             "home variant-inline",
-            include_str!("about.html").to_string(),
+            // Keep README links usable on GitHub and point them at generated pages here.
+            about_fragment(fragment.replace("href=\"CV.md", "href=\"CV.html"))?,
             format!(
                 r#"<div id="image-preview" class="image-preview" aria-hidden="true" hidden><img alt=""></div><script src="{}" defer></script>"#,
                 asset_url(&static_root, "preview.js")?
@@ -193,6 +194,76 @@ fn asset_url(static_root: &str, name: &str) -> Result<String> {
     let mut hash = DefaultHasher::new();
     fs::read(Path::new(STATIC_DIR).join(name))?.hash(&mut hash);
     Ok(format!("{static_root}/{name}?v={:x}", hash.finish()))
+}
+
+/// Keep the README readable as prose; the hidden markers position site-only art.
+fn about_fragment(fragment: String) -> Result<String> {
+    let mut paragraphs = Vec::new();
+    let mut rest = fragment.trim();
+    while !rest.is_empty() {
+        let paragraph = rest
+            .strip_prefix("<p>")
+            .ok_or_else(|| eyre::eyre!("README must contain only paragraphs"))?;
+        let (text, remaining) = paragraph
+            .split_once("</p>")
+            .ok_or_else(|| eyre::eyre!("unclosed README paragraph"))?;
+        paragraphs.push(text.to_string());
+        rest = remaining.trim();
+    }
+    if paragraphs.is_empty() {
+        return Err(eyre::eyre!("README is empty"));
+    }
+
+    let mut introduction = paragraphs.remove(0);
+    let asterism = r#"<span class="asterism" aria-hidden="true"><span>*</span><span>*</span><span>*</span></span>"#;
+    for paragraph in paragraphs {
+        let (lead, remainder) = paragraph
+            .split_once("<!-- section -->")
+            .ok_or_else(|| eyre::eyre!("README paragraph needs a section marker"))?;
+        introduction.push_str(&format!(
+            r#" <span class="section-start">{asterism} {lead}</span>{remainder}"#
+        ));
+    }
+
+    replace_readme_marker(
+        &mut introduction,
+        "<strong>Juliette Pluto</strong><!-- portrait -->",
+        r#"<span class="name">Juliette Pluto</span><button class="inline-portrait" type="button" data-portrait-zoom aria-label="Enlarge portrait of Juliette Pluto" aria-expanded="false" aria-controls="image-preview"><img src="static/portrait.jpg" alt="" width="666" height="1000" fetchpriority="high"></button>"#,
+    )?;
+    replace_readme_marker(
+        &mut introduction,
+        "New York City.<!-- liberty -->",
+        r#"<span class="place">New York City.<span class="image-wrap liberty" aria-hidden="true"><svg class="inline-art" viewBox="185 2 491 695" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="static/woodcut-cities.png" width="2172" height="724"/></svg></span></span>"#,
+    )?;
+    replace_readme_marker(
+        &mut introduction,
+        "London<!-- bus -->",
+        r#"<span class="place">London<span class="image-wrap bus" aria-hidden="true"><img class="inline-art" src="static/london-bus.png" alt=""></span></span>"#,
+    )?;
+    replace_readme_marker(
+        &mut introduction,
+        "Berlin.<!-- bear -->",
+        r#"<span class="place">Berlin.<span class="image-wrap bear" aria-hidden="true"><svg class="inline-art" viewBox="1603 87 401 612" preserveAspectRatio="xMidYMid meet" focusable="false"><image href="static/woodcut-cities.png" width="2172" height="724"/></svg></span></span>"#,
+    )?;
+    replace_readme_marker(
+        &mut introduction,
+        r#"<a href="CV.html">my CV</a>"#,
+        r#"<a class="cv-link" href="CV.html">my CV</a>"#,
+    )?;
+
+    Ok(format!(
+        "<h1 class=\"visually-hidden\">Juliette Pluto</h1><p class=\"introduction\">{introduction}</p>\n"
+    ))
+}
+
+fn replace_readme_marker(html: &mut String, marker: &str, replacement: &str) -> Result<()> {
+    if html.matches(marker).count() != 1 {
+        return Err(eyre::eyre!(
+            "expected one README marker {marker:?}"
+        ));
+    }
+    *html = html.replacen(marker, replacement, 1);
+    Ok(())
 }
 
 /// Animate the original bear and bus engravings, plus Liberty's flame.
