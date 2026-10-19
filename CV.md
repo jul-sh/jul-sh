@@ -1,25 +1,30 @@
 # Juliette Pluto
 
-_Adversarial robustness for frontier AI systems at Google DeepMind. Previously: trusted execution environments, privacy-preserving ML, and web platforms at scale._
+_Adversarial robustness for frontier AI systems at Google DeepMind. Previously: trusted execution environments, privacy-preserving ML, and web engineering._
 
 [j@jul.sh](mailto:j@jul.sh)
 
 ## Experience
 
 ### **Google DeepMind** · Staff Software Engineer
-#### 2020-04 — present · NYC · promoted to Senior 2024, Staff 2026
+#### 2024-05 — present · NYC · promoted to Senior 2024, Staff 2026
 
-* **Security evaluations for model selection:** Started GDM's first effort to defend against prompt injection. Established the core security evaluation bundle used directly by GenAI leadership for frontier model selection, and expanded adversarial evaluation coverage across critical production agentic surfaces: Workspace, Cloud, and Search.
-* **Prompt injection robustness for Gemini:** Originated and socialized a novel mitigation strategy for adaptive prompt injection robustness, overcoming initial resistance and securing resourcing for implementation. Under the same data budget, the strategy delivered a 5x improvement on an internal automated red-teaming benchmark.
-* **Data-centric mitigations for an enterprise deployment:** Picked by leadership to close a critical prompt injection robustness gap for a multi-billion-dollar enterprise contract. Analyzed failure modes and targeted training distributions, doubling robustness on an internal benchmark; advised the customer's Head of ML Safety and helped secure final acceptance.
-* **User Instruction Classifier:** Invented an early policy-based defense that saturated the team's internal benchmark — 99.97% robustness against its adaptive prompt injection attacks. The result was diagnostic, not a solution: saturation exposed where the benchmark fell short of the real threat model, and shifted mitigation work toward attack classes the defense can't beat. The technique was later adopted to improve resilience against human red-teaming in production safety systems.
-* **Threat intelligence for Google Search:** Discovered unaddressed attack surfaces in Google Search before the wider organization was aware of them. Directed a cross-org technical response staffed by four engineers, and co-authored sections of the Google-wide Prompt Injection Playbook.
-* **Trusted execution environments & privacy-preserving ML (pre-2024):** Designed a Trusted Execution Environment orchestrator to reduce the Trusted Computing Base for remote-attested production ML launches (e.g., Gboard). Engineered attested browser-to-enclave end-to-end encryption and prevented critical zero-day vulnerabilities during infrastructure design.
+* **Security evaluations for model selection:** Started DeepMind’s first effort to defend against prompt injection, built Gemini’s first adaptive eval in the post-training pipeline and early post-training defenses ([arXiv:2505.14534](https://arxiv.org/abs/2505.14534)). Now lead prompt injection evaluations and manage two engineers.
+* **Prompt injection robustness for Gemini:** Led an analysis of human red-teaming and real-world attacks showing that our automated attackers were collapsing onto a narrow set of strategies, and drove the shift to strategy-diverse adversarial training data. Co-wrote the prompt injection section of the [Gemini 4 Argon Safety & Security Report](https://storage.googleapis.com/deepmind-media/gemini/gemini_4_safety_report.pdf), where Argon ranked as the most robust frontier model on the Gray Swan’s benchmark.
+* **User Instruction Classifier:** Built a novel [monitor](https://arxiv.org/abs/2505.14534) that checks each action an agent proposes against the user’s request without exposing the monitor to untrusted data. Advised on the production defense built on the same principle for Gemini computer use; Anthropic’s Claude Code auto mode, released ten months after our paper, uses the same approach ([Anthropic, 2026](https://www.anthropic.com/engineering/claude-code-auto-mode)).
+* **Training mitigations for an enterprise deployment:** Picked by leadership to close a critical prompt injection robustness gap for a multi-billion-dollar enterprise contract. Analyzed failure modes and created targeted training mitigations, doubling robustness on an internal benchmark. Advised customer's Head of ML Safety helping secure final acceptance.
+* **Defending Google Search:** Identified unaddressed attack surfaces in Google Search before the wider organization was aware of them. Directed a cross-org technical response and co-authored sections of the Google-wide Prompt Injection Playbook.
+
+### **Google** · Software Engineer
+#### 2020-04 — 2024-05 · London, then New York
+
+* **Trusted execution environments ([Project Oak](https://github.com/project-oak/oak)):** Core contributor to Google’s open-source confidential computing stack. Designed and built its orchestrator, which runs the attested workloads in [Gboard’s confidential federated analytics launch](https://arxiv.org/abs/2404.10764).
+* **Browser-to-enclave encryption:** Engineered attested browser-to-enclave end-to-end encryption and prevented critical zero-day vulnerabilities during infrastructure design.
 
 ### **N26** · Software Engineer
 #### 2018-01 — 2020-03 · Berlin
 
-Joined the web platform rebuild as one of four engineers and helped scale the team past 20 as N26 became a unicorn. Led full-stack product work, mentored engineers, and improved production reliability and performance: 30% fewer production errors, 20% faster time-to-first-meaningful-paint, 1.4s faster time-to-interactive.
+Joined the web platform rebuild as one of four engineers and helped grow the team past 20 as N26 became a unicorn. Led product work across the stack, mentored engineers, and cut production errors by 30%, time-to-first-meaningful-paint by 20%, and time-to-interactive by 1.4s.
 
 ### **Language Academy** · Lead Engineer
 #### 2016-08 — 2017-12 · Berlin
@@ -36,7 +41,7 @@ Joined the web platform rebuild as one of four engineers and helped scale the te
 ## Talks
 
 * *DICE Attestation on AMD SEV-SNP.* With Ivan Petrov. [OC3 2024](https://www.youtube.com/watch?v=LaT_vgz3Dd4).
-* *Beyond the Paper: Operationalizing Auto Red Teaming for Measurable Model Evaluation & Development.* AI Red Team Colloquium.
+* *Beyond the Paper: Operationalizing Auto Red Teaming for Measurable Model Evaluation & Development.* AI Red Team Colloquium (invite-only, hosted by Microsoft), 2026.
 
 ## Education
 
