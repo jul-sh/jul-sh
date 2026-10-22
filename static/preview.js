@@ -2,7 +2,8 @@
 /** @typedef {{kind: 'hover', trigger: HTMLElement} | {kind: 'focus', trigger: HTMLElement} | {kind: 'tap', trigger: HTMLElement}} ActiveState */
 /** @typedef {RestingState | ActiveState | {kind: 'closing', after: RestingState}} PreviewState */
 const preview = document.querySelector('#image-preview');
-const previewImage = preview.querySelector('img');
+const previewImage = preview.querySelector('.preview-crop');
+const fullImage = preview.querySelector('.preview-full');
 const hoverPointer = matchMedia('(hover: hover) and (pointer: fine)');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const triggers = document.querySelectorAll('[data-portrait-zoom]');
@@ -32,6 +33,7 @@ function finishClose(next) {
   preview.hidden = true;
   delete preview.dataset.phase;
   delete preview.dataset.input;
+  delete preview.dataset.fullReady;
 }
 
 /** @param {RestingState | ActiveState} next */
@@ -67,6 +69,7 @@ function show(next) {
       const startX = rect.left - left - (width - rect.width) / 2;
       const startY = rect.top - top - (height - rect.height) / 2;
       previewImage.src = image.currentSrc || image.src;
+      if (!fullImage.getAttribute('src')) fullImage.src = preview.dataset.fullSrc;
       Object.assign(preview.style, {width: `${width}px`, height: `${height}px`, left: `${left}px`, top: `${top}px`});
       preview.style.setProperty('--preview-start-scale', String(startScale));
       preview.style.setProperty('--preview-start-x', `${startX}px`);
@@ -78,10 +81,19 @@ function show(next) {
       }
       preview.dataset.input = state.kind;
       preview.dataset.phase = 'open';
+      if (fullImage.complete && fullImage.naturalWidth) {
+        requestAnimationFrame(() => {
+          if (preview.dataset.phase === 'open') preview.dataset.fullReady = '';
+        });
+      }
       break;
     }
   }
 }
+
+fullImage.addEventListener('load', () => {
+  if (preview.dataset.phase === 'open') preview.dataset.fullReady = '';
+});
 
 for (const trigger of triggers) {
   trigger.addEventListener('pointerdown', event => {

@@ -147,7 +147,8 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
             // Keep README links usable on GitHub and point them at generated pages here.
             about_fragment(fragment.replace("href=\"CV.md", "href=\"CV.html"), &static_root)?,
             format!(
-                r#"<div id="image-preview" class="image-preview" aria-hidden="true" hidden><img alt=""></div><script src="{}" defer></script>"#,
+                r#"<div id="image-preview" class="image-preview" data-full-src="{}" aria-hidden="true" hidden><img class="preview-crop" alt=""><img class="preview-full" alt=""></div><script src="{}" defer></script>"#,
+                asset_url(&static_root, "portrait-full.webp")?,
                 asset_url(&static_root, "preview.js")?
             ),
         ),
