@@ -112,8 +112,8 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 .asterism>span:nth-child(2){left:0}.asterism>span:nth-child(3){right:0}
 .inline-portrait{padding:0;border:0;background:none;color:inherit;font:inherit;appearance:none;cursor:zoom-in;-webkit-tap-highlight-color:transparent}
 .inline-portrait>img,.image-preview>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%;pointer-events:none}
-.image-preview{position:fixed;z-index:100;display:block;overflow:hidden;border-radius:3px;pointer-events:auto;box-shadow:0 0 0 5px var(--paper),0 10px 30px #171b1630;opacity:0;transform:scale(.94);transition:opacity .4s ease,transform .4s ease}
-.image-preview[data-phase="open"]{opacity:1;transform:scale(1)}
+.image-preview{position:fixed;z-index:100;display:block;overflow:hidden;border-radius:3px;pointer-events:auto;box-shadow:0 0 0 5px var(--paper),0 10px 30px #171b1630;opacity:0;transform:translate(var(--preview-start-x,0px),var(--preview-start-y,0px)) scale(var(--preview-start-scale,.94));transition:opacity .48s ease,transform .48s ease}
+.image-preview[data-phase="open"]{opacity:1;transform:translate(0,0) scale(1)}
 .image-preview[data-phase="closing"]{pointer-events:none}
 .image-preview[data-phase="closing"][data-input="tap"]{pointer-events:auto}
 .image-preview[hidden]{display:none}
@@ -213,9 +213,20 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   max-width: none;
   object-fit: cover;
   object-position: center 40%;
-  border-radius: 50%;
+  border-radius: 0;
   transform: none;
   pointer-events: auto;
+}
+
+.variant-inline .inline-portrait > img {
+  -webkit-mask-image: url('./ghost-mask.svg');
+  mask-image: url('./ghost-mask.svg');
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 
 .variant-inline .inline-portrait:focus-visible {
@@ -228,12 +239,69 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
 }
 
 .variant-inline .image-preview {
-  border-radius: 50%;
+  overflow: visible;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 10px 24px #171b1640);
+  pointer-events: none;
+}
+
+.variant-inline .image-preview::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: clip-path .48s ease, opacity .48s ease;
 }
 
 .variant-inline .image-preview > img {
+  position: relative;
+  z-index: 1;
   object-position: center 40%;
   transform: none;
+  pointer-events: auto;
+  transition: clip-path .48s ease;
+}
+
+.variant-inline .image-preview::before,
+.variant-inline .image-preview > img {
+  /* Matching vertices let the ghost outline flow into the original oval crop. */
+  clip-path: polygon(
+    50.00% 0.91%, 52.76% 1.37%, 55.53% 1.83%, 58.16% 2.51%, 60.66% 3.54%, 63.03% 4.69%, 65.26% 6.17%, 67.37% 7.77%, 69.21% 9.60%, 70.92% 11.66%, 72.24% 13.71%, 73.55% 15.77%,
+    74.61% 17.94%, 75.66% 19.89%, 76.58% 21.94%, 77.37% 23.77%, 78.16% 25.60%, 78.82% 27.31%, 79.61% 28.91%, 80.39% 30.40%, 81.05% 32.00%, 81.84% 33.37%, 82.63% 34.86%, 83.42% 36.23%,
+    84.21% 37.71%, 85.00% 39.09%, 85.92% 40.57%, 86.84% 41.94%, 87.89% 43.43%, 88.95% 45.03%, 90.26% 46.51%, 91.84% 48.23%, 93.82% 50.06%, 96.71% 52.00%, 98.42% 54.17%, 96.97% 56.00%,
+    95.00% 57.71%, 97.37% 60.34%, 98.95% 62.86%, 98.55% 65.14%, 96.97% 66.86%, 95.13% 68.57%, 93.29% 70.17%, 91.71% 71.66%, 90.13% 73.26%, 88.68% 74.97%, 87.50% 76.80%, 86.45% 78.63%,
+    85.39% 80.80%, 84.47% 83.09%, 83.55% 85.60%, 82.50% 88.00%, 81.05% 90.40%, 79.21% 92.34%, 76.84% 93.60%, 74.08% 94.29%, 68.42% 88.57%, 66.32% 89.71%, 65.92% 95.77%, 63.68% 97.37%,
+    61.05% 98.06%, 58.29% 98.51%, 55.53% 98.97%, 52.76% 99.09%, 50.00% 99.20%, 47.24% 99.20%, 44.47% 99.09%, 41.58% 98.97%, 38.82% 98.63%, 36.05% 98.17%, 33.29% 97.71%, 30.66% 97.03%,
+    27.89% 96.23%, 25.26% 95.31%, 22.76% 94.29%, 20.39% 93.03%, 18.03% 91.54%, 15.92% 89.94%, 13.95% 88.23%, 12.37% 86.17%, 11.18% 83.77%, 10.79% 80.91%, 13.95% 75.66%, 11.32% 74.86%,
+    8.68% 73.94%, 6.32% 72.69%, 4.34% 71.20%, 2.89% 69.37%, 2.89% 66.97%, 5.53% 63.89%, 4.34% 62.06%, 2.76% 60.34%, 1.58% 58.40%, 1.05% 56.34%, 1.97% 54.06%, 3.68% 52.00%,
+    6.05% 50.06%, 8.95% 48.23%, 11.18% 46.63%, 12.89% 45.26%, 14.34% 43.89%, 15.66% 42.51%, 16.58% 41.26%, 17.63% 39.89%, 18.42% 38.63%, 19.08% 37.26%, 19.74% 35.89%, 20.26% 34.51%,
+    20.79% 33.03%, 21.18% 31.43%, 21.58% 29.71%, 21.97% 27.89%, 22.37% 25.94%, 22.63% 23.77%, 23.16% 21.60%, 23.68% 19.09%, 24.47% 16.69%, 25.39% 14.40%, 26.71% 12.11%, 28.29% 10.06%,
+    30.00% 8.23%, 32.11% 6.40%, 34.34% 5.03%, 36.71% 3.77%, 39.21% 2.74%, 41.84% 1.94%, 44.47% 1.49%, 47.24% 1.14%
+  );
+}
+
+.variant-inline .image-preview[data-phase="open"]::before {
+  opacity: 1;
+}
+
+.variant-inline .image-preview[data-phase="open"]::before,
+.variant-inline .image-preview[data-phase="open"] > img {
+  clip-path: polygon(
+    50.00% 0.00%, 52.45% 0.06%, 54.90% 0.24%, 57.34% 0.54%, 59.75% 0.96%, 62.15% 1.50%, 64.51% 2.15%, 66.84% 2.92%, 69.13% 3.81%, 71.38% 4.80%, 73.57% 5.90%, 75.71% 7.11%,
+    77.78% 8.43%, 79.78% 9.84%, 81.72% 11.35%, 83.58% 12.95%, 85.36% 14.64%, 87.05% 16.42%, 88.65% 18.28%, 90.16% 20.22%, 91.57% 22.22%, 92.89% 24.29%, 94.10% 26.43%, 95.20% 28.62%,
+    96.19% 30.87%, 97.08% 33.16%, 97.85% 35.49%, 98.50% 37.85%, 99.04% 40.25%, 99.46% 42.66%, 99.76% 45.10%, 99.94% 47.55%, 100.00% 50.00%, 99.94% 52.45%, 99.76% 54.90%, 99.46% 57.34%,
+    99.04% 59.75%, 98.50% 62.15%, 97.85% 64.51%, 97.08% 66.84%, 96.19% 69.13%, 95.20% 71.38%, 94.10% 73.57%, 92.89% 75.71%, 91.57% 77.78%, 90.16% 79.78%, 88.65% 81.72%, 87.05% 83.58%,
+    85.36% 85.36%, 83.58% 87.05%, 81.72% 88.65%, 79.78% 90.16%, 77.78% 91.57%, 75.71% 92.89%, 73.57% 94.10%, 71.38% 95.20%, 69.13% 96.19%, 66.84% 97.08%, 64.51% 97.85%, 62.15% 98.50%,
+    59.75% 99.04%, 57.34% 99.46%, 54.90% 99.76%, 52.45% 99.94%, 50.00% 100.00%, 47.55% 99.94%, 45.10% 99.76%, 42.66% 99.46%, 40.25% 99.04%, 37.85% 98.50%, 35.49% 97.85%, 33.16% 97.08%,
+    30.87% 96.19%, 28.62% 95.20%, 26.43% 94.10%, 24.29% 92.89%, 22.22% 91.57%, 20.22% 90.16%, 18.28% 88.65%, 16.42% 87.05%, 14.64% 85.36%, 12.95% 83.58%, 11.35% 81.72%, 9.84% 79.78%,
+    8.43% 77.78%, 7.11% 75.71%, 5.90% 73.57%, 4.80% 71.38%, 3.81% 69.13%, 2.92% 66.84%, 2.15% 64.51%, 1.50% 62.15%, 0.96% 59.75%, 0.54% 57.34%, 0.24% 54.90%, 0.06% 52.45%,
+    0.00% 50.00%, 0.06% 47.55%, 0.24% 45.10%, 0.54% 42.66%, 0.96% 40.25%, 1.50% 37.85%, 2.15% 35.49%, 2.92% 33.16%, 3.81% 30.87%, 4.80% 28.62%, 5.90% 26.43%, 7.11% 24.29%,
+    8.43% 22.22%, 9.84% 20.22%, 11.35% 18.28%, 12.95% 16.42%, 14.64% 14.64%, 16.42% 12.95%, 18.28% 11.35%, 20.22% 9.84%, 22.22% 8.43%, 24.29% 7.11%, 26.43% 5.90%, 28.62% 4.80%,
+    30.87% 3.81%, 33.16% 2.92%, 35.49% 2.15%, 37.85% 1.50%, 40.25% 0.96%, 42.66% 0.54%, 45.10% 0.24%, 47.55% 0.06%
+  );
 }
 
 .variant-inline .image-wrap {

@@ -145,7 +145,7 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
             "Juliette Pluto".to_string(),
             "home variant-inline",
             // Keep README links usable on GitHub and point them at generated pages here.
-            about_fragment(fragment.replace("href=\"CV.md", "href=\"CV.html"))?,
+            about_fragment(fragment.replace("href=\"CV.md", "href=\"CV.html"), &static_root)?,
             format!(
                 r#"<div id="image-preview" class="image-preview" aria-hidden="true" hidden><img alt=""></div><script src="{}" defer></script>"#,
                 asset_url(&static_root, "preview.js")?
@@ -203,7 +203,7 @@ fn asset_url(static_root: &str, name: &str) -> Result<String> {
 }
 
 /// Keep the README readable as prose; the hidden markers position site-only art.
-fn about_fragment(fragment: String) -> Result<String> {
+fn about_fragment(fragment: String, static_root: &str) -> Result<String> {
     let mut paragraphs = Vec::new();
     let mut rest = fragment.trim();
     while !rest.is_empty() {
@@ -231,10 +231,11 @@ fn about_fragment(fragment: String) -> Result<String> {
         ));
     }
 
+    let portrait = asset_url(static_root, "portrait.webp")?;
     replace_readme_marker(
         &mut introduction,
         "<strong>Juliette Pluto</strong><!-- portrait -->",
-        r#"<span class="name">Juliette Pluto</span><button class="inline-portrait" type="button" data-portrait-zoom aria-label="Enlarge portrait of Juliette Pluto" aria-expanded="false" aria-controls="image-preview"><img src="static/portrait.webp" alt="" width="666" height="1000" fetchpriority="high" decoding="async"></button>"#,
+        &format!(r#"<span class="name">Juliette Pluto</span><button class="inline-portrait" type="button" data-portrait-zoom aria-label="Enlarge portrait of Juliette Pluto" aria-expanded="false" aria-controls="image-preview"><img src="{portrait}" alt="" width="520" height="650" fetchpriority="high" decoding="async"></button>"#),
     )?;
     replace_readme_marker(
         &mut introduction,

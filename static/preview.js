@@ -61,8 +61,16 @@ function show(next) {
       const width = height * ratio;
       const left = Math.max(16, Math.min(innerWidth - width - 16, rect.left + rect.width / 2 - width / 2));
       const top = Math.max(16, Math.min(innerHeight - height - 16, rect.top + rect.height / 2 - height / 2));
+      const startScale = rect.width / width;
+      // With a centered transform origin, these offsets place the small preview
+      // directly over the inline portrait before it grows into its final position.
+      const startX = rect.left - left - (width - rect.width) / 2;
+      const startY = rect.top - top - (height - rect.height) / 2;
       previewImage.src = image.currentSrc || image.src;
       Object.assign(preview.style, {width: `${width}px`, height: `${height}px`, left: `${left}px`, top: `${top}px`});
+      preview.style.setProperty('--preview-start-scale', String(startScale));
+      preview.style.setProperty('--preview-start-x', `${startX}px`);
+      preview.style.setProperty('--preview-start-y', `${startY}px`);
       if (preview.hidden) {
         preview.hidden = false;
         // Establish the closed appearance before starting the opening transition.
