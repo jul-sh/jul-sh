@@ -1,5 +1,5 @@
-@font-face{font-family:Kerberos;src:url('./Kerberos[wght].woff2?v=1.4.0-latin') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}
-@font-face{font-family:Kerberos;src:url('./Kerberos-Italic[wght].woff2?v=1.4.0-latin') format('woff2');font-weight:300 700;font-style:italic;font-display:swap}
+@font-face{font-family:Kerberos;src:url('./Kerberos[wght].woff2?v=1.4.2-latin') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}
+@font-face{font-family:Kerberos;src:url('./Kerberos-Italic[wght].woff2?v=1.4.2-latin') format('woff2');font-weight:300 700;font-style:italic;font-display:swap}
 @font-face{font-family:Caleuche;src:url('./IosevkaCaleuche-Medium[YTLC,opsz].woff2?v=0d2012a-opsz') format('woff2');font-weight:500;font-style:normal;font-display:swap}
 @font-face{font-family:Caleuche;src:url('./IosevkaCaleuche-Bold[YTLC,opsz].woff2?v=0d2012a-opsz') format('woff2');font-weight:700;font-style:normal;font-display:swap}
 :root{font-synthesis:none;font-optical-sizing:auto;color-scheme:light;font-family:Kerberos,Georgia,serif;font-size:20px;line-height:1.5}

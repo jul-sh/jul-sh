@@ -1,20 +1,20 @@
 {
   "upstream": "https://github.com/jul-sh/Kerberos",
-  "release": "v1.4.0",
-  "release_url": "https://github.com/jul-sh/Kerberos/releases/tag/v1.4.0",
-  "released_at": "2026-10-21T21:39:30Z",
-  "source_commit": "d354a3b2d931436ae7b8f28ea913395ccb556d9d",
-  "checked_on": "2026-10-21",
-  "main_equals_release_commit": false,
-  "notes": "Latin-focused WOFF2 subsets of official v1.4.0 variable fonts. Weight and optical size remain variable; unused GRAD and YTLC axes are fixed at their upstream defaults to keep transfer size low. OpenType features, including ligatures, are retained.",
+  "release": "v1.4.2",
+  "release_url": "https://github.com/jul-sh/Kerberos/releases/tag/v1.4.2",
+  "released_at": "2026-10-23T14:55:44Z",
+  "source_commit": "c813af0fd5ccda50c4beffebb5ea4029aad8e1a6",
+  "checked_on": "2026-10-23",
+  "main_equals_release_commit": true,
+  "notes": "Latin-focused WOFF2 subsets of official v1.4.2 variable fonts. Weight and optical size remain variable; unused GRAD and YTLC axes are fixed at their upstream defaults to keep transfer size low. OpenType features, including ligatures, are retained. Four nonvarying glyphs had missing empty gvar records in the upstream WOFF2; those records were restored before subsetting.",
   "fonts": [
     {
       "file": "Kerberos[wght].woff2",
-      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.0/Kerberos-VF.woff2",
-      "sha256": "417ca498ff27516634c5cd711184afef20b75eab44a601d30805c9231b02a23e",
-      "bytes": 440996,
-      "font_version": "Version 1.400",
-      "font_revision": 1.399993896484375,
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.2/Kerberos-VF.woff2",
+      "sha256": "2829c33ba4b971b649fbb22c3b373880673148eff37a2819d41b28b4a1f03749",
+      "bytes": 435972,
+      "font_version": "Version 1.402",
+      "font_revision": 1.4019927978515625,
       "family": "Kerberos",
       "style": "Regular",
       "glyph_count": 1158,
@@ -34,21 +34,21 @@
         }
       ],
       "replaced": {
-        "sha256": "24cadcd3a774685c28b4d1ecca9df86d21eac8d985302df3ea64fc07d7b3e3be",
-        "bytes": 407052,
-        "font_version": "Version 1.300",
-        "font_revision": 1.3000030517578125
+        "sha256": "417ca498ff27516634c5cd711184afef20b75eab44a601d30805c9231b02a23e",
+        "bytes": 440996,
+        "font_version": "Version 1.400",
+        "font_revision": 1.399993896484375
       },
-      "upstream_sha256": "9deee0c38c5e2a252fe5e286a9bfb8c19e2225e496a69ba24e2d58927cf99083",
-      "upstream_bytes": 1697980
+      "upstream_sha256": "fde45fea15f1e44f3cf39b9706a0c3422e1f5c9f1031499e47b168446a78d62b",
+      "upstream_bytes": 1689016
     },
     {
       "file": "Kerberos-Italic[wght].woff2",
-      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.0/Kerberos-Italic-VF.woff2",
-      "sha256": "b7def1b6526e344e7d803dc205a403cdfb9570dc4af52a3e0180ed0ac5a01f65",
-      "bytes": 466380,
-      "font_version": "Version 1.400",
-      "font_revision": 1.399993896484375,
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.2/Kerberos-Italic-VF.woff2",
+      "sha256": "8735945063e3d3a3fc0d477c182e8572f010e08086558924049331c1973fed5d",
+      "bytes": 470928,
+      "font_version": "Version 1.402",
+      "font_revision": 1.4019927978515625,
       "family": "Kerberos",
       "style": "Italic",
       "glyph_count": 1149,
@@ -68,13 +68,13 @@
         }
       ],
       "replaced": {
-        "sha256": "619a33b228d38f6e3fdabf9dba63f5c7d177d410d5a7866106b77c3a3bd3e1e2",
-        "bytes": 445544,
-        "font_version": "Version 1.300",
-        "font_revision": 1.3000030517578125
+        "sha256": "b7def1b6526e344e7d803dc205a403cdfb9570dc4af52a3e0180ed0ac5a01f65",
+        "bytes": 466380,
+        "font_version": "Version 1.400",
+        "font_revision": 1.399993896484375
       },
-      "upstream_sha256": "14427a34756cd906ab6f77d60cb1873a4baecab34a659fc7ea98e5c42445ecb7",
-      "upstream_bytes": 1781712
+      "upstream_sha256": "3836166a1ee0682224ce9b5bad8bdc327b48e69dae2b4e8701c620aa3f900e2c",
+      "upstream_bytes": 1791844
     }
   ],
   "subset_unicode_ranges": [
