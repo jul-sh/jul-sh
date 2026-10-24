@@ -1,4 +1,4 @@
-I’m **Juliette Pluto**<!-- portrait -->, a Staff Software Engineer at [Google DeepMind](CV.md#experience) in New York City.<!-- liberty --> I work on adversarial robustness for frontier AI systems; lately, mostly prompt injection: what an agent should do when the data it reads tries to give it orders.
+I’m **Juliette Pluto**<!-- portrait -->, a Staff Software Engineer at [Google DeepMind](CV.md#experience) in New York City.<!-- liberty --> I work on adversarial robustness for frontier AI systems.
 
 I started<!-- section --> DeepMind’s first effort to defend against prompt injection, and now lead our prompt injection evaluations. My work spans training Gemini, improving adaptive attackers, and practical defenses for production systems.
 
