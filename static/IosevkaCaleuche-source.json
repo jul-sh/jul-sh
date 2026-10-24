@@ -1,52 +1,65 @@
 {
   "upstream": "https://github.com/jul-sh/iosevka-charon",
-  "release": "pre-0e4c8a0a11d162d7bc7d47a6f54b803c0c1815f5",
-  "release_url": "https://github.com/jul-sh/iosevka-charon/releases/tag/pre-0e4c8a0a11d162d7bc7d47a6f54b803c0c1815f5",
-  "released_at": "2026-10-15T04:51:21Z",
-  "source_commit": "0e4c8a0a11d162d7bc7d47a6f54b803c0c1815f5",
-  "checked_on": "2026-10-15",
+  "source_commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad",
+  "source_url": "https://github.com/jul-sh/iosevka-charon/commit/7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad",
+  "checked_on": "2026-10-23",
+  "paired_kerberos_version": "1.4.2",
+  "derivation": "Locally built from the pinned upstream commit using the unhinted Iosevka Caleuche build plan, upstream post-processing and variable-font generator. Converted to WOFF2 and subset to the previous webfonts' exact Latin Unicode coverage, retaining all OpenType features and both opsz/YTLC axes.",
+  "build_plan_sha256": "814fd6cee8d1832cd412d966c6af86882da9032697871f082f83185f17cebdb8",
+  "kerberos_metrics_sha256": "da48594b36ce115748ede3299b07802dcd035fa9f5b086e33bf29b6f366ca724",
+  "generator": {
+    "url": "https://github.com/jul-sh/iosevka-charon/blob/7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad/scripts/caleuche_variable.py",
+    "commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad",
+    "sha256": "0054ab83e4cdb6b26fe9fe470c11fb209e983175cb4930c95689d6a2d19136d6"
+  },
   "fonts": [
     {
       "file": "IosevkaCaleuche-Medium[YTLC,opsz].woff2",
-      "sha256": "f84960fa578dadabb3dc491dce8bc7c8e2268a5cdab209760f588a626aabc29c",
-      "bytes": 32204,
+      "sha256": "15c1a4bef6c32e0d0877bbb59cf70c72df5e842b8a63f8ce55c99d1fc29d4420",
+      "bytes": 34156,
       "font_version": "Version 34.802",
-      "glyph_count": 644,
+      "glyph_count": 645,
       "unicode_codepoint_count": 192,
-      "source_archive_path": "iosevkacaleuche/IosevkaCaleuche-Medium.ttf",
-      "source_ttf_sha256": "2daa6159c4ee4fe8c3c54dd31439b90c4311ceb2606dfd1a30150e4f6f56baf0"
+      "source_ttf_path": "fonts/iosevkacaleuche/variable/IosevkaCaleuche-Medium[YTLC,opsz].ttf",
+      "source_ttf_sha256": "30c6fac634799f94d7269a7486ad532b0155a10643a56f7f8601e372f3e65a13",
+      "axes": [
+        {
+          "tag": "opsz",
+          "minimum": 8.0,
+          "default": 14.0,
+          "maximum": 72.0
+        },
+        {
+          "tag": "YTLC",
+          "minimum": 500.0,
+          "default": 500.0,
+          "maximum": 550.0
+        }
+      ]
     },
     {
       "file": "IosevkaCaleuche-Bold[YTLC,opsz].woff2",
-      "sha256": "d2ff050e2fd6c6ec8e10f828f05b0dc0890778e2dfb92fde2251b241a3534209",
-      "bytes": 33144,
+      "sha256": "35b38667cf10c10db50078cef303a648b5fd988930b6b100ac6e640273a6516b",
+      "bytes": 35204,
       "font_version": "Version 34.802",
-      "glyph_count": 644,
+      "glyph_count": 645,
       "unicode_codepoint_count": 192,
-      "source_archive_path": "iosevkacaleuche/IosevkaCaleuche-Bold.ttf",
-      "source_ttf_sha256": "379ec37d257bd7a83f2c17b24e2eda5730f4388d73901a69b36985c7bd4c6677"
-    }
-  ],
-  "source_archive_url": "https://github.com/jul-sh/iosevka-charon/releases/download/pre-0e4c8a0a11d162d7bc7d47a6f54b803c0c1815f5/iosevka-charon.zip",
-  "source_archive_sha256": "dd58820786320b2c008f12644844b27b529dbf1f1bad75953c9888e14229c71a",
-  "generator": {
-    "url": "https://github.com/jul-sh/iosevka-charon/blob/0d2012a82eccfb93a5d99b7015229255e55685a9/scripts/caleuche_variable.py",
-    "commit": "0d2012a82eccfb93a5d99b7015229255e55685a9",
-    "sha256": "77823b3ac80505da8e320f05624f4f7f622441def2766d2e9ad9743462188877"
-  },
-  "derivation": "Generated opsz/YTLC variable TTFs from official prerelease static TTFs with upstream script; converted to WOFF2 and subset to the same Latin Unicode coverage as the official webfonts.",
-  "axes": [
-    {
-      "tag": "opsz",
-      "minimum": 8,
-      "default": 14,
-      "maximum": 72
-    },
-    {
-      "tag": "YTLC",
-      "minimum": 500,
-      "default": 500,
-      "maximum": 550
+      "source_ttf_path": "fonts/iosevkacaleuche/variable/IosevkaCaleuche-Bold[YTLC,opsz].ttf",
+      "source_ttf_sha256": "e4031896ec452279c449c469c33af28eed42a00d95a1ee55a4249b1922c397e4",
+      "axes": [
+        {
+          "tag": "opsz",
+          "minimum": 8.0,
+          "default": 14.0,
+          "maximum": 72.0
+        },
+        {
+          "tag": "YTLC",
+          "minimum": 500.0,
+          "default": 500.0,
+          "maximum": 550.0
+        }
+      ]
     }
   ]
 }
