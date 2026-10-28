@@ -1,18 +1,44 @@
 {
   "upstream": "https://github.com/jul-sh/iosevka-charon",
-  "source_commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad",
-  "source_url": "https://github.com/jul-sh/iosevka-charon/commit/7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad",
-  "checked_on": "2026-10-23",
+  "source_commit": "b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
+  "source_url": "https://github.com/jul-sh/iosevka-charon/commit/b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
+  "checked_on": "2026-10-28",
   "paired_kerberos_version": "1.4.2",
-  "derivation": "Locally built from the pinned upstream commit using the unhinted Iosevka Caleuche build plan, upstream post-processing and variable-font generator. Converted to WOFF2 and subset to the previous webfonts' exact Latin Unicode coverage, retaining all OpenType features and both opsz/YTLC axes.",
-  "build_plan_sha256": "814fd6cee8d1832cd412d966c6af86882da9032697871f082f83185f17cebdb8",
-  "kerberos_metrics_sha256": "da48594b36ce115748ede3299b07802dcd035fa9f5b086e33bf29b6f366ca724",
+  "derivation": "Regular uses the approved shape-450 drawing labeled as Regular 400, from the pinned upstream revision. Medium and Bold retain their previous builds at the revision recorded in their entries. All webfonts are unhinted WOFF2 subsets retaining the previous exact Latin Unicode coverage, OpenType features and opsz/YTLC axes.",
+  "build_plan_sha256": "6c7a13d8d4d79be91e3142a261ef658eb9719a839a72be2432906f92334e2d37",
+  "kerberos_metrics_sha256": "407a1267380ed7abae4a3d93b265cd8d10601dd95e86f0ddfb843e0226e2678d",
   "generator": {
-    "url": "https://github.com/jul-sh/iosevka-charon/blob/7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad/scripts/caleuche_variable.py",
-    "commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad",
+    "url": "https://github.com/jul-sh/iosevka-charon/blob/b6c681ce1005c9dd3e2b6c77065d55052ddd20b7/scripts/caleuche_variable.py",
+    "commit": "b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
     "sha256": "0054ab83e4cdb6b26fe9fe470c11fb209e983175cb4930c95689d6a2d19136d6"
   },
   "fonts": [
+    {
+      "file": "IosevkaCaleuche-Regular[YTLC,opsz].woff2",
+      "sha256": "620160c333beceea3254aa366079826e10610cc4087eb27ac375cb2084842387",
+      "bytes": 33892,
+      "font_version": "Version 34.802",
+      "glyph_count": 644,
+      "unicode_codepoint_count": 192,
+      "source_ttf_path": "fonts/iosevkacaleuche/variable/IosevkaCaleuche-Regular[YTLC,opsz].ttf",
+      "source_ttf_sha256": "6b8aade3a47379e890f2db3a6b0aac214f82ec5f2b534aa4e4aab3530d7d6bad",
+      "axes": [
+        {
+          "tag": "opsz",
+          "minimum": 8.0,
+          "default": 14.0,
+          "maximum": 72.0
+        },
+        {
+          "tag": "YTLC",
+          "minimum": 500.0,
+          "default": 500.0,
+          "maximum": 550.0
+        }
+      ],
+      "source_commit": "b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
+      "notes": "Regular uses the approved shape-450 drawing and optical-size height targets, labeled as menu/CSS weight 400. Relabeling preserves all outline, advance-width, positioning and variation tables byte for byte."
+    },
     {
       "file": "IosevkaCaleuche-Medium[YTLC,opsz].woff2",
       "sha256": "15c1a4bef6c32e0d0877bbb59cf70c72df5e842b8a63f8ce55c99d1fc29d4420",
@@ -35,7 +61,8 @@
           "default": 500.0,
           "maximum": 550.0
         }
-      ]
+      ],
+      "source_commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad"
     },
     {
       "file": "IosevkaCaleuche-Bold[YTLC,opsz].woff2",
@@ -59,7 +86,8 @@
           "default": 500.0,
           "maximum": 550.0
         }
-      ]
+      ],
+      "source_commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad"
     }
   ]
 }
