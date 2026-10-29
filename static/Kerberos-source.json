@@ -2,23 +2,23 @@
   "upstream": "https://github.com/jul-sh/Kerberos",
   "release": "v1.4.10",
   "release_url": "https://github.com/jul-sh/Kerberos/releases/tag/v1.4.10",
-  "released_at": "2026-10-28T21:47:24Z",
-  "source_commit": "2a88ef556a3f2729d36b9f5f7adaf5780c2a5a74",
-  "checked_on": "2026-10-28",
+  "released_at": "2026-10-29T13:39:01Z",
+  "source_commit": "ce855c170a8e78491d18a16cb4783d4afc776f68",
+  "checked_on": "2026-10-29",
   "main_equals_release_commit": true,
   "notes": "Latin-focused WOFF2 subsets of official v1.4.10 variable fonts. Weight and optical size remain variable; unused GRAD and YTLC axes are fixed at their upstream defaults to keep transfer size low. OpenType features, including ligatures, are retained.",
   "fonts": [
     {
       "file": "Kerberos[wght].woff2",
       "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.10/Kerberos-VF.woff2",
-      "sha256": "4f9733275924736cd165c47437b7f1e38fc62b0e21bccfb058f0adde2f34fe10",
-      "bytes": 407932,
+      "sha256": "b8c141a9af81f382dade818f7fceee0f8e6f959716670cb273778de055b681fd",
+      "bytes": 411028,
       "font_version": "Version 1.410",
       "font_revision": 1.410003662109375,
       "family": "Kerberos",
       "style": "Regular",
-      "glyph_count": 1159,
-      "unicode_codepoint_count": 660,
+      "glyph_count": 1162,
+      "unicode_codepoint_count": 663,
       "axes": [
         {
           "tag": "wght",
@@ -34,25 +34,25 @@
         }
       ],
       "replaced": {
-        "sha256": "a6075654b1518fd2e4e4d78195d2c559b3234c19663eac456ca56acd976e4027",
-        "bytes": 332296,
-        "font_version": "Version 1.405",
-        "font_revision": 1.404998779296875
+        "sha256": "4f9733275924736cd165c47437b7f1e38fc62b0e21bccfb058f0adde2f34fe10",
+        "bytes": 407932,
+        "font_version": "Version 1.410",
+        "font_revision": 1.410003662109375
       },
-      "upstream_sha256": "03f99af1dfbc51487fd3d466d92415bd3725320705abc850b624a398b2d82e3b",
-      "upstream_bytes": 1871952
+      "upstream_sha256": "5e6f7aa3c96bde1e4c9f0f9ea9a4d650902b8e500418e186059ec71ab031c501",
+      "upstream_bytes": 1883476
     },
     {
       "file": "Kerberos-Italic[wght].woff2",
       "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.10/Kerberos-Italic-VF.woff2",
-      "sha256": "819dab4941f71438faba7407cf01452e00fcc26a6535ead26d0e839c620b9014",
-      "bytes": 471744,
+      "sha256": "164bcc61f8218e89c856a1da489a7718ca9be37de86d587c2edeff103da2ab9f",
+      "bytes": 475172,
       "font_version": "Version 1.410",
       "font_revision": 1.410003662109375,
       "family": "Kerberos",
       "style": "Italic",
-      "glyph_count": 1150,
-      "unicode_codepoint_count": 660,
+      "glyph_count": 1153,
+      "unicode_codepoint_count": 663,
       "axes": [
         {
           "tag": "wght",
@@ -68,13 +68,13 @@
         }
       ],
       "replaced": {
-        "sha256": "db961f629b98d23a93736b58386e9e44a292b242f9527370406fc4b041dad099",
-        "bytes": 364232,
-        "font_version": "Version 1.405",
-        "font_revision": 1.404998779296875
+        "sha256": "819dab4941f71438faba7407cf01452e00fcc26a6535ead26d0e839c620b9014",
+        "bytes": 471744,
+        "font_version": "Version 1.410",
+        "font_revision": 1.410003662109375
       },
-      "upstream_sha256": "287c5812fdbf0f32cf7cb14b0a74c5a0b46e3e4d64172d4c222b7a9b0af4affc",
-      "upstream_bytes": 2111460
+      "upstream_sha256": "905182373cdc51bd2b187199a5d9216427907e773558d895c02c3f13c5dcc99e",
+      "upstream_bytes": 2123600
     }
   ],
   "subset_unicode_ranges": [
@@ -146,8 +146,10 @@
     "2030",
     "2032-2033",
     "2039-203A",
+    "2042",
     "2044",
-    "2052",
+    "204E",
+    "2051-2052",
     "20A1",
     "20A3-20A4",
     "20A6-20A7",

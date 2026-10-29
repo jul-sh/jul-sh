@@ -1,5 +1,5 @@
-@font-face{font-family:Kerberos;src:url('./Kerberos[wght].woff2?v=1.4.10-latin') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}
-@font-face{font-family:Kerberos;src:url('./Kerberos-Italic[wght].woff2?v=1.4.10-latin') format('woff2');font-weight:300 700;font-style:italic;font-display:swap}
+@font-face{font-family:Kerberos;src:url('./Kerberos[wght].woff2?v=1.4.10-ce855c1-latin') format('woff2');font-weight:300 700;font-style:normal;font-display:swap}
+@font-face{font-family:Kerberos;src:url('./Kerberos-Italic[wght].woff2?v=1.4.10-ce855c1-latin') format('woff2');font-weight:300 700;font-style:italic;font-display:swap}
 @font-face{font-family:Caleuche;src:url('./IosevkaCaleuche-Regular[YTLC,opsz].woff2?v=7163e84-regular450') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:Caleuche;src:url('./IosevkaCaleuche-Bold[YTLC,opsz].woff2?v=7163e84-opsz') format('woff2');font-weight:700;font-style:normal;font-display:swap}
 :root{font-synthesis:none;font-optical-sizing:auto;color-scheme:light;font-family:Kerberos,Georgia,serif;font-size:20px;line-height:1.5}
@@ -106,10 +106,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   45%,55%{opacity:.58}
 }
 .place,.section-start{white-space:nowrap}
-.asterism{position:relative;display:inline-block;width:1em;height:0;margin:0 .22em;vertical-align:baseline;font:400 .85em/1 Caleuche,monospace;letter-spacing:0}
-.asterism>span{position:absolute;top:-.79em;font-size:.64em;line-height:1;width:.8em;text-align:center}
-.asterism>span:first-child{left:.38em;top:-1.37em}
-.asterism>span:nth-child(2){left:0}.asterism>span:nth-child(3){right:0}
+.asterism{display:inline-block;margin:0 .22em;vertical-align:baseline;font:400 .85em/1 Kerberos,Georgia,serif;letter-spacing:0}
 .inline-portrait{padding:0;border:0;background:none;color:inherit;font:inherit;appearance:none;cursor:zoom-in;-webkit-tap-highlight-color:transparent}
 .inline-portrait>img,.image-preview>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%;pointer-events:none}
 .image-preview{position:fixed;z-index:100;display:block;overflow:hidden;border-radius:3px;pointer-events:auto;box-shadow:0 0 0 5px var(--paper),0 10px 30px #171b1630;opacity:0;transform:translate(var(--preview-start-x,0px),var(--preview-start-y,0px)) scale(var(--preview-start-scale,.94));transition:opacity .48s ease,transform .48s ease}
