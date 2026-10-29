@@ -176,12 +176,6 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   outline-offset: 4px;
 }
 
-.variant-inline .asterism {
-  color: var(--ink);
-  font-size: .75em;
-  margin-inline: .24em;
-}
-
 /* Absolute artwork leaves the paragraph's baseline rhythm undisturbed. */
 .variant-inline .inline-portrait {
   --portrait-width: 1.35em;
