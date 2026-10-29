@@ -178,7 +178,7 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     <title>{title}</title>
     <meta name="description" content="Juliette Pluto, Staff Software Engineer at Google DeepMind in New York City. Adversarial robustness for frontier AI systems."/>
     <link rel="stylesheet" href="{stylesheet}"/>
-    <link rel="preload" href="{static_root}/Kerberos[wght].woff2?v=1.4.10-ce855c1-latin" as="font" type="font/woff2" crossorigin/>
+    <link rel="preload" href="{static_root}/Kerberos[wght].woff2?v=1.4.10-0f69894-latin" as="font" type="font/woff2" crossorigin/>
     <link rel="preload" href="{static_root}/IosevkaCaleuche-Regular[YTLC,opsz].woff2?v=7163e84-regular450" as="font" type="font/woff2" crossorigin/>
     <link rel="apple-touch-icon" sizes="180x180" href="{apple_touch_icon}"/>
     <link rel="icon" type="image/png" sizes="32x32" href="{favicon}"/>
@@ -222,7 +222,7 @@ fn about_fragment(fragment: String, static_root: &str) -> Result<String> {
     }
 
     let mut introduction = paragraphs.remove(0);
-    let asterism = r#"<span class="asterism" aria-hidden="true">⁂</span>"#;
+    let asterism = r#"<span aria-hidden="true">⁂</span>"#;
     for paragraph in paragraphs {
         let (lead, remainder) = paragraph
             .split_once("<!-- section -->")
