@@ -17,6 +17,7 @@ body{font-feature-settings:'liga' 1}
 }
 body{display:flow-root;min-height:100vh;font-weight:400}
 main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px}
+.asterism{display:inline-block;margin:0 .22em;vertical-align:baseline;font:400 .85em/1 Kerberos,Georgia,serif;letter-spacing:0}
 .introduction{display:flow-root}
 .name{font:400 1em Caleuche,monospace}
 .introduction a{color:var(--link);text-decoration:none}
