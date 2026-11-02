@@ -1,6 +1,7 @@
 //! Minimal static-site generator: convert *.md → HTML, mirror ./static.
 
 use eyre::Result;
+use fonts::{BuiltFonts, FontArtifact, PageFontUpgrade};
 use pulldown_cmark::{Event, Parser, Tag, html};
 use std::{
     collections::{HashSet, hash_map::DefaultHasher},
@@ -11,7 +12,7 @@ use std::{
 };
 use walkdir::WalkDir;
 
-mod font_coverage;
+mod fonts;
 
 // Output the generated static site here.
 static OUTPUT_DIR: &str = "./build";
@@ -32,9 +33,17 @@ enum PageKind {
     Regular { title: String },
 }
 
+struct PreparedPage {
+    rel_html: PathBuf,
+    static_root: String,
+    title: String,
+    body_class: &'static str,
+    contents: String,
+    after_main: String,
+    font_upgrade: PageFontUpgrade,
+}
+
 fn main() -> Result<()> {
-    let font_coverage =
-        font_coverage::FontCoverage::load(Path::new(STATIC_DIR).join("Kerberos-source.json"))?;
     if let Err(e) = fs::remove_dir_all(OUTPUT_DIR)
         && e.kind() != io::ErrorKind::NotFound
     {
@@ -48,23 +57,50 @@ fn main() -> Result<()> {
     let static_out_str = static_out.to_string_lossy();
     copy_dir_tree(STATIC_DIR, &static_out_str)?;
 
-    // Discover all markdown files.
+    // Discover all markdown files in deterministic order.
     let md_files: HashSet<PathBuf> = get_markdown_files(WalkDir::new("./").into_iter())?;
+    let mut sorted_md: Vec<PathBuf> = md_files.iter().cloned().collect();
+    sorted_md.sort();
 
-    // Convert each markdown file.
-    for md in &md_files {
+    // Pass 1: render page fragments so font subsets automatically cover every character used.
+    let mut prepared_pages = Vec::with_capacity(sorted_md.len());
+    let mut coverage_inputs = Vec::with_capacity(sorted_md.len());
+    for md in &sorted_md {
         let markdown = fs::read_to_string(md)?;
         let events = transform_events(md, &markdown, &md_files)?;
         let mut html_fragment = String::new();
         html::push_html(&mut html_fragment, events.into_iter());
 
         let rel_html = make_html_path_rel(md);
-        let out_path = Path::new(OUTPUT_DIR).join(&rel_html);
+        let prepared = prepare_page(rel_html, html_fragment)?;
+        let check_html = format!(
+            "<title>{}</title><a class=\"skip\">Skip to content</a><main>{}</main>{}",
+            prepared.title, prepared.contents, prepared.after_main
+        );
+        coverage_inputs.push((prepared.rel_html.clone(), check_html));
+        prepared_pages.push(prepared);
+    }
+
+    // Build two-stage WOFF2 subsets and prepend fingerprinted @font-face rules to build/static/main.css.
+    let built_fonts = BuiltFonts::build(
+        Path::new(STATIC_DIR).join("Kerberos-source.json"),
+        &coverage_inputs,
+        static_out.join("fonts"),
+    )?;
+    let built_css_path = static_out.join("main.css");
+    let base_css = fs::read_to_string(&built_css_path)?;
+    fs::write(
+        &built_css_path,
+        format!("{}{base_css}", built_fonts.font_face_css()),
+    )?;
+
+    // Pass 2: assemble and write complete HTML documents with fingerprinted asset and font URLs.
+    for prepared in prepared_pages {
+        let out_path = Path::new(OUTPUT_DIR).join(&prepared.rel_html);
         if let Some(parent) = out_path.parent() {
             fs::create_dir_all(parent)?;
         }
-        let page = html_page(&rel_html, html_fragment)?;
-        font_coverage.check_page(&rel_html, &page)?;
+        let page = render_html_document(&prepared, &built_fonts)?;
         fs::write(&out_path, page)?;
     }
 
@@ -130,17 +166,13 @@ fn make_html_path_rel(md: &Path) -> PathBuf {
     rel
 }
 
-/// Build the full HTML page around a fragment.
-fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
-    let depth = html_rel_path.parent().map_or(0, |p| p.components().count());
+/// Prepare rendered body fragments and asset references for a page prior to font subsetting.
+fn prepare_page(rel_html: PathBuf, fragment: String) -> Result<PreparedPage> {
+    let depth = rel_html.parent().map_or(0, |p| p.components().count());
     let prefix = "../".repeat(depth);
     let static_root = format!("{prefix}static");
     let about_link = format!("{prefix}index.html");
-    let stylesheet = asset_url(&static_root, "main.css")?;
-    let favicon = asset_url(&static_root, "favicon-32x32.png")?;
-    let favicon_svg = asset_url(&static_root, "favicon.svg")?;
-    let apple_touch_icon = asset_url(&static_root, "apple-touch-icon.png")?;
-    let (title, body_class, contents, after_main) = match PageKind::try_from(html_rel_path)? {
+    let (title, body_class, contents, after_main) = match PageKind::try_from(rel_html.as_path())? {
         PageKind::About => (
             "Juliette Pluto".to_string(),
             "home variant-inline",
@@ -169,17 +201,55 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
         ),
     };
     let contents = add_illustration_animations(contents, &static_root)?;
+    let font_upgrade = PageFontUpgrade::from_rendered_html(&contents)?;
+    Ok(PreparedPage {
+        rel_html,
+        static_root,
+        title,
+        body_class,
+        contents,
+        after_main,
+        font_upgrade,
+    })
+}
+
+/// Build the full HTML page around a prepared fragment and generated font bundle.
+fn render_html_document(page: &PreparedPage, built_fonts: &BuiltFonts) -> Result<String> {
+    let static_root = &page.static_root;
+    let stylesheet = asset_url(static_root, "main.css")?;
+    let fonts_script = asset_url(static_root, "fonts.js")?;
+    let favicon = asset_url(static_root, "favicon-32x32.png")?;
+    let favicon_svg = asset_url(static_root, "favicon.svg")?;
+    let apple_touch_icon = asset_url(static_root, "apple-touch-icon.png")?;
+    let boot_kerberos = built_fonts.page_url(static_root, FontArtifact::BootKerberosRegular);
+    let boot_caleuche = built_fonts.page_url(static_root, FontArtifact::BootCaleucheRegular);
+    let vf_roman = built_fonts.page_url(static_root, FontArtifact::VariableRoman);
+    let html_vf_attrs = match page.font_upgrade {
+        PageFontUpgrade::RomanOnly => format!(r#"data-vf-roman="{vf_roman}""#),
+        PageFontUpgrade::RomanAndItalic => {
+            let vf_italic = built_fonts.page_url(static_root, FontArtifact::VariableItalic);
+            format!(r#"data-vf-roman="{vf_roman}" data-vf-italic="{vf_italic}""#)
+        }
+    };
+    let title = &page.title;
+    let body_class = page.body_class;
+    let contents = &page.contents;
+    let after_main = &page.after_main;
+
+    // TODO(security): HTTP response security headers (CSP, X-Frame-Options, X-Content-Type-Options)
+    // are served by GitHub Pages edge infrastructure rather than static HTML files.
     Ok(format!(
         r##"<!DOCTYPE html>
-<html lang="en">
+<html lang="en" {html_vf_attrs}>
   <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/>
     <title>{title}</title>
     <meta name="description" content="Juliette Pluto, Staff Software Engineer at Google DeepMind in New York City. Adversarial robustness for frontier AI systems."/>
     <link rel="stylesheet" href="{stylesheet}"/>
-    <link rel="preload" href="{static_root}/Kerberos[wght].woff2?v=1.4.10-0f69894-latin" as="font" type="font/woff2" crossorigin/>
-    <link rel="preload" href="{static_root}/IosevkaCaleuche-Regular[YTLC,opsz].woff2?v=7163e84-regular450" as="font" type="font/woff2" crossorigin/>
+    <link rel="preload" href="{boot_kerberos}" as="font" type="font/woff2" crossorigin/>
+    <link rel="preload" href="{boot_caleuche}" as="font" type="font/woff2" crossorigin/>
+    <script src="{fonts_script}" defer></script>
     <link rel="apple-touch-icon" sizes="180x180" href="{apple_touch_icon}"/>
     <link rel="icon" type="image/png" sizes="32x32" href="{favicon}"/>
     <link rel="icon" type="image/svg+xml" href="{favicon_svg}"/>
@@ -196,10 +266,11 @@ fn html_page(html_rel_path: &Path, fragment: String) -> Result<String> {
     ))
 }
 
-/// Fingerprint mutable assets so rebuilding also refreshes cached CSS and JS.
+/// Fingerprint mutable assets from `./build/static` so rebuilding refreshes cached CSS and JS.
 fn asset_url(static_root: &str, name: &str) -> Result<String> {
     let mut hash = DefaultHasher::new();
-    fs::read(Path::new(STATIC_DIR).join(name))?.hash(&mut hash);
+    let built_path = Path::new(OUTPUT_DIR).join("static").join(name);
+    fs::read(&built_path)?.hash(&mut hash);
     Ok(format!("{static_root}/{name}?v={:x}", hash.finish()))
 }
 
