@@ -7,7 +7,7 @@
 //!
 //! - **Boot cuts (`[opsz]`):** lightweight weight- and `CALE`-pinned subsets for
 //!   fast, zero-CLS first paint across all viewport optical sizes.
-//! - **Progressive variable cuts (`[CALE,opsz,wght]` / `[opsz,wght]`):** loaded
+//! - **Progressive variable cuts (`[CALE,opsz,wght]`):** loaded
 //!   in the background after first paint via the CSS `FontFace` API.
 
 use eyre::{Result, WrapErr, bail, ensure, eyre};
@@ -57,8 +57,8 @@ pub enum VariationMode {
     BootOpszOnly { weight: u16, cale: u8 },
     /// Progressive Roman variable font (`wght`, `opsz`, `CALE` kept variable).
     VariableRomanCale,
-    /// Progressive Italic variable font (`wght`, `opsz` kept variable; `CALE=0`).
-    VariableItalicText,
+    /// Progressive Italic variable font (`wght`, `opsz`, `CALE` kept variable).
+    VariableItalicCale,
 }
 
 impl VariationMode {
@@ -71,9 +71,7 @@ impl VariationMode {
                 (*b"CALE", f32::from(cale)),
             ],
             Self::VariableRomanCale => vec![(*b"GRAD", 0.0), (*b"YTLC", 500.0)],
-            Self::VariableItalicText => {
-                vec![(*b"CALE", 0.0), (*b"GRAD", 0.0), (*b"YTLC", 500.0)]
-            }
+            Self::VariableItalicCale => vec![(*b"GRAD", 0.0), (*b"YTLC", 500.0)],
         }
     }
 
@@ -81,7 +79,7 @@ impl VariationMode {
         match self {
             Self::BootOpszOnly { weight, cale } => format!("boot-opsz-w{weight}-c{cale}"),
             Self::VariableRomanCale => "var-roman-cale-opsz-wght".to_string(),
-            Self::VariableItalicText => "var-italic-opsz-wght".to_string(),
+            Self::VariableItalicCale => "var-italic-cale-opsz-wght".to_string(),
         }
     }
 }
@@ -162,7 +160,7 @@ impl FontArtifact {
                 cale: 100,
             },
             Self::VariableRoman => VariationMode::VariableRomanCale,
-            Self::VariableItalic => VariationMode::VariableItalicText,
+            Self::VariableItalic => VariationMode::VariableItalicCale,
         }
     }
 }

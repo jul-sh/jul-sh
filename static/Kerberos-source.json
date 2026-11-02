@@ -5,20 +5,20 @@
   "released_at": "2026-11-02T02:53:36Z",
   "source_commit": "b52518e54da10c5f24625cfb346830f464cf01c7",
   "checked_on": "2026-11-02",
-  "notes": "Upstream Kerberos v1.5.0-rc.1 5-axis variable fonts (CALE, GRAD, YTLC, opsz, wght). During `cargo run`, the build fetches and SHA-256-verifies these release assets into `target/font-cache/` and automatically generates two-stage WOFF2 subsets covering the site's exact rendered Unicode characters: lightweight [opsz]-only boot cuts for instant zero-CLS first paint, plus progressive [CALE,opsz,wght] variable cuts loaded after first paint.",
+  "notes": "Kerberos v1.5.0-rc.1 SerifOnly 5-axis variable fonts (CALE, GRAD, YTLC, opsz, wght), preserving glyph widths and kerning across CALE 0\u2013100. The build fetches and SHA-256-verifies release assets, then generates [opsz]-only boot cuts and progressive [CALE,opsz,wght] Roman and Italic subsets. Links animate between serif and sans endpoints without tracking compensation.",
   "sources": [
     {
       "style": "roman",
-      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.5.0-rc.1/Kerberos-VF.woff2",
-      "sha256": "43835b766c55de38228c0881a5adbcb8c0abedd6965fcd4f7655649ad9747d84",
-      "bytes": 3811992,
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.5.0-rc.1/Kerberos-SerifOnly-VF.woff2",
+      "sha256": "b09b20796eb85799807db8b5f3ca1d2fdd2740e6c8de7a9fb485ef3f6da75bfe",
+      "bytes": 3794820,
       "font_version": "Version 1.500"
     },
     {
       "style": "italic",
-      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.5.0-rc.1/Kerberos-Italic-VF.woff2",
-      "sha256": "e5bf50b2bd4e963234f7e5abb7dafc731d56ca7b8520ab721e2ab7fbefdb7652",
-      "bytes": 4324472,
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.5.0-rc.1/Kerberos-Italic-SerifOnly-VF.woff2",
+      "sha256": "db9b3c8882e0660da701ad99a04d759f99a4cff56812fca83be9d916673ee5d0",
+      "bytes": 4305660,
       "font_version": "Version 1.500"
     }
   ]

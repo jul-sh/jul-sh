@@ -390,46 +390,24 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   text-decoration-color: currentColor;
 }
 
-/* Once the variable font loads in the background, links subtly morph along CALE on hover/focus. */
+/* SerifOnly preserves widths and kerning throughout the full serif–sans flip. */
 html[data-vf-ready] a {
-  font-variation-settings: 'CALE' 0;
-  transition: font-variation-settings .24s cubic-bezier(.22, 1, .36, 1),
-              letter-spacing .24s cubic-bezier(.22, 1, .36, 1),
+  --link-cale: 0;
+  --link-hover-cale: 100;
+  font-variation-settings: 'CALE' var(--link-cale);
+  transition: font-variation-settings .32s cubic-bezier(.22, 1, .36, 1),
               text-decoration-color .2s ease;
 }
 
-html[data-vf-ready] .introduction a:not(.cv-link):hover,
-html[data-vf-ready] .introduction a:not(.cv-link):focus-visible {
-  font-variation-settings: 'CALE' 28;
-  letter-spacing: -.002em;
+html[data-vf-ready] :is(h1, h2, nav, figcaption, .mono, .label, .name,
+  .resume > p:nth-of-type(2), .resume h3 strong, .resume .dates, .cv-footer) a,
+html[data-vf-ready] a.cv-link {
+  --link-cale: 100;
+  --link-hover-cale: 0;
 }
 
-html[data-vf-ready] .resume li a:hover,
-html[data-vf-ready] .resume li a:focus-visible {
-  font-variation-settings: 'CALE' 28;
-  letter-spacing: .011em;
-}
-
-html[data-vf-ready] .cv-link,
-html[data-vf-ready] .resume h1 a,
-html[data-vf-ready] .resume > p:nth-of-type(2) a,
-html[data-vf-ready] .cv-footer a {
-  font-variation-settings: 'CALE' 100;
-}
-
-html[data-vf-ready] .cv-link:hover,
-html[data-vf-ready] .cv-link:focus-visible {
-  font-variation-settings: 'CALE' 68;
-  letter-spacing: -.048em;
-}
-
-html[data-vf-ready] .resume h1 a:hover,
-html[data-vf-ready] .resume h1 a:focus-visible,
-html[data-vf-ready] .resume > p:nth-of-type(2) a:hover,
-html[data-vf-ready] .resume > p:nth-of-type(2) a:focus-visible,
-html[data-vf-ready] .cv-footer a:hover,
-html[data-vf-ready] .cv-footer a:focus-visible {
-  font-variation-settings: 'CALE' 62;
+html[data-vf-ready] a:is(:hover, :focus-visible) {
+  font-variation-settings: 'CALE' var(--link-hover-cale);
 }
 
 @media (max-width: 900px) {
@@ -438,12 +416,6 @@ html[data-vf-ready] .cv-footer a:focus-visible {
 
 @media (max-width: 560px) {
   .cv-footer { width: calc(100% - 44px); margin-bottom: 40px; }
-  html[data-vf-ready] .introduction a:not(.cv-link):hover,
-  html[data-vf-ready] .introduction a:not(.cv-link):focus-visible { letter-spacing: .004em; }
-  html[data-vf-ready] .resume li a:hover,
-  html[data-vf-ready] .resume li a:focus-visible { letter-spacing: .016em; }
-  html[data-vf-ready] .cv-link:hover,
-  html[data-vf-ready] .cv-link:focus-visible { letter-spacing: -.042em; }
 }
 
 @media print {
