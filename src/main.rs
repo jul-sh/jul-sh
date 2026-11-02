@@ -236,8 +236,6 @@ fn render_html_document(page: &PreparedPage, built_fonts: &BuiltFonts) -> Result
     let contents = &page.contents;
     let after_main = &page.after_main;
 
-    // TODO(security): HTTP response security headers (CSP, X-Frame-Options, X-Content-Type-Options)
-    // are served by GitHub Pages edge infrastructure rather than static HTML files.
     Ok(format!(
         r##"<!DOCTYPE html>
 <html lang="en" {html_vf_attrs}>
