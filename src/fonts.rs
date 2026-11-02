@@ -223,44 +223,49 @@ impl BuiltFonts {
         let fonts_out_dir = fonts_out_dir.as_ref();
         fs::create_dir_all(fonts_out_dir)?;
 
-        let built: Vec<(FontArtifact, String)> = thread::scope(|scope| -> Result<Vec<_>> {
-            let mut handles = Vec::with_capacity(FontArtifact::ALL.len());
-            for artifact in FontArtifact::ALL {
-                let style = artifact.upstream_style();
-                let sfnt = match style {
-                    UpstreamStyle::Roman => roman_sfnt.as_slice(),
-                    UpstreamStyle::Italic => italic_sfnt.as_slice(),
-                };
-                let upstream_sha = sources[&style].sha256.as_str();
-                let chars = &site_chars;
-                let subset_cache_ref = subset_cache.as_path();
-                let out_dir_ref = fonts_out_dir;
+        // Variable-font instancing is memory intensive; bound concurrent workers so
+        // a cold build does not hold all eight upstream instances in memory at once.
+        let mut built = Vec::with_capacity(FontArtifact::ALL.len());
+        for artifacts in FontArtifact::ALL.chunks(2) {
+            built.extend(thread::scope(|scope| -> Result<Vec<_>> {
+                let mut handles = Vec::with_capacity(artifacts.len());
+                for &artifact in artifacts {
+                    let style = artifact.upstream_style();
+                    let sfnt = match style {
+                        UpstreamStyle::Roman => roman_sfnt.as_slice(),
+                        UpstreamStyle::Italic => italic_sfnt.as_slice(),
+                    };
+                    let upstream_sha = sources[&style].sha256.as_str();
+                    let chars = &site_chars;
+                    let subset_cache_ref = subset_cache.as_path();
+                    let out_dir_ref = fonts_out_dir;
 
-                handles.push(scope.spawn(move || -> Result<(FontArtifact, String)> {
-                    let woff2 = build_or_load_subset(
-                        artifact,
-                        sfnt,
-                        upstream_sha,
-                        chars,
-                        subset_cache_ref,
-                    )?;
-                    let hash = short_sha256(&woff2);
-                    let out_path = out_dir_ref.join(artifact.file_name());
-                    fs::write(&out_path, &woff2)
-                        .wrap_err_with(|| format!("cannot write {}", out_path.display()))?;
-                    Ok((artifact, hash))
-                }));
-            }
+                    handles.push(scope.spawn(move || -> Result<(FontArtifact, String)> {
+                        let woff2 = build_or_load_subset(
+                            artifact,
+                            sfnt,
+                            upstream_sha,
+                            chars,
+                            subset_cache_ref,
+                        )?;
+                        let hash = short_sha256(&woff2);
+                        let out_path = out_dir_ref.join(artifact.file_name());
+                        fs::write(&out_path, &woff2)
+                            .wrap_err_with(|| format!("cannot write {}", out_path.display()))?;
+                        Ok((artifact, hash))
+                    }));
+                }
 
-            let mut results = Vec::with_capacity(handles.len());
-            for handle in handles {
-                let res = handle
-                    .join()
-                    .map_err(|_| eyre!("font subset worker panicked"))??;
-                results.push(res);
-            }
-            Ok(results)
-        })?;
+                let mut results = Vec::with_capacity(handles.len());
+                for handle in handles {
+                    let res = handle
+                        .join()
+                        .map_err(|_| eyre!("font subset worker panicked"))??;
+                    results.push(res);
+                }
+                Ok(results)
+            })?);
+        }
 
         Ok(Self {
             fingerprints: built.into_iter().collect(),
