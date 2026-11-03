@@ -390,7 +390,7 @@ main{position:relative;width:min(1000px,calc(100% - 96px));margin:64px auto 84px
   text-decoration-color: currentColor;
 }
 
-/* Flip between serif and proportional Caleuche sans forms on hover/focus. */
+/* SerifOnly preserves widths and kerning throughout the full serif–sans flip. */
 html[data-vf-ready] a {
   --link-cale: 0;
   --link-hover-cale: 100;
