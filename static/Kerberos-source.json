@@ -5,7 +5,7 @@
   "released_at": "2026-11-02T02:53:36Z",
   "source_commit": "b52518e54da10c5f24625cfb346830f464cf01c7",
   "checked_on": "2026-11-02",
-  "notes": "Kerberos v1.5.0-rc.1 SerifOnly 5-axis variable fonts (CALE, GRAD, YTLC, opsz, wght), preserving glyph widths and kerning across CALE 0\u2013100. The build fetches and SHA-256-verifies release assets, then generates [opsz]-only boot cuts and progressive [CALE,opsz,wght] Roman and Italic subsets. Links animate between serif and sans endpoints without tracking compensation.",
+  "notes": "Kerberos v1.5.0-rc.1: CALE is pinned at 0 and removed from all generated fonts. Boot cuts retain opsz; progressive Roman and Italic retain GRAD, opsz, wght for maximum-grade (+100) link hover. Caleuche uses its dedicated, restored Iosevka Caleuche fonts.",
   "sources": [
     {
       "style": "roman",

@@ -5,9 +5,9 @@
 //! across the generated HTML pages, verifies full upstream `cmap` coverage, and
 //! emits deterministic two-stage WOFF2 subsets into `./build/static/fonts/`:
 //!
-//! - **Boot cuts (`[opsz]`):** lightweight weight- and `CALE`-pinned subsets for
+//! - **Boot cuts (`[opsz]`):** lightweight weight-pinned subsets for
 //!   fast, zero-CLS first paint across all viewport optical sizes.
-//! - **Progressive variable cuts (`[CALE,opsz,wght]`):** loaded
+//! - **Progressive variable cuts (`[GRAD,opsz,wght]`):** loaded
 //!   in the background after first paint via the CSS `FontFace` API.
 
 use eyre::{Result, WrapErr, bail, ensure, eyre};
@@ -55,10 +55,10 @@ pub enum VariationMode {
     /// Fast first-paint cut: pins `wght` and `CALE` (plus `GRAD=0, YTLC=500`),
     /// keeping `opsz` variable so automatic optical sizing matches the full VF.
     BootOpszOnly { weight: u16, cale: u8 },
-    /// Progressive Roman variable font (`wght`, `opsz`, `CALE` kept variable).
-    VariableRomanCale,
-    /// Progressive Italic variable font (`wght`, `opsz`, `CALE` kept variable).
-    VariableItalicCale,
+    /// Progressive Roman variable font (`wght`, `opsz`, `GRAD` kept variable).
+    VariableRomanGrade,
+    /// Progressive Italic variable font (`wght`, `opsz`, `GRAD` kept variable).
+    VariableItalicGrade,
 }
 
 impl VariationMode {
@@ -70,16 +70,16 @@ impl VariationMode {
                 (*b"YTLC", 500.0),
                 (*b"CALE", f32::from(cale)),
             ],
-            Self::VariableRomanCale => vec![(*b"GRAD", 0.0), (*b"YTLC", 500.0)],
-            Self::VariableItalicCale => vec![(*b"GRAD", 0.0), (*b"YTLC", 500.0)],
+            Self::VariableRomanGrade => vec![(*b"CALE", 0.0), (*b"YTLC", 500.0)],
+            Self::VariableItalicGrade => vec![(*b"CALE", 0.0), (*b"YTLC", 500.0)],
         }
     }
 
     fn cache_descriptor(self) -> String {
         match self {
             Self::BootOpszOnly { weight, cale } => format!("boot-opsz-w{weight}-c{cale}"),
-            Self::VariableRomanCale => "var-roman-cale-opsz-wght".to_string(),
-            Self::VariableItalicCale => "var-italic-cale-opsz-wght".to_string(),
+            Self::VariableRomanGrade => "var-roman-grade-opsz-wght".to_string(),
+            Self::VariableItalicGrade => "var-italic-grade-opsz-wght".to_string(),
         }
     }
 }
@@ -90,20 +90,16 @@ pub enum FontArtifact {
     BootKerberosMedium,
     BootKerberosSemiBold,
     BootKerberosItalic,
-    BootCaleucheRegular,
-    BootCaleucheBold,
     VariableRoman,
     VariableItalic,
 }
 
 impl FontArtifact {
-    pub const ALL: [Self; 8] = [
+    pub const ALL: [Self; 6] = [
         Self::BootKerberosRegular,
         Self::BootKerberosMedium,
         Self::BootKerberosSemiBold,
         Self::BootKerberosItalic,
-        Self::BootCaleucheRegular,
-        Self::BootCaleucheBold,
         Self::VariableRoman,
         Self::VariableItalic,
     ];
@@ -114,8 +110,6 @@ impl FontArtifact {
             Self::BootKerberosMedium => "Kerberos-Boot-Medium.woff2",
             Self::BootKerberosSemiBold => "Kerberos-Boot-SemiBold.woff2",
             Self::BootKerberosItalic => "Kerberos-Boot-Italic.woff2",
-            Self::BootCaleucheRegular => "Caleuche-Boot-Regular.woff2",
-            Self::BootCaleucheBold => "Caleuche-Boot-Bold.woff2",
             Self::VariableRoman => "Kerberos-VF-Roman.woff2",
             Self::VariableItalic => "Kerberos-VF-Italic.woff2",
         }
@@ -127,8 +121,6 @@ impl FontArtifact {
             Self::BootKerberosRegular
             | Self::BootKerberosMedium
             | Self::BootKerberosSemiBold
-            | Self::BootCaleucheRegular
-            | Self::BootCaleucheBold
             | Self::VariableRoman => UpstreamStyle::Roman,
         }
     }
@@ -151,16 +143,8 @@ impl FontArtifact {
                 weight: 400,
                 cale: 0,
             },
-            Self::BootCaleucheRegular => VariationMode::BootOpszOnly {
-                weight: 400,
-                cale: 100,
-            },
-            Self::BootCaleucheBold => VariationMode::BootOpszOnly {
-                weight: 700,
-                cale: 100,
-            },
-            Self::VariableRoman => VariationMode::VariableRomanCale,
-            Self::VariableItalic => VariationMode::VariableItalicCale,
+            Self::VariableRoman => VariationMode::VariableRomanGrade,
+            Self::VariableItalic => VariationMode::VariableItalicGrade,
         }
     }
 }
@@ -222,7 +206,7 @@ impl BuiltFonts {
         fs::create_dir_all(fonts_out_dir)?;
 
         // Variable-font instancing is memory intensive; bound concurrent workers so
-        // a cold build does not hold all eight upstream instances in memory at once.
+        // a cold build does not hold all upstream instances in memory at once.
         let mut built = Vec::with_capacity(FontArtifact::ALL.len());
         for artifacts in FontArtifact::ALL.chunks(2) {
             built.extend(thread::scope(|scope| -> Result<Vec<_>> {
@@ -284,8 +268,6 @@ impl BuiltFonts {
             ("Kerberos", 500, "normal", FontArtifact::BootKerberosMedium),
             ("Kerberos", 550, "normal", FontArtifact::BootKerberosSemiBold),
             ("Kerberos", 400, "italic", FontArtifact::BootKerberosItalic),
-            ("Caleuche", 400, "normal", FontArtifact::BootCaleucheRegular),
-            ("Caleuche", 700, "normal", FontArtifact::BootCaleucheBold),
         ] {
             let hash = &self.fingerprints[&artifact];
             let file = artifact.file_name();

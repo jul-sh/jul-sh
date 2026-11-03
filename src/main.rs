@@ -222,7 +222,7 @@ fn render_html_document(page: &PreparedPage, built_fonts: &BuiltFonts) -> Result
     let favicon_svg = asset_url(static_root, "favicon.svg")?;
     let apple_touch_icon = asset_url(static_root, "apple-touch-icon.png")?;
     let boot_kerberos = built_fonts.page_url(static_root, FontArtifact::BootKerberosRegular);
-    let boot_caleuche = built_fonts.page_url(static_root, FontArtifact::BootCaleucheRegular);
+    let boot_caleuche = asset_url(static_root, "IosevkaCaleuche-Regular[YTLC,opsz].woff2")?;
     let vf_roman = built_fonts.page_url(static_root, FontArtifact::VariableRoman);
     let html_vf_attrs = match page.font_upgrade {
         PageFontUpgrade::RomanOnly => format!(r#"data-vf-roman="{vf_roman}""#),
