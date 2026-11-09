@@ -52,9 +52,9 @@ pub enum UpstreamStyle {
 /// Type-safe variation instancing mode for each generated webfont cut.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum VariationMode {
-    /// Fast first-paint cut: pins `wght` and `CALE` (plus `GRAD=0, YTLC=500`),
+    /// Fast first-paint cut: pins `wght` (plus `GRAD=0, YTLC=500`),
     /// keeping `opsz` variable so automatic optical sizing matches the full VF.
-    BootOpszOnly { weight: u16, cale: u8 },
+    BootOpszOnly { weight: u16 },
     /// Progressive Roman variable font (`wght`, `opsz`, `GRAD` kept variable).
     VariableRomanGrade,
     /// Progressive Italic variable font (`wght`, `opsz`, `GRAD` kept variable).
@@ -64,20 +64,19 @@ pub enum VariationMode {
 impl VariationMode {
     fn pinned_axes(self) -> Vec<([u8; 4], f32)> {
         match self {
-            Self::BootOpszOnly { weight, cale } => vec![
+            Self::BootOpszOnly { weight } => vec![
                 (*b"wght", f32::from(weight)),
                 (*b"GRAD", 0.0),
                 (*b"YTLC", 500.0),
-                (*b"CALE", f32::from(cale)),
             ],
-            Self::VariableRomanGrade => vec![(*b"CALE", 0.0), (*b"YTLC", 500.0)],
-            Self::VariableItalicGrade => vec![(*b"CALE", 0.0), (*b"YTLC", 500.0)],
+            Self::VariableRomanGrade => vec![(*b"YTLC", 500.0)],
+            Self::VariableItalicGrade => vec![(*b"YTLC", 500.0)],
         }
     }
 
     fn cache_descriptor(self) -> String {
         match self {
-            Self::BootOpszOnly { weight, cale } => format!("boot-opsz-w{weight}-c{cale}"),
+            Self::BootOpszOnly { weight } => format!("boot-opsz-w{weight}"),
             Self::VariableRomanGrade => "var-roman-grade-opsz-wght".to_string(),
             Self::VariableItalicGrade => "var-italic-grade-opsz-wght".to_string(),
         }
@@ -129,19 +128,15 @@ impl FontArtifact {
         match self {
             Self::BootKerberosRegular => VariationMode::BootOpszOnly {
                 weight: 400,
-                cale: 0,
             },
             Self::BootKerberosMedium => VariationMode::BootOpszOnly {
                 weight: 500,
-                cale: 0,
             },
             Self::BootKerberosSemiBold => VariationMode::BootOpszOnly {
                 weight: 550,
-                cale: 0,
             },
             Self::BootKerberosItalic => VariationMode::BootOpszOnly {
                 weight: 400,
-                cale: 0,
             },
             Self::VariableRoman => VariationMode::VariableRomanGrade,
             Self::VariableItalic => VariationMode::VariableItalicGrade,
