@@ -429,6 +429,10 @@ fn cv_fragment(fragment: String) -> String {
         );
         cv = cv.replace(needle, &needle.replace(text, &art));
     }
+    cv = cv.replace(
+        "2020-04 — 2024-05 · London, then New York",
+        r#"2020-04 — 2024-05 · <span class="place">London<span class="image-wrap bus" aria-hidden="true"><img class="inline-art" src="static/london-bus.webp" alt=""></span></span>, then New York"#,
+    );
     cv
 }
 
