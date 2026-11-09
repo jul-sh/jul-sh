@@ -1,25 +1,25 @@
 {
   "upstream": "https://github.com/jul-sh/Kerberos",
-  "release": "v1.5.0-rc.1",
-  "release_url": "https://github.com/jul-sh/Kerberos/releases/tag/v1.5.0-rc.1",
-  "released_at": "2026-11-02T02:53:36Z",
-  "source_commit": "b52518e54da10c5f24625cfb346830f464cf01c7",
-  "checked_on": "2026-11-02",
-  "notes": "Kerberos v1.5.0-rc.1: CALE is pinned at 0 and removed from all generated fonts. Boot cuts retain opsz; progressive Roman and Italic retain GRAD, opsz, wght for maximum-grade (+100) link hover. Caleuche uses its dedicated, restored Iosevka Caleuche fonts.",
+  "release": "v1.4.11",
+  "release_url": "https://github.com/jul-sh/Kerberos/releases/tag/v1.4.11",
+  "released_at": "2026-11-09T01:02:20Z",
+  "source_commit": "10600f3285013cece6900cdd500add8843b006c4",
+  "checked_on": "2026-11-09",
+  "notes": "Kerberos v1.4.11 has no CALE axis. Boot cuts retain opsz; progressive Roman and Italic retain GRAD, opsz, wght for maximum-grade (+100) link hover. Caleuche uses its dedicated Iosevka Caleuche fonts.",
   "sources": [
     {
       "style": "roman",
-      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.5.0-rc.1/Kerberos-SerifOnly-VF.woff2",
-      "sha256": "b09b20796eb85799807db8b5f3ca1d2fdd2740e6c8de7a9fb485ef3f6da75bfe",
-      "bytes": 3794820,
-      "font_version": "Version 1.500"
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.11/Kerberos-VF.woff2",
+      "sha256": "a2b89f7b54b217c3278ffbaaf405838ab10de1d3d5b9c9dbc01e0cad61c7efff",
+      "bytes": 1885572,
+      "font_version": "Version 1.411"
     },
     {
       "style": "italic",
-      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.5.0-rc.1/Kerberos-Italic-SerifOnly-VF.woff2",
-      "sha256": "db9b3c8882e0660da701ad99a04d759f99a4cff56812fca83be9d916673ee5d0",
-      "bytes": 4305660,
-      "font_version": "Version 1.500"
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.11/Kerberos-Italic-VF.woff2",
+      "sha256": "bd914a469ee936608c75453d10d0f7972b085fd3f60dda6674056000d076548b",
+      "bytes": 2123836,
+      "font_version": "Version 1.411"
     }
   ]
 }
