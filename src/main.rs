@@ -305,7 +305,7 @@ fn about_fragment(fragment: String, static_root: &str) -> Result<String> {
     replace_readme_marker(
         &mut introduction,
         "<strong>Juliette Pluto</strong><!-- portrait -->",
-        &format!(r#"<span class="name">Juliette Pluto</span><button class="inline-portrait" type="button" data-portrait-zoom aria-label="Enlarge portrait of Juliette Pluto" aria-expanded="false" aria-controls="image-preview"><img src="{portrait}" alt="" width="520" height="650" fetchpriority="high" decoding="async"></button>"#),
+        &format!(r#"<span class="name">Juliette Pluto</span><span class="inline-portrait"><button type="button" data-portrait-zoom aria-label="Enlarge portrait of Juliette Pluto" aria-controls="image-preview" aria-expanded="false"><img src="{portrait}" alt="" width="520" height="650" fetchpriority="high" decoding="async"></button></span>"#),
     )?;
     replace_readme_marker(
         &mut introduction,

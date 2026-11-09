@@ -1,43 +1,28 @@
 /** @typedef {{kind: 'closed'} | {kind: 'dismissed', trigger: HTMLElement}} RestingState */
-/** @typedef {{kind: 'hover', trigger: HTMLElement} | {kind: 'focus', trigger: HTMLElement} | {kind: 'tap', trigger: HTMLElement}} ActiveState */
+/** @typedef {{kind: 'hover', trigger: HTMLButtonElement} | {kind: 'activated', trigger: HTMLButtonElement}} ActiveState */
 /** @typedef {RestingState | ActiveState | {kind: 'closing', after: RestingState}} PreviewState */
 const preview = document.querySelector('#image-preview');
 const previewImage = preview.querySelector('.preview-crop');
 const fullImage = preview.querySelector('.preview-full');
 const hoverPointer = matchMedia('(hover: hover) and (pointer: fine)');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-const triggers = document.querySelectorAll('[data-portrait-zoom]');
+const triggers = document.querySelectorAll('button[data-portrait-zoom]');
 /** @type {PreviewState} */
 let state = {kind: 'closed'};
 
-/** @param {PreviewState} next */
-function setState(next) {
-  state = next;
-  for (const trigger of triggers) trigger.setAttribute('aria-expanded', 'false');
-  switch (state.kind) {
-    case 'hover':
-    case 'focus':
-    case 'tap':
-      state.trigger.setAttribute('aria-expanded', 'true');
-      break;
-    case 'closed':
-    case 'dismissed':
-    case 'closing':
-      break;
-  }
-}
-
 /** @param {RestingState} next */
 function finishClose(next) {
-  setState(next);
+  state = next;
   preview.hidden = true;
   delete preview.dataset.phase;
-  delete preview.dataset.input;
   delete preview.dataset.fullReady;
 }
 
 /** @param {RestingState | ActiveState} next */
 function show(next) {
+  if (state.kind === 'hover' || state.kind === 'activated') {
+    state.trigger.setAttribute('aria-expanded', 'false');
+  }
   switch (next.kind) {
     case 'closed':
     case 'dismissed':
@@ -46,18 +31,16 @@ function show(next) {
       if (preview.hidden || reducedMotion.matches || getComputedStyle(preview).opacity === '0') {
         finishClose(next);
       } else {
-        setState({kind: 'closing', after: next});
+        state = {kind: 'closing', after: next};
         preview.dataset.phase = 'closing';
       }
       break;
     case 'hover':
-    case 'focus':
-    case 'tap': {
-      setState(next);
+    case 'activated': {
+      state = next;
+      state.trigger.setAttribute('aria-expanded', 'true');
       const image = state.trigger.querySelector('img');
-      const triggerRect = state.trigger.getBoundingClientRect();
-      // The inline oval reserves width only, keeping the paragraph's leading even.
-      const rect = triggerRect.height === 0 ? image.getBoundingClientRect() : triggerRect;
+      const rect = state.trigger.getBoundingClientRect();
       const ratio = rect.width / rect.height;
       const height = Math.min(280, innerHeight - 32, (innerWidth - 32) / ratio);
       const width = height * ratio;
@@ -79,7 +62,6 @@ function show(next) {
         // Establish the closed appearance before starting the opening transition.
         preview.getBoundingClientRect();
       }
-      preview.dataset.input = state.kind;
       preview.dataset.phase = 'open';
       if (fullImage.complete && fullImage.naturalWidth) {
         requestAnimationFrame(() => {
@@ -96,33 +78,11 @@ fullImage.addEventListener('load', () => {
 });
 
 for (const trigger of triggers) {
-  trigger.addEventListener('pointerdown', event => {
-    // Touch activation is handled by click. Avoid opening on incidental focus
-    // before the touch finishes, which could move the target under the finger.
-    if (event.pointerType === 'touch' || !hoverPointer.matches) event.preventDefault();
-  });
-  trigger.addEventListener('click', event => {
-    // One click path handles touch and keyboard activation without also toggling
-    // on emulated mouse events or pinning a desktop hover preview.
-    if (event.detail !== 0 && (event.pointerType === 'mouse' || (event.pointerType !== 'touch' && hoverPointer.matches))) return;
-    switch (state.kind) {
-      case 'tap':
-        if (state.trigger === trigger) show({kind: 'dismissed', trigger});
-        else show({kind: 'tap', trigger});
-        break;
-      case 'hover':
-      case 'focus':
-        if (event.detail === 0 && event.pointerType !== 'touch' && state.trigger === trigger) {
-          show({kind: 'dismissed', trigger});
-        } else {
-          show({kind: 'tap', trigger});
-        }
-        break;
-      case 'closed':
-      case 'dismissed':
-      case 'closing':
-        show({kind: 'tap', trigger});
-        break;
+  trigger.addEventListener('click', () => {
+    if (state.kind === 'activated' && state.trigger === trigger) {
+      dismiss();
+    } else {
+      show({kind: 'activated', trigger});
     }
   });
   trigger.addEventListener('pointerenter', event => {
@@ -145,8 +105,7 @@ for (const trigger of triggers) {
             break;
         }
         break;
-      case 'focus':
-      case 'tap':
+      case 'activated':
         break;
     }
   });
@@ -170,69 +129,11 @@ for (const trigger of triggers) {
         }
         break;
       case 'closed':
-      case 'focus':
-      case 'tap':
-        break;
-    }
-  });
-  trigger.addEventListener('focus', () => {
-    if (!trigger.matches(':focus-visible')) return;
-    switch (state.kind) {
-      case 'tap':
-        break;
-      case 'closed':
-      case 'dismissed':
-      case 'closing':
-      case 'hover':
-      case 'focus':
-        show({kind: 'focus', trigger});
-        break;
-    }
-  });
-  trigger.addEventListener('blur', () => {
-    switch (state.kind) {
-      case 'focus':
-      case 'dismissed':
-        if (state.trigger === trigger) show({kind: 'closed'});
-        break;
-      case 'closing':
-        switch (state.after.kind) {
-          case 'dismissed':
-            if (state.after.trigger === trigger) show({kind: 'closed'});
-            break;
-          case 'closed':
-            break;
-        }
-        break;
-      case 'closed':
-      case 'hover':
-      case 'tap':
+      case 'activated':
         break;
     }
   });
 }
-
-// Capture before the trigger's handler: the opening click passes through while
-// a later click anywhere dismisses without reopening or following a link.
-document.addEventListener('click', event => {
-  switch (state.kind) {
-    case 'hover':
-    case 'focus':
-    case 'tap':
-      event.preventDefault();
-      event.stopPropagation();
-      show({kind: 'dismissed', trigger: state.trigger});
-      break;
-    case 'closing':
-      // Let the closing animation finish before another click activates a link.
-      event.preventDefault();
-      event.stopPropagation();
-      break;
-    case 'closed':
-    case 'dismissed':
-      break;
-  }
-}, {capture: true});
 
 preview.addEventListener('pointerleave', event => {
   switch (state.kind) {
@@ -253,8 +154,7 @@ preview.addEventListener('pointerleave', event => {
       }
       break;
     case 'closed':
-    case 'focus':
-    case 'tap':
+    case 'activated':
       break;
   }
 });
@@ -268,8 +168,7 @@ preview.addEventListener('transitionend', event => {
     case 'closed':
     case 'dismissed':
     case 'hover':
-    case 'focus':
-    case 'tap':
+    case 'activated':
       break;
   }
 });
@@ -283,8 +182,7 @@ reducedMotion.addEventListener('change', () => {
     case 'closed':
     case 'dismissed':
     case 'hover':
-    case 'focus':
-    case 'tap':
+    case 'activated':
       break;
   }
 });
@@ -292,8 +190,7 @@ reducedMotion.addEventListener('change', () => {
 function dismiss() {
   switch (state.kind) {
     case 'hover':
-    case 'focus':
-    case 'tap':
+    case 'activated':
       show({kind: 'dismissed', trigger: state.trigger});
       break;
     case 'closed':
@@ -305,6 +202,9 @@ function dismiss() {
 
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') dismiss();
+});
+document.addEventListener('click', event => {
+  if (state.kind === 'activated' && !state.trigger.contains(event.target)) dismiss();
 });
 window.addEventListener('scroll', dismiss, {passive: true});
 window.addEventListener('resize', dismiss);
