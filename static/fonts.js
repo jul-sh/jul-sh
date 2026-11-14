@@ -1,4 +1,6 @@
 /** @typedef {{kind: 'idle'} | {kind: 'loading'} | {kind: 'ready'}} FontUpgradeState */
+/** @typedef {{src:string,style:'normal'|'italic',scale:number}} FaceSpec */
+/** @typedef {{kind:'unavailable'}|{kind:'available',faces:[FaceSpec,...FaceSpec[]]}} PageFonts */
 const root = document.documentElement;
 const SAFE_FONT_URL = /^[A-Za-z0-9._/?=-]+$/;
 
@@ -7,8 +9,38 @@ function safeFontUrl(raw) {
   return raw && SAFE_FONT_URL.test(raw) && !raw.includes('..') ? raw : null;
 }
 
-const romanSrc = safeFontUrl(root.dataset.vfRoman);
-const italicSrc = safeFontUrl(root.dataset.vfItalic);
+/** @returns {PageFonts} */
+function readPageFonts() {
+  const romanSrc = safeFontUrl(root.dataset.vfRoman);
+  const romanScale = Number(root.dataset.fontRomanScale);
+  const italicScale = Number(root.dataset.fontItalicScale);
+  if (!romanSrc || !Number.isFinite(romanScale) || romanScale <= 0) return {kind:'unavailable'};
+  /** @type {[FaceSpec,...FaceSpec[]]} */
+  const faces = [{src:romanSrc,style:'normal',scale:romanScale}];
+  const italicSrc = safeFontUrl(root.dataset.vfItalic);
+  if (italicSrc) {
+    if (!Number.isFinite(italicScale) || italicScale <= 0) return {kind:'unavailable'};
+    faces.push({src:italicSrc,style:'italic',scale:italicScale});
+  }
+  return {kind:'available',faces};
+}
+const pageFonts = readPageFonts();
+
+function syncOpticalSizes() {
+  for (const element of document.querySelectorAll('body,body *')) {
+    if (!(element instanceof HTMLElement)) continue;
+    if (!Array.from(element.childNodes).some(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim())) continue;
+    const style = getComputedStyle(element);
+    if (!style.fontFamily.includes('Kerberos')) continue;
+    const opticalSize = Math.min(72, Math.max(6, Number.parseFloat(style.fontSize) * .75));
+    element.style.fontOpticalSizing = 'none';
+    element.style.fontVariationSettings = `'opsz' ${opticalSize}, 'GRAD' -30, 'YTLC' 500`;
+  }
+}
+syncOpticalSizes();
+window.addEventListener('resize', syncOpticalSizes, {passive:true});
+window.addEventListener('beforeprint', syncOpticalSizes);
+window.addEventListener('afterprint', syncOpticalSizes);
 
 /** @type {FontUpgradeState} */
 let upgradeState = {kind: 'idle'};
@@ -21,24 +53,25 @@ function upgradeToVariableFonts() {
     case 'idle':
       break;
   }
-  if (!romanSrc || typeof FontFace !== 'function' || !('fonts' in document)) return;
+  switch (pageFonts.kind) {
+    case 'unavailable': return;
+    case 'available': break;
+  }
+  if (typeof FontFace !== 'function' || !('fonts' in document)) return;
 
   upgradeState = {kind: 'loading'};
-  const descriptors = {weight: '300 700', display: 'swap'};
-  const faces = [
-    new FontFace('Kerberos VF', `url("${romanSrc}")`, {...descriptors, style: 'normal'}),
-  ];
-  if (italicSrc) {
-    faces.push(
-      new FontFace('Kerberos VF', `url("${italicSrc}")`, {...descriptors, style: 'italic'}),
-    );
-  }
+  const faces = pageFonts.faces.map(({src,style,scale}) => new FontFace('Kerberos VF', `url("${src}")`, {
+    weight:'300 700', display:'swap', style,
+    sizeAdjust:`${scale * 100}%`, ascentOverride:`${96 / scale}%`,
+    descentOverride:`${24.5 / scale}%`, lineGapOverride:'0%',
+  }));
 
   Promise.all(faces.map(face => face.load()))
     .then(loaded => {
       for (const face of loaded) document.fonts.add(face);
       upgradeState = {kind: 'ready'};
       root.dataset.vfReady = '';
+      syncOpticalSizes();
     })
     .catch(() => {
       // Boot fonts are already active; stay on Tier 1 silently if offline.

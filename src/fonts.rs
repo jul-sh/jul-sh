@@ -1,13 +1,13 @@
-//! Automated two-stage webfont builder from pinned upstream Kerberos variable fonts.
+//! Automated two-stage webfont builder from pinned Kerberos variable fonts.
 //!
-//! Fetches and SHA-256-verifies upstream Kerberos WOFF2 release assets into
+//! Verifies bundled WOFF2 inputs or fetches pinned release assets into
 //! `./target/font-cache/upstream/`, extracts every rendered Unicode character
 //! across the generated HTML pages, verifies full upstream `cmap` coverage, and
 //! emits deterministic two-stage WOFF2 subsets into `./build/static/fonts/`:
 //!
 //! - **Boot cuts (`[opsz]`):** lightweight weight-pinned subsets for
 //!   fast, zero-CLS first paint across all viewport optical sizes.
-//! - **Progressive variable cuts (`[GRAD,opsz,wght]`):** loaded
+//! - **Progressive variable cuts (`[GRAD,YTLC,opsz,wght]`):** loaded
 //!   in the background after first paint via the CSS `FontFace` API.
 
 use eyre::{Result, WrapErr, bail, ensure, eyre};
@@ -26,7 +26,10 @@ use std::{
 const ALLOWED_RELEASE_URL_PREFIX: &str = "https://github.com/jul-sh/Kerberos/releases/download/";
 const MAX_UPSTREAM_FONT_BYTES: u64 = 16 * 1024 * 1024;
 const CACHE_ROOT: &str = "./target/font-cache";
-const CACHE_SCHEMA_VERSION: &str = "v1-hb-subset-woff2";
+const CACHE_SCHEMA_VERSION: &str = "v2-hb-subset-grade-minus30";
+
+pub const ROMAN_SIZE_ADJUST: f64 = 0.9415954415954416;
+pub const ITALIC_SIZE_ADJUST: f64 = 0.9510791366906475;
 
 #[derive(Debug, Deserialize)]
 struct FontManifest {
@@ -37,9 +40,17 @@ struct FontManifest {
 #[derive(Debug, Clone, Deserialize)]
 struct UpstreamSource {
     style: UpstreamStyle,
-    source_url: String,
+    #[serde(flatten)]
+    location: SourceLocation,
     sha256: String,
     bytes: usize,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(tag = "source", rename_all = "lowercase")]
+enum SourceLocation {
+    Release { source_url: String },
+    Bundled { path: PathBuf },
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
@@ -52,13 +63,11 @@ pub enum UpstreamStyle {
 /// Type-safe variation instancing mode for each generated webfont cut.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum VariationMode {
-    /// Fast first-paint cut: pins `wght` (plus `GRAD=0, YTLC=500`),
+    /// Fast first-paint cut: pins `wght` (plus `GRAD=-30, YTLC=500`),
     /// keeping `opsz` variable so automatic optical sizing matches the full VF.
     BootOpszOnly { weight: u16 },
-    /// Progressive Roman variable font (`wght`, `opsz`, `GRAD` kept variable).
-    VariableRomanGrade,
-    /// Progressive Italic variable font (`wght`, `opsz`, `GRAD` kept variable).
-    VariableItalicGrade,
+    /// Progressive font with all four source axes retained.
+    VariableAllAxes,
 }
 
 impl VariationMode {
@@ -66,19 +75,17 @@ impl VariationMode {
         match self {
             Self::BootOpszOnly { weight } => vec![
                 (*b"wght", f32::from(weight)),
-                (*b"GRAD", 0.0),
+                (*b"GRAD", -30.0),
                 (*b"YTLC", 500.0),
             ],
-            Self::VariableRomanGrade => vec![(*b"YTLC", 500.0)],
-            Self::VariableItalicGrade => vec![(*b"YTLC", 500.0)],
+            Self::VariableAllAxes => vec![],
         }
     }
 
     fn cache_descriptor(self) -> String {
         match self {
             Self::BootOpszOnly { weight } => format!("boot-opsz-w{weight}"),
-            Self::VariableRomanGrade => "var-roman-grade-opsz-wght".to_string(),
-            Self::VariableItalicGrade => "var-italic-grade-opsz-wght".to_string(),
+            Self::VariableAllAxes => "var-all-axes".to_string(),
         }
     }
 }
@@ -126,20 +133,11 @@ impl FontArtifact {
 
     fn variation_mode(self) -> VariationMode {
         match self {
-            Self::BootKerberosRegular => VariationMode::BootOpszOnly {
-                weight: 400,
-            },
-            Self::BootKerberosMedium => VariationMode::BootOpszOnly {
-                weight: 500,
-            },
-            Self::BootKerberosSemiBold => VariationMode::BootOpszOnly {
-                weight: 550,
-            },
-            Self::BootKerberosItalic => VariationMode::BootOpszOnly {
-                weight: 400,
-            },
-            Self::VariableRoman => VariationMode::VariableRomanGrade,
-            Self::VariableItalic => VariationMode::VariableItalicGrade,
+            Self::BootKerberosRegular => VariationMode::BootOpszOnly { weight: 400 },
+            Self::BootKerberosMedium => VariationMode::BootOpszOnly { weight: 500 },
+            Self::BootKerberosSemiBold => VariationMode::BootOpszOnly { weight: 550 },
+            Self::BootKerberosItalic => VariationMode::BootOpszOnly { weight: 400 },
+            Self::VariableRoman | Self::VariableItalic => VariationMode::VariableAllAxes,
         }
     }
 }
@@ -261,13 +259,19 @@ impl BuiltFonts {
         for (family, weight, style, artifact) in [
             ("Kerberos", 400, "normal", FontArtifact::BootKerberosRegular),
             ("Kerberos", 500, "normal", FontArtifact::BootKerberosMedium),
-            ("Kerberos", 550, "normal", FontArtifact::BootKerberosSemiBold),
+            (
+                "Kerberos",
+                550,
+                "normal",
+                FontArtifact::BootKerberosSemiBold,
+            ),
             ("Kerberos", 400, "italic", FontArtifact::BootKerberosItalic),
         ] {
             let hash = &self.fingerprints[&artifact];
             let file = artifact.file_name();
             css.push_str(&format!(
-                "@font-face{{font-family:{family};src:url('./fonts/{file}?v={hash}') format('woff2');font-weight:{weight};font-style:{style};font-display:swap}}\n"
+                "@font-face{{font-family:{family};src:url('./fonts/{file}?v={hash}') format('woff2');font-weight:{weight};font-style:{style};font-display:swap;{}}}\n",
+                face_geometry_css(artifact.upstream_style())
             ));
         }
         css
@@ -281,11 +285,21 @@ fn validate_manifest(manifest: &FontManifest) -> Result<BTreeMap<UpstreamStyle, 
     );
     let mut map = BTreeMap::new();
     for src in &manifest.sources {
-        ensure!(
-            src.source_url.starts_with(ALLOWED_RELEASE_URL_PREFIX),
-            "disallowed upstream font URL {:?}; must start with {ALLOWED_RELEASE_URL_PREFIX}",
-            src.source_url
-        );
+        match &src.location {
+            SourceLocation::Release { source_url } => ensure!(
+                source_url.starts_with(ALLOWED_RELEASE_URL_PREFIX),
+                "disallowed upstream font URL {source_url:?}; must start with {ALLOWED_RELEASE_URL_PREFIX}"
+            ),
+            SourceLocation::Bundled { path } => ensure!(
+                !path.as_os_str().is_empty()
+                    && path
+                        .components()
+                        .all(|part| matches!(part, std::path::Component::Normal(_)))
+                    && path.extension().is_some_and(|ext| ext == "woff2"),
+                "bundled font path must be a relative WOFF2 path: {}",
+                path.display()
+            ),
+        }
         ensure!(
             src.sha256.len() == 64
                 && src
@@ -317,6 +331,16 @@ fn validate_manifest(manifest: &FontManifest) -> Result<BTreeMap<UpstreamStyle, 
 }
 
 fn load_or_fetch_upstream(src: &UpstreamSource, cache_dir: &Path) -> Result<Vec<u8>> {
+    let source_url = match &src.location {
+        SourceLocation::Bundled { path } => {
+            let bytes = fs::read(path)
+                .wrap_err_with(|| format!("cannot read bundled font {}", path.display()))?;
+            verify_bytes(&bytes, src.bytes, &src.sha256)
+                .wrap_err_with(|| format!("integrity check failed for {}", path.display()))?;
+            return Ok(bytes);
+        }
+        SourceLocation::Release { source_url } => source_url,
+    };
     let cached_path = cache_dir.join(format!("{}.woff2", src.sha256));
     if cached_path.is_file() {
         let bytes = fs::read(&cached_path)?;
@@ -332,21 +356,34 @@ fn load_or_fetch_upstream(src: &UpstreamSource, cache_dir: &Path) -> Result<Vec<
         .build();
     let agent: ureq::Agent = config.into();
     let mut response = agent
-        .get(&src.source_url)
+        .get(source_url)
         .call()
-        .wrap_err_with(|| format!("failed to download upstream font {}", src.source_url))?;
+        .wrap_err_with(|| format!("failed to download upstream font {source_url}"))?;
     let bytes = response
         .body_mut()
         .with_config()
         .limit(MAX_UPSTREAM_FONT_BYTES)
         .read_to_vec()
-        .wrap_err_with(|| format!("failed reading response body from {}", src.source_url))?;
+        .wrap_err_with(|| format!("failed reading response body from {source_url}"))?;
 
     verify_bytes(&bytes, src.bytes, &src.sha256)
-        .wrap_err_with(|| format!("integrity check failed for {}", src.source_url))?;
+        .wrap_err_with(|| format!("integrity check failed for {source_url}"))?;
 
     write_atomic(&cached_path, &bytes)?;
     Ok(bytes)
+}
+
+fn face_geometry_css(style: UpstreamStyle) -> String {
+    let scale = match style {
+        UpstreamStyle::Roman => ROMAN_SIZE_ADJUST,
+        UpstreamStyle::Italic => ITALIC_SIZE_ADJUST,
+    };
+    format!(
+        "size-adjust:{:.10}%;ascent-override:{:.10}%;descent-override:{:.10}%;line-gap-override:0%",
+        scale * 100.0,
+        96.0 / scale,
+        24.5 / scale
+    )
 }
 
 fn verify_bytes(bytes: &[u8], expected_len: usize, expected_sha256: &str) -> Result<()> {
@@ -468,7 +505,8 @@ fn subset_and_compress(
 ) -> Result<Vec<u8>> {
     let blob = Blob::from_bytes(sfnt).map_err(|_| eyre!("cannot allocate HarfBuzz blob"))?;
     let face = FontFace::new(blob).map_err(|_| eyre!("cannot parse SFNT font face"))?;
-    let mut input = SubsetInput::new().map_err(|_| eyre!("cannot allocate HarfBuzz SubsetInput"))?;
+    let mut input =
+        SubsetInput::new().map_err(|_| eyre!("cannot allocate HarfBuzz SubsetInput"))?;
 
     // Retain all OpenType layout features (ligatures, kerning, marks, figures) and name records.
     input.layout_feature_tag_set().insert_range(..);
@@ -501,8 +539,7 @@ fn subset_and_compress(
         .subset_font(&face)
         .map_err(|_| eyre!("HarfBuzz subset_font failed"))?;
     let subset_sfnt = subset_face.underlying_blob().to_vec();
-    let woff2 =
-        wrap_woff2(&subset_sfnt).map_err(|e| eyre!("WOFF2 compression failed: {e}"))?;
+    let woff2 = wrap_woff2(&subset_sfnt).map_err(|e| eyre!("WOFF2 compression failed: {e}"))?;
     Ok(woff2)
 }
 
@@ -585,12 +622,36 @@ mod tests {
             release: "v1.5.0-rc.1".to_string(),
             sources: vec![UpstreamSource {
                 style: UpstreamStyle::Roman,
-                source_url: "https://evil.example/Kerberos-VF.woff2".to_string(),
+                location: SourceLocation::Release {
+                    source_url: "https://evil.example/Kerberos-VF.woff2".to_string(),
+                },
                 sha256: "935edb1c9a4ad4043e55565ed3c54563f26853a07c36e8d1bd6e68eb3dc98c8c"
                     .to_string(),
                 bytes: 100,
             }],
         };
         assert!(validate_manifest(&bad).is_err());
+    }
+
+    #[test]
+    fn bundled_font_integrity_is_checked_on_every_build() {
+        let path = PathBuf::from(format!(
+            "target/font-integrity-test-{}.woff2",
+            std::process::id()
+        ));
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, b"font").unwrap();
+        let source = UpstreamSource {
+            style: UpstreamStyle::Roman,
+            location: SourceLocation::Bundled { path: path.clone() },
+            sha256: hex_sha256(b"font"),
+            bytes: 4,
+        };
+        let original = load_or_fetch_upstream(&source, Path::new(CACHE_ROOT));
+        fs::write(&path, b"edit").unwrap();
+        let changed = load_or_fetch_upstream(&source, Path::new(CACHE_ROOT));
+        fs::remove_file(&path).unwrap();
+        assert_eq!(original.unwrap(), b"font");
+        assert!(changed.is_err());
     }
 }

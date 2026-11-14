@@ -1,7 +1,7 @@
 //! Minimal static-site generator: convert *.md → HTML, mirror ./static.
 
 use eyre::Result;
-use fonts::{BuiltFonts, FontArtifact, PageFontUpgrade};
+use fonts::{BuiltFonts, FontArtifact, ITALIC_SIZE_ADJUST, PageFontUpgrade, ROMAN_SIZE_ADJUST};
 use pulldown_cmark::{Event, Parser, Tag, html};
 use std::{
     collections::{HashSet, hash_map::DefaultHasher},
@@ -87,6 +87,7 @@ fn main() -> Result<()> {
         &coverage_inputs,
         static_out.join("fonts"),
     )?;
+    fs::copy("fonts/OFL.txt", static_out.join("fonts/OFL.txt"))?;
     let built_css_path = static_out.join("main.css");
     let base_css = fs::read_to_string(&built_css_path)?;
     fs::write(
@@ -177,7 +178,10 @@ fn prepare_page(rel_html: PathBuf, fragment: String) -> Result<PreparedPage> {
             "Juliette Pluto".to_string(),
             "home variant-inline",
             // Keep README links usable on GitHub and point them at generated pages here.
-            about_fragment(fragment.replace("href=\"CV.md", "href=\"CV.html"), &static_root)?,
+            about_fragment(
+                fragment.replace("href=\"CV.md", "href=\"CV.html"),
+                &static_root,
+            )?,
             format!(
                 r#"<div id="image-preview" class="image-preview" data-full-src="{}" aria-hidden="true" hidden><img class="preview-crop" alt=""><img class="preview-full" alt=""></div><script src="{}" defer></script>"#,
                 asset_url(&static_root, "portrait-full.webp")?,
@@ -238,7 +242,7 @@ fn render_html_document(page: &PreparedPage, built_fonts: &BuiltFonts) -> Result
 
     Ok(format!(
         r##"<!DOCTYPE html>
-<html lang="en" {html_vf_attrs}>
+<html lang="en" {html_vf_attrs} data-font-roman-scale="{ROMAN_SIZE_ADJUST}" data-font-italic-scale="{ITALIC_SIZE_ADJUST}">
   <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/>
@@ -305,7 +309,9 @@ fn about_fragment(fragment: String, static_root: &str) -> Result<String> {
     replace_readme_marker(
         &mut introduction,
         "<strong>Juliette Pluto</strong><!-- portrait -->",
-        &format!(r#"<span class="name">Juliette Pluto</span><span class="inline-portrait"><button type="button" data-portrait-zoom aria-label="Enlarge portrait of Juliette Pluto" aria-controls="image-preview" aria-expanded="false"><img src="{portrait}" alt="" width="520" height="650" fetchpriority="high" decoding="async"></button></span>"#),
+        &format!(
+            r#"<span class="name">Juliette Pluto</span><span class="inline-portrait"><button type="button" data-portrait-zoom aria-label="Enlarge portrait of Juliette Pluto" aria-controls="image-preview" aria-expanded="false"><img src="{portrait}" alt="" width="520" height="650" fetchpriority="high" decoding="async"></button></span>"#
+        ),
     )?;
     replace_readme_marker(
         &mut introduction,
