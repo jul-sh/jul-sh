@@ -2,92 +2,113 @@
   "upstream": "https://github.com/jul-sh/iosevka-charon",
   "source_commit": "b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
   "source_url": "https://github.com/jul-sh/iosevka-charon/commit/b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
-  "checked_on": "2026-10-28",
-  "paired_kerberos_version": "1.4.2",
-  "derivation": "Regular uses the approved shape-450 drawing labeled as Regular 400, from the pinned upstream revision. Medium and Bold retain their previous builds at the revision recorded in their entries. All webfonts are unhinted WOFF2 subsets retaining the previous exact Latin Unicode coverage, OpenType features and opsz/YTLC axes.",
+  "checked_on": "2026-11-14",
+  "paired_kerberos_version": "working-1.413",
+  "derivation": "Existing Caleuche static drawings with lowercase heights derived automatically from the site's pinned Kerberos fonts. Webfonts retain the previous exact Unicode coverage and OpenType features, with matching opsz and YTLC axes.",
   "build_plan_sha256": "6c7a13d8d4d79be91e3142a261ef658eb9719a839a72be2432906f92334e2d37",
-  "kerberos_metrics_sha256": "407a1267380ed7abae4a3d93b265cd8d10601dd95e86f0ddfb843e0226e2678d",
+  "kerberos_metrics_sha256": "d04c3e8baee8f59acab24f12c1e067a322dcc1d1c07c940f76beb2ecc0c4309d",
   "generator": {
-    "url": "https://github.com/jul-sh/iosevka-charon/blob/b6c681ce1005c9dd3e2b6c77065d55052ddd20b7/scripts/caleuche_variable.py",
-    "commit": "b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
-    "sha256": "0054ab83e4cdb6b26fe9fe470c11fb209e983175cb4930c95689d6a2d19136d6"
+    "path": "scripts/caleuche_variable.py",
+    "sha256": "1c467cef844883f20500544278c145a80aa317a1d9b395c67f77d0d2a8a4f914"
   },
   "fonts": [
     {
       "file": "IosevkaCaleuche-Regular[YTLC,opsz].woff2",
-      "sha256": "620160c333beceea3254aa366079826e10610cc4087eb27ac375cb2084842387",
-      "bytes": 33892,
+      "sha256": "e2037d54d58360cb3a4a730fa3eb051d7bf0370737aae04acb49e0a6deabd794",
+      "bytes": 41384,
       "font_version": "Version 34.802",
-      "glyph_count": 644,
+      "glyph_count": 645,
       "unicode_codepoint_count": 192,
-      "source_ttf_path": "fonts/iosevkacaleuche/variable/IosevkaCaleuche-Regular[YTLC,opsz].ttf",
-      "source_ttf_sha256": "6b8aade3a47379e890f2db3a6b0aac214f82ec5f2b534aa4e4aab3530d7d6bad",
+      "source_ttf_sha256": "a25760e75c7db359677f5213b7fc17a4ccd3dc2d646d5d0030798c9e4fd9df31",
       "axes": [
         {
           "tag": "opsz",
-          "minimum": 8.0,
-          "default": 14.0,
+          "minimum": 6.0,
+          "default": 12.0,
           "maximum": 72.0
         },
         {
           "tag": "YTLC",
-          "minimum": 500.0,
+          "minimum": 450.0,
           "default": 500.0,
           "maximum": 550.0
         }
       ],
       "source_commit": "b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
-      "notes": "Regular uses the approved shape-450 drawing and optical-size height targets, labeled as menu/CSS weight 400. Relabeling preserves all outline, advance-width, positioning and variation tables byte for byte."
+      "notes": "Lowercase heights follow the measured Kerberos optical-size and YTLC profile; original drawing and advances are preserved.",
+      "source_ttf_file": "IosevkaCaleuche-Regular[YTLC,opsz].ttf"
     },
     {
       "file": "IosevkaCaleuche-Medium[YTLC,opsz].woff2",
-      "sha256": "15c1a4bef6c32e0d0877bbb59cf70c72df5e842b8a63f8ce55c99d1fc29d4420",
-      "bytes": 34156,
+      "sha256": "1507a86195621fb995353730818d60155805aab1286d0439750d6c1ef9d20568",
+      "bytes": 40636,
       "font_version": "Version 34.802",
       "glyph_count": 645,
       "unicode_codepoint_count": 192,
-      "source_ttf_path": "fonts/iosevkacaleuche/variable/IosevkaCaleuche-Medium[YTLC,opsz].ttf",
-      "source_ttf_sha256": "30c6fac634799f94d7269a7486ad532b0155a10643a56f7f8601e372f3e65a13",
+      "source_ttf_sha256": "f3d5f4fcf323e8a885b727347a26f94798615ed43992d20c0951a8654d2ec49b",
       "axes": [
         {
           "tag": "opsz",
-          "minimum": 8.0,
-          "default": 14.0,
+          "minimum": 6.0,
+          "default": 12.0,
           "maximum": 72.0
         },
         {
           "tag": "YTLC",
-          "minimum": 500.0,
+          "minimum": 450.0,
           "default": 500.0,
           "maximum": 550.0
         }
       ],
-      "source_commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad"
+      "source_commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad",
+      "source_ttf_file": "IosevkaCaleuche-Medium[YTLC,opsz].ttf",
+      "notes": "Lowercase heights follow the measured Kerberos optical-size and YTLC profile; original drawing and advances are preserved."
     },
     {
       "file": "IosevkaCaleuche-Bold[YTLC,opsz].woff2",
-      "sha256": "35b38667cf10c10db50078cef303a648b5fd988930b6b100ac6e640273a6516b",
-      "bytes": 35204,
+      "sha256": "699fb51ffd9a10d84b686a27ba8c9678f8c4e4b742ad9818903d25d8966e55de",
+      "bytes": 41484,
       "font_version": "Version 34.802",
       "glyph_count": 645,
       "unicode_codepoint_count": 192,
-      "source_ttf_path": "fonts/iosevkacaleuche/variable/IosevkaCaleuche-Bold[YTLC,opsz].ttf",
-      "source_ttf_sha256": "e4031896ec452279c449c469c33af28eed42a00d95a1ee55a4249b1922c397e4",
+      "source_ttf_sha256": "27018bd72cbcfb75226e47ec5a04daa20909130413fbc47b04d4199a53549b1f",
       "axes": [
         {
           "tag": "opsz",
-          "minimum": 8.0,
-          "default": 14.0,
+          "minimum": 6.0,
+          "default": 12.0,
           "maximum": 72.0
         },
         {
           "tag": "YTLC",
-          "minimum": 500.0,
+          "minimum": 450.0,
           "default": 500.0,
           "maximum": 550.0
         }
       ],
-      "source_commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad"
+      "source_commit": "7163e84c4bb742b482e1f9f4da8b7ee28b0c64ad",
+      "source_ttf_file": "IosevkaCaleuche-Bold[YTLC,opsz].ttf",
+      "notes": "Lowercase heights follow the measured Kerberos optical-size and YTLC profile; original drawing and advances are preserved."
     }
-  ]
+  ],
+  "paired_kerberos_sources": {
+    "roman": "a1452b02f18e11434be6f7fe915781698ddece1d8e61299f23d5bbef0e870951",
+    "italic": "3ae18485df562ecec113301baa9086b153f54ee319c806ac816a90e82be5a119"
+  },
+  "kerberos_font_sources": {
+    "roman": {
+      "file": "Kerberos-v1.413.woff2",
+      "style": "roman",
+      "version": "1.413",
+      "sha256": "a1452b02f18e11434be6f7fe915781698ddece1d8e61299f23d5bbef0e870951",
+      "bytes": 3013612
+    },
+    "italic": {
+      "file": "Kerberos-Italic-v1.413.woff2",
+      "style": "italic",
+      "version": "1.413",
+      "sha256": "3ae18485df562ecec113301baa9086b153f54ee319c806ac816a90e82be5a119",
+      "bytes": 3774748
+    }
+  }
 }

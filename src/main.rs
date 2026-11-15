@@ -90,9 +90,10 @@ fn main() -> Result<()> {
     fs::copy("fonts/OFL.txt", static_out.join("fonts/OFL.txt"))?;
     let built_css_path = static_out.join("main.css");
     let base_css = fs::read_to_string(&built_css_path)?;
+    let caleuche_css = fonts::caleuche_face_css(&static_out)?;
     fs::write(
         &built_css_path,
-        format!("{}{base_css}", built_fonts.font_face_css()),
+        format!("{}{caleuche_css}{base_css}", built_fonts.font_face_css()),
     )?;
 
     // Pass 2: assemble and write complete HTML documents with fingerprinted asset and font URLs.

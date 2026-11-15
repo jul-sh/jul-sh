@@ -18,6 +18,7 @@ use sigilbuzz_woff::{unwrap_woff2, wrap_woff2};
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
+    hash::{DefaultHasher, Hash, Hasher},
     path::{Path, PathBuf},
     thread,
     time::Duration,
@@ -35,6 +36,39 @@ pub const ITALIC_SIZE_ADJUST: f64 = 0.9510791366906475;
 struct FontManifest {
     release: String,
     sources: Vec<UpstreamSource>,
+}
+
+#[derive(Debug, Deserialize)]
+struct CaleucheManifest {
+    paired_kerberos_sources: BTreeMap<UpstreamStyle, String>,
+    fonts: Vec<CaleucheSource>,
+}
+
+#[derive(Debug, Deserialize)]
+struct CaleucheSource {
+    file: CaleucheFile,
+    sha256: String,
+    bytes: usize,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Deserialize)]
+enum CaleucheFile {
+    #[serde(rename = "IosevkaCaleuche-Regular[YTLC,opsz].woff2")]
+    Regular,
+    #[serde(rename = "IosevkaCaleuche-Medium[YTLC,opsz].woff2")]
+    Medium,
+    #[serde(rename = "IosevkaCaleuche-Bold[YTLC,opsz].woff2")]
+    Bold,
+}
+
+impl CaleucheFile {
+    fn file_name(self) -> &'static str {
+        match self {
+            Self::Regular => "IosevkaCaleuche-Regular[YTLC,opsz].woff2",
+            Self::Medium => "IosevkaCaleuche-Medium[YTLC,opsz].woff2",
+            Self::Bold => "IosevkaCaleuche-Bold[YTLC,opsz].woff2",
+        }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -178,6 +212,22 @@ impl BuiltFonts {
         .wrap_err_with(|| format!("invalid JSON in {}", manifest_path.display()))?;
 
         let sources = validate_manifest(&manifest)?;
+        let pairing_path = manifest_path.with_file_name("IosevkaCaleuche-source.json");
+        let pairing: CaleucheManifest = serde_json::from_slice(
+            &fs::read(&pairing_path)
+                .wrap_err_with(|| format!("cannot read {}", pairing_path.display()))?,
+        )
+        .wrap_err_with(|| format!("invalid Caleuche pairing in {}", pairing_path.display()))?;
+        validate_caleuche_pairing(&sources, &pairing)?;
+        verify_caleuche_files(
+            pairing_path.parent().unwrap_or_else(|| Path::new(".")),
+            &pairing.fonts,
+        )?;
+        let copied_static = fonts_out_dir
+            .as_ref()
+            .parent()
+            .ok_or_else(|| eyre!("font output directory has no static parent"))?;
+        verify_caleuche_files(copied_static, &pairing.fonts)?;
         let cache_dir = Path::new(CACHE_ROOT);
         let upstream_cache = cache_dir.join("upstream");
         let subset_cache = cache_dir.join("subsets");
@@ -276,6 +326,63 @@ impl BuiltFonts {
         }
         css
     }
+}
+
+fn validate_caleuche_pairing(
+    sources: &BTreeMap<UpstreamStyle, UpstreamSource>,
+    pairing: &CaleucheManifest,
+) -> Result<()> {
+    for style in [UpstreamStyle::Roman, UpstreamStyle::Italic] {
+        ensure!(
+            pairing.paired_kerberos_sources.get(&style) == Some(&sources[&style].sha256),
+            "Caleuche does not match the bundled {style:?} Kerberos source; refresh Caleuche before rebuilding"
+        );
+    }
+    Ok(())
+}
+
+fn verify_caleuche_files(static_dir: &Path, sources: &[CaleucheSource]) -> Result<()> {
+    let mut seen = BTreeSet::new();
+    for source in sources {
+        ensure!(
+            seen.insert(source.file),
+            "duplicate Caleuche entry {:?}",
+            source.file
+        );
+        let path = static_dir.join(source.file.file_name());
+        let bytes = fs::read(&path)
+            .wrap_err_with(|| format!("cannot read Caleuche font {}", path.display()))?;
+        verify_bytes(&bytes, source.bytes, &source.sha256)
+            .wrap_err_with(|| format!("integrity check failed for {}", path.display()))?;
+    }
+    for required in [
+        CaleucheFile::Regular,
+        CaleucheFile::Medium,
+        CaleucheFile::Bold,
+    ] {
+        ensure!(
+            seen.contains(&required),
+            "missing Caleuche font {required:?}"
+        );
+    }
+    Ok(())
+}
+
+/// Pair Caleuche with the Roman display metrics and fingerprint the actual copied files.
+pub fn caleuche_face_css(static_dir: impl AsRef<Path>) -> Result<String> {
+    let mut css = String::new();
+    for (font, weight) in [(CaleucheFile::Regular, 400), (CaleucheFile::Bold, 700)] {
+        let file = font.file_name();
+        // Match the asset_url fingerprint used for the regular face's preload.
+        let mut hash = DefaultHasher::new();
+        fs::read(static_dir.as_ref().join(file))?.hash(&mut hash);
+        css.push_str(&format!(
+            "@font-face{{font-family:Caleuche;src:url('./{file}?v={:x}') format('woff2');font-weight:{weight};font-style:normal;font-display:swap;{}}}\n",
+            hash.finish(),
+            face_geometry_css(UpstreamStyle::Roman)
+        ));
+    }
+    Ok(css)
 }
 
 fn validate_manifest(manifest: &FontManifest) -> Result<BTreeMap<UpstreamStyle, UpstreamSource>> {
@@ -591,6 +698,93 @@ fn short_sha256(bytes: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn caleuche_pairing_rejects_a_changed_kerberos_source() {
+        let sources: BTreeMap<_, _> = [UpstreamStyle::Roman, UpstreamStyle::Italic]
+            .into_iter()
+            .map(|style| {
+                (
+                    style,
+                    UpstreamSource {
+                        style,
+                        location: SourceLocation::Bundled {
+                            path: PathBuf::from("fonts/source.woff2"),
+                        },
+                        sha256: format!("{style:?}-original"),
+                        bytes: 4,
+                    },
+                )
+            })
+            .collect();
+        let mut pairing = CaleucheManifest {
+            paired_kerberos_sources: sources
+                .iter()
+                .map(|(&style, source)| (style, source.sha256.clone()))
+                .collect(),
+            fonts: Vec::new(),
+        };
+        assert!(validate_caleuche_pairing(&sources, &pairing).is_ok());
+        pairing
+            .paired_kerberos_sources
+            .insert(UpstreamStyle::Roman, "changed".to_owned());
+        assert!(validate_caleuche_pairing(&sources, &pairing).is_err());
+        pairing
+            .paired_kerberos_sources
+            .remove(&UpstreamStyle::Italic);
+        assert!(validate_caleuche_pairing(&sources, &pairing).is_err());
+    }
+
+    #[test]
+    fn caleuche_integrity_rejects_tampered_files_and_unknown_paths() {
+        let directory = PathBuf::from(format!(
+            "target/caleuche-integrity-test-{}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&directory).unwrap();
+        let sources: Vec<_> = [
+            CaleucheFile::Regular,
+            CaleucheFile::Medium,
+            CaleucheFile::Bold,
+        ]
+        .into_iter()
+        .map(|file| {
+            fs::write(directory.join(file.file_name()), b"font").unwrap();
+            CaleucheSource {
+                file,
+                sha256: hex_sha256(b"font"),
+                bytes: 4,
+            }
+        })
+        .collect();
+        assert!(verify_caleuche_files(&directory, &sources).is_ok());
+        fs::write(directory.join(CaleucheFile::Medium.file_name()), b"edit").unwrap();
+        assert!(verify_caleuche_files(&directory, &sources).is_err());
+        fs::remove_dir_all(&directory).unwrap();
+        assert!(serde_json::from_str::<CaleucheFile>(r#""../font.woff2""#).is_err());
+    }
+
+    #[test]
+    fn caleuche_urls_follow_each_fonts_actual_bytes() {
+        let directory = PathBuf::from(format!("target/caleuche-css-test-{}", std::process::id()));
+        fs::create_dir_all(&directory).unwrap();
+        let regular = directory.join("IosevkaCaleuche-Regular[YTLC,opsz].woff2");
+        let bold = directory.join("IosevkaCaleuche-Bold[YTLC,opsz].woff2");
+        fs::write(&regular, b"regular").unwrap();
+        fs::write(&bold, b"bold").unwrap();
+        let before = caleuche_face_css(&directory).unwrap();
+        fs::write(&regular, b"new regular").unwrap();
+        let after = caleuche_face_css(&directory).unwrap();
+        fs::remove_dir_all(&directory).unwrap();
+        assert_ne!(before.lines().next(), after.lines().next());
+        assert_eq!(before.lines().nth(1), after.lines().nth(1));
+        assert_eq!(
+            after
+                .matches(&face_geometry_css(UpstreamStyle::Roman))
+                .count(),
+            2
+        );
+    }
 
     #[test]
     fn extracts_visible_chars_and_decodes_entities_ignoring_comments() {

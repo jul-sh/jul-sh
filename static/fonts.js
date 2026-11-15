@@ -26,15 +26,31 @@ function readPageFonts() {
 }
 const pageFonts = readPageFonts();
 
+/** @typedef {'kerberos' | 'caleuche'} ProfiledFamily */
 function syncOpticalSizes() {
+  /** @type {Array<{element:HTMLElement,family:ProfiledFamily,opticalSize:number}>} */
+  const runs = [];
   for (const element of document.querySelectorAll('body,body *')) {
     if (!(element instanceof HTMLElement)) continue;
-    if (!Array.from(element.childNodes).some(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim())) continue;
     const style = getComputedStyle(element);
-    if (!style.fontFamily.includes('Kerberos')) continue;
+    /** @type {ProfiledFamily} */
+    let family;
+    if (style.fontFamily.includes('Kerberos')) family = 'kerberos';
+    else if (style.fontFamily.includes('Caleuche')) family = 'caleuche';
+    else continue;
     const opticalSize = Math.min(72, Math.max(6, Number.parseFloat(style.fontSize) * .75));
+    runs.push({element, family, opticalSize});
+  }
+  for (const {element, family, opticalSize} of runs) {
     element.style.fontOpticalSizing = 'none';
-    element.style.fontVariationSettings = `'opsz' ${opticalSize}, 'GRAD' -30, 'YTLC' 500`;
+    switch (family) {
+      case 'kerberos':
+        element.style.fontVariationSettings = `'opsz' ${opticalSize}, 'GRAD' var(--font-grade), 'YTLC' var(--font-lowercase-height)`;
+        break;
+      case 'caleuche':
+        element.style.fontVariationSettings = `'opsz' ${opticalSize}, 'YTLC' var(--font-lowercase-height)`;
+        break;
+    }
   }
 }
 syncOpticalSizes();
@@ -88,7 +104,10 @@ function scheduleIdleUpgrade() {
     }
   };
   if ('fonts' in document && document.fonts.ready) {
-    document.fonts.ready.then(start);
+    document.fonts.ready.then(() => {
+      syncOpticalSizes();
+      start();
+    });
   } else {
     start();
   }
