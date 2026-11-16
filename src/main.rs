@@ -1,7 +1,7 @@
 //! Minimal static-site generator: convert *.md → HTML, mirror ./static.
 
 use eyre::Result;
-use fonts::{BuiltFonts, FontArtifact, ITALIC_SIZE_ADJUST, PageFontUpgrade, ROMAN_SIZE_ADJUST};
+use fonts::{BuiltFonts, FontArtifact, PageFontUpgrade};
 use pulldown_cmark::{Event, Parser, Tag, html};
 use std::{
     collections::{HashSet, hash_map::DefaultHasher},
@@ -243,7 +243,7 @@ fn render_html_document(page: &PreparedPage, built_fonts: &BuiltFonts) -> Result
 
     Ok(format!(
         r##"<!DOCTYPE html>
-<html lang="en" {html_vf_attrs} data-font-roman-scale="{ROMAN_SIZE_ADJUST}" data-font-italic-scale="{ITALIC_SIZE_ADJUST}">
+<html lang="en" {html_vf_attrs}>
   <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/>

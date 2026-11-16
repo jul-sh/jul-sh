@@ -29,8 +29,8 @@ const MAX_UPSTREAM_FONT_BYTES: u64 = 16 * 1024 * 1024;
 const CACHE_ROOT: &str = "./target/font-cache";
 const CACHE_SCHEMA_VERSION: &str = "v2-hb-subset-grade-minus20";
 
-pub const ROMAN_SIZE_ADJUST: f64 = 0.9415954415954416;
-pub const ITALIC_SIZE_ADJUST: f64 = 0.9510791366906475;
+const FACE_GEOMETRY_CSS: &str =
+    "ascent-override:96%;descent-override:24.5%;line-gap-override:0%";
 
 #[derive(Debug, Deserialize)]
 struct FontManifest {
@@ -321,7 +321,7 @@ impl BuiltFonts {
             let file = artifact.file_name();
             css.push_str(&format!(
                 "@font-face{{font-family:{family};src:url('./fonts/{file}?v={hash}') format('woff2');font-weight:{weight};font-style:{style};font-display:swap;{}}}\n",
-                face_geometry_css(artifact.upstream_style())
+                FACE_GEOMETRY_CSS
             ));
         }
         css
@@ -379,7 +379,7 @@ pub fn caleuche_face_css(static_dir: impl AsRef<Path>) -> Result<String> {
         css.push_str(&format!(
             "@font-face{{font-family:Caleuche;src:url('./{file}?v={:x}') format('woff2');font-weight:{weight};font-style:normal;font-display:swap;{}}}\n",
             hash.finish(),
-            face_geometry_css(UpstreamStyle::Roman)
+            FACE_GEOMETRY_CSS
         ));
     }
     Ok(css)
@@ -478,19 +478,6 @@ fn load_or_fetch_upstream(src: &UpstreamSource, cache_dir: &Path) -> Result<Vec<
 
     write_atomic(&cached_path, &bytes)?;
     Ok(bytes)
-}
-
-fn face_geometry_css(style: UpstreamStyle) -> String {
-    let scale = match style {
-        UpstreamStyle::Roman => ROMAN_SIZE_ADJUST,
-        UpstreamStyle::Italic => ITALIC_SIZE_ADJUST,
-    };
-    format!(
-        "size-adjust:{:.10}%;ascent-override:{:.10}%;descent-override:{:.10}%;line-gap-override:0%",
-        scale * 100.0,
-        96.0 / scale,
-        24.5 / scale
-    )
 }
 
 fn verify_bytes(bytes: &[u8], expected_len: usize, expected_sha256: &str) -> Result<()> {
@@ -780,7 +767,7 @@ mod tests {
         assert_eq!(before.lines().nth(1), after.lines().nth(1));
         assert_eq!(
             after
-                .matches(&face_geometry_css(UpstreamStyle::Roman))
+                .matches(FACE_GEOMETRY_CSS)
                 .count(),
             2
         );

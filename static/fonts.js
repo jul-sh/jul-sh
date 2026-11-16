@@ -1,5 +1,5 @@
 /** @typedef {{kind: 'idle'} | {kind: 'loading'} | {kind: 'ready'}} FontUpgradeState */
-/** @typedef {{src:string,style:'normal'|'italic',scale:number}} FaceSpec */
+/** @typedef {{src:string,style:'normal'|'italic'}} FaceSpec */
 /** @typedef {{kind:'unavailable'}|{kind:'available',faces:[FaceSpec,...FaceSpec[]]}} PageFonts */
 const root = document.documentElement;
 const SAFE_FONT_URL = /^[A-Za-z0-9._/?=-]+$/;
@@ -12,15 +12,12 @@ function safeFontUrl(raw) {
 /** @returns {PageFonts} */
 function readPageFonts() {
   const romanSrc = safeFontUrl(root.dataset.vfRoman);
-  const romanScale = Number(root.dataset.fontRomanScale);
-  const italicScale = Number(root.dataset.fontItalicScale);
-  if (!romanSrc || !Number.isFinite(romanScale) || romanScale <= 0) return {kind:'unavailable'};
+  if (!romanSrc) return {kind:'unavailable'};
   /** @type {[FaceSpec,...FaceSpec[]]} */
-  const faces = [{src:romanSrc,style:'normal',scale:romanScale}];
+  const faces = [{src:romanSrc,style:'normal'}];
   const italicSrc = safeFontUrl(root.dataset.vfItalic);
   if (italicSrc) {
-    if (!Number.isFinite(italicScale) || italicScale <= 0) return {kind:'unavailable'};
-    faces.push({src:italicSrc,style:'italic',scale:italicScale});
+    faces.push({src:italicSrc,style:'italic'});
   }
   return {kind:'available',faces};
 }
@@ -76,10 +73,9 @@ function upgradeToVariableFonts() {
   if (typeof FontFace !== 'function' || !('fonts' in document)) return;
 
   upgradeState = {kind: 'loading'};
-  const faces = pageFonts.faces.map(({src,style,scale}) => new FontFace('Kerberos VF', `url("${src}")`, {
+  const faces = pageFonts.faces.map(({src,style}) => new FontFace('Kerberos VF', `url("${src}")`, {
     weight:'300 700', display:'swap', style,
-    sizeAdjust:`${scale * 100}%`, ascentOverride:`${96 / scale}%`,
-    descentOverride:`${24.5 / scale}%`, lineGapOverride:'0%',
+    ascentOverride:'96%', descentOverride:'24.5%', lineGapOverride:'0%',
   }));
 
   Promise.all(faces.map(face => face.load()))
