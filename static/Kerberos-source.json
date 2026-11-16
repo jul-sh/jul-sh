@@ -1,25 +1,29 @@
 {
   "upstream": "https://github.com/jul-sh/Kerberos",
-  "release": "working-1.413",
-  "notes": "Pinned Latin variable fonts. Boot cuts use grade -30 and normal lowercase height; progressive cuts retain all four axes.",
+  "release": "v1.4.12",
+  "notes": "Pinned official v1.4.12 variable fonts. Boot cuts use grade -30 and normal lowercase height; progressive cuts retain all four axes.",
   "sources": [
     {
       "style": "roman",
       "source": "bundled",
-      "path": "fonts/Kerberos-v1.413.woff2",
-      "sha256": "a1452b02f18e11434be6f7fe915781698ddece1d8e61299f23d5bbef0e870951",
-      "bytes": 3013612,
-      "font_version": "Version 1.413",
-      "source_font_sha256": "b525ff9c7f38025ed3f3e0a9d7fac781e00394214ca081897141963842f41853"
+      "path": "fonts/Kerberos-v1.4.12.woff2",
+      "sha256": "9f0888bcb4443ec0ccdc3e9b9104bd672999e740be39c3b1fa9dfd755082f911",
+      "bytes": 1993812,
+      "font_version": "Version 1.412",
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.12/Kerberos-VF.woff2"
     },
     {
       "style": "italic",
       "source": "bundled",
-      "path": "fonts/Kerberos-Italic-v1.413.woff2",
-      "sha256": "3ae18485df562ecec113301baa9086b153f54ee319c806ac816a90e82be5a119",
-      "bytes": 3774748,
-      "font_version": "Version 1.413",
-      "source_font_sha256": "79b2e075892379739e7b357c8156769ff04075d0c4fb7ca8d7cb0b34df8b2bd4"
+      "path": "fonts/Kerberos-Italic-v1.4.12.woff2",
+      "sha256": "a2db36fae4223af3fafaf3bd7f506d744aed019babffdd4f5232b129ab49ac5c",
+      "bytes": 2213988,
+      "font_version": "Version 1.412",
+      "source_url": "https://github.com/jul-sh/Kerberos/releases/download/v1.4.12/Kerberos-Italic-VF.woff2"
     }
-  ]
+  ],
+  "release_url": "https://github.com/jul-sh/Kerberos/releases/tag/v1.4.12",
+  "released_at": "2026-11-16T20:03:45Z",
+  "source_commit": "dc684e1cac25e2c94f234e6b612b0ed3375b2241",
+  "checked_on": "2026-11-16"
 }
