@@ -1,4 +1,4 @@
-:root{--font-grade:-30;--font-lowercase-height:500;--font-serif:Kerberos,Georgia,serif;--font-sans:Caleuche,monospace;font-synthesis:none;font-optical-sizing:auto;color-scheme:light;font-family:var(--font-serif);font-variation-settings:'GRAD' var(--font-grade),'YTLC' var(--font-lowercase-height);font-size:20px;line-height:1.5}
+:root{--font-grade:-20;--font-lowercase-height:500;--font-serif:Kerberos,Georgia,serif;--font-sans:Caleuche,monospace;font-synthesis:none;font-optical-sizing:auto;color-scheme:light;font-family:var(--font-serif);font-variation-settings:'GRAD' var(--font-grade),'YTLC' var(--font-lowercase-height);font-size:20px;line-height:1.5}
 html[data-vf-ready]{--font-serif:'Kerberos VF',Kerberos,Georgia,serif}
 /* Keep Kerberos's standard ligatures active in letter-spaced body copy. */
 body{font-feature-settings:'liga' 1}

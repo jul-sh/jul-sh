@@ -1,7 +1,7 @@
 {
   "upstream": "https://github.com/jul-sh/Kerberos",
   "release": "v1.4.12",
-  "notes": "Pinned official v1.4.12 variable fonts. Boot cuts use grade -30 and normal lowercase height; progressive cuts retain all four axes.",
+  "notes": "Pinned official v1.4.12 variable fonts. Boot cuts use grade -20 and normal lowercase height; progressive cuts retain all four axes.",
   "sources": [
     {
       "style": "roman",

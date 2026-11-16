@@ -27,7 +27,7 @@ use std::{
 const ALLOWED_RELEASE_URL_PREFIX: &str = "https://github.com/jul-sh/Kerberos/releases/download/";
 const MAX_UPSTREAM_FONT_BYTES: u64 = 16 * 1024 * 1024;
 const CACHE_ROOT: &str = "./target/font-cache";
-const CACHE_SCHEMA_VERSION: &str = "v2-hb-subset-grade-minus30";
+const CACHE_SCHEMA_VERSION: &str = "v2-hb-subset-grade-minus20";
 
 pub const ROMAN_SIZE_ADJUST: f64 = 0.9415954415954416;
 pub const ITALIC_SIZE_ADJUST: f64 = 0.9510791366906475;
@@ -97,7 +97,7 @@ pub enum UpstreamStyle {
 /// Type-safe variation instancing mode for each generated webfont cut.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum VariationMode {
-    /// Fast first-paint cut: pins `wght` (plus `GRAD=-30, YTLC=500`),
+    /// Fast first-paint cut: pins `wght` (plus `GRAD=-20, YTLC=500`),
     /// keeping `opsz` variable so automatic optical sizing matches the full VF.
     BootOpszOnly { weight: u16 },
     /// Progressive font with all four source axes retained.
@@ -109,7 +109,7 @@ impl VariationMode {
         match self {
             Self::BootOpszOnly { weight } => vec![
                 (*b"wght", f32::from(weight)),
-                (*b"GRAD", -30.0),
+                (*b"GRAD", -20.0),
                 (*b"YTLC", 500.0),
             ],
             Self::VariableAllAxes => vec![],
