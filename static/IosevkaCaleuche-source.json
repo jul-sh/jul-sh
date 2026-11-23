@@ -2,11 +2,11 @@
   "upstream": "https://github.com/jul-sh/iosevka-charon",
   "source_commit": "b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
   "source_url": "https://github.com/jul-sh/iosevka-charon/commit/b6c681ce1005c9dd3e2b6c77065d55052ddd20b7",
-  "checked_on": "2026-11-14",
-  "paired_kerberos_version": "working-1.413",
+  "checked_on": "2026-11-22",
+  "paired_kerberos_version": "v1.4.12",
   "derivation": "Existing Caleuche static drawings with lowercase heights derived automatically from the site's pinned Kerberos fonts. Webfonts retain the previous exact Unicode coverage and OpenType features, with matching opsz and YTLC axes.",
   "build_plan_sha256": "6c7a13d8d4d79be91e3142a261ef658eb9719a839a72be2432906f92334e2d37",
-  "kerberos_metrics_sha256": "d04c3e8baee8f59acab24f12c1e067a322dcc1d1c07c940f76beb2ecc0c4309d",
+  "kerberos_metrics_sha256": "ad31bd3c9ea121dc185cbeb013226a7e29066cda1d2eae7d95df33409f5acc06",
   "generator": {
     "path": "scripts/caleuche_variable.py",
     "sha256": "1c467cef844883f20500544278c145a80aa317a1d9b395c67f77d0d2a8a4f914"
@@ -14,12 +14,12 @@
   "fonts": [
     {
       "file": "IosevkaCaleuche-Regular[YTLC,opsz].woff2",
-      "sha256": "e2037d54d58360cb3a4a730fa3eb051d7bf0370737aae04acb49e0a6deabd794",
-      "bytes": 41384,
+      "sha256": "f992b486fc573c73ec77d087b9b3b326e71b2e992def69ffbd547ac00550ca49",
+      "bytes": 32940,
       "font_version": "Version 34.802",
       "glyph_count": 645,
       "unicode_codepoint_count": 192,
-      "source_ttf_sha256": "a25760e75c7db359677f5213b7fc17a4ccd3dc2d646d5d0030798c9e4fd9df31",
+      "source_ttf_sha256": "81310ccea6647f9b19a94d78c9abde9ed23eb0c0d184f1482221f77b4c9d4200",
       "axes": [
         {
           "tag": "opsz",
@@ -29,7 +29,7 @@
         },
         {
           "tag": "YTLC",
-          "minimum": 450.0,
+          "minimum": 500.0,
           "default": 500.0,
           "maximum": 550.0
         }
@@ -40,12 +40,12 @@
     },
     {
       "file": "IosevkaCaleuche-Medium[YTLC,opsz].woff2",
-      "sha256": "1507a86195621fb995353730818d60155805aab1286d0439750d6c1ef9d20568",
-      "bytes": 40636,
+      "sha256": "7f50b6691e2d6a44c0319174e724da60ff576d50961637df32a170788d49239e",
+      "bytes": 33216,
       "font_version": "Version 34.802",
       "glyph_count": 645,
       "unicode_codepoint_count": 192,
-      "source_ttf_sha256": "f3d5f4fcf323e8a885b727347a26f94798615ed43992d20c0951a8654d2ec49b",
+      "source_ttf_sha256": "525b983f021d34acc72212f482a20a42501cee1b3bc9b34974a2621ba66de443",
       "axes": [
         {
           "tag": "opsz",
@@ -55,7 +55,7 @@
         },
         {
           "tag": "YTLC",
-          "minimum": 450.0,
+          "minimum": 500.0,
           "default": 500.0,
           "maximum": 550.0
         }
@@ -66,12 +66,12 @@
     },
     {
       "file": "IosevkaCaleuche-Bold[YTLC,opsz].woff2",
-      "sha256": "699fb51ffd9a10d84b686a27ba8c9678f8c4e4b742ad9818903d25d8966e55de",
-      "bytes": 41484,
+      "sha256": "3b6d80c304c3a66a831cefc2bacc6e5b2df7d312d9565be76bcd621927baab77",
+      "bytes": 34564,
       "font_version": "Version 34.802",
       "glyph_count": 645,
       "unicode_codepoint_count": 192,
-      "source_ttf_sha256": "27018bd72cbcfb75226e47ec5a04daa20909130413fbc47b04d4199a53549b1f",
+      "source_ttf_sha256": "5d419b01a5a35ec04ae7c85b888dc8fb3d37732008e41bf4506b15a592379c05",
       "axes": [
         {
           "tag": "opsz",
@@ -81,7 +81,7 @@
         },
         {
           "tag": "YTLC",
-          "minimum": 450.0,
+          "minimum": 500.0,
           "default": 500.0,
           "maximum": 550.0
         }
@@ -92,23 +92,23 @@
     }
   ],
   "paired_kerberos_sources": {
-    "roman": "a1452b02f18e11434be6f7fe915781698ddece1d8e61299f23d5bbef0e870951",
-    "italic": "3ae18485df562ecec113301baa9086b153f54ee319c806ac816a90e82be5a119"
+    "roman": "ae3e33eec3e5b5114f71f8c64a29b1ce23a877061a3fdc88eb11b6d2549f3f83",
+    "italic": "c4c7ad9b3be4bf69c7e2a080c62f477184c91f2fe2c9599f5b82fc2661db010c"
   },
   "kerberos_font_sources": {
     "roman": {
-      "file": "Kerberos-v1.413.woff2",
+      "file": "Kerberos-v1.4.12-1c42931.woff2",
       "style": "roman",
-      "version": "1.413",
-      "sha256": "a1452b02f18e11434be6f7fe915781698ddece1d8e61299f23d5bbef0e870951",
-      "bytes": 3013612
+      "version": "1.412",
+      "sha256": "ae3e33eec3e5b5114f71f8c64a29b1ce23a877061a3fdc88eb11b6d2549f3f83",
+      "bytes": 2007604
     },
     "italic": {
-      "file": "Kerberos-Italic-v1.413.woff2",
+      "file": "Kerberos-Italic-v1.4.12-1c42931.woff2",
       "style": "italic",
-      "version": "1.413",
-      "sha256": "3ae18485df562ecec113301baa9086b153f54ee319c806ac816a90e82be5a119",
-      "bytes": 3774748
+      "version": "1.412",
+      "sha256": "c4c7ad9b3be4bf69c7e2a080c62f477184c91f2fe2c9599f5b82fc2661db010c",
+      "bytes": 2213228
     }
   }
 }
