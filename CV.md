@@ -15,10 +15,10 @@ _Adversarial robustness for frontier AI systems at Google DeepMind. Previously: 
 * **Training mitigations for an enterprise deployment:** Picked by leadership to close a critical prompt injection robustness gap for a multi-billion-dollar enterprise contract. Analyzed failure modes and created targeted training mitigations, doubling robustness on an internal benchmark. Advised customer's Head of ML Safety helping secure final acceptance.
 * **Defending Google Search:** Identified unaddressed attack surfaces in Google Search before the wider organization was aware of them. Directed a cross-org technical response and co-authored sections of the Google-wide Prompt Injection Playbook.
 
-### **Google** · Software Engineer
+### **Google Research** · Software Engineer
 #### 2020-04 — 2024-05 · London, then New York
 
-* **Trusted execution environments ([Project Oak](https://github.com/project-oak/oak)):** Core contributor to Google’s open-source confidential computing stack. Designed and built its orchestrator, which runs the attested workloads in [Gboard’s confidential federated analytics launch](https://arxiv.org/abs/2404.10764).
+* **Private Inference & trusted execution environments ([Project Oak](https://github.com/project-oak/oak)):** Core contributor to Google’s open-source confidential computing stack. Designed and built its orchestrator, which runs the attested workloads in [Gboard’s confidential federated analytics launch](https://arxiv.org/abs/2404.10764).
 * **Browser-to-enclave encryption:** Engineered attested browser-to-enclave end-to-end encryption and prevented critical zero-day vulnerabilities during infrastructure design.
 
 ### **N26** · Software Engineer
